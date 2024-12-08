@@ -12,6 +12,8 @@ class ExtendedTrackingSummary(model.TrackingSummary):
         start_date = data_dict.get('start_date')
         end_date = data_dict.get('end_date') + datetime.timedelta(days=1)
         package_name = data_dict['package_name']
+        start_date = start_date.replace(hour=0, minute=0, second=0, microsecond=0)
+        end_date = end_date.replace(hour=0, minute=0, second=0, microsecond=0)
         
         try:
             query = meta.Session.query(

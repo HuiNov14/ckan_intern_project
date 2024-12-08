@@ -6,7 +6,7 @@
 
 {% block breadcrumb_content %}
   {{ super() }}
-  <li>{% link_for _('Activities'), named_route='activity.dashboard' %}</li>
+  <li>{% link_for _('statistics'), named_route='activity.dashboard' %}</li>
   <li class="active">{{ _('Login Information') }}</li>
 {% endblock %}
 

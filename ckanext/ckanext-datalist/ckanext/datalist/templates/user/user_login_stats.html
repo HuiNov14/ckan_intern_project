@@ -1,0 +1,335 @@
+{% extends "page.html" %}
+
+{% block page_title %}User Login Statistics{% endblock %}
+
+{% block breadcrumb_content_selected %}{% endblock %}
+
+{% block breadcrumb_content %}
+<li class="dashboard">
+    <a href="/dashboard/datasets">
+        {{ _('Dashboard') }}
+    </a>
+</li>
+<li class="statistical">
+    <a href="/dashboard/statistical">
+        {{ _('Statistics') }}
+    </a>
+</li>
+<li class="active">
+    <a href="/dashboard/statistical/user_login_stats">
+        {{ _('User Login Statistics') }}
+    </a>
+</li>
+{% endblock %}
+
+{% block secondary %}{% endblock %}
+
+{% block primary %}
+<!-- Filter form -->
+<form id="date-form" method="GET" action="/dashboard/statistical/user_login_stats">
+    <div class="form-container">
+        <div class="form-group">
+            <label for="start-date">Start Date</label>
+            <input type="date" id="start-date" name="start_date" required>
+            <div id="start-date-error" class="text-danger mt-1"></div>
+        </div>
+        <div class="form-group">
+            <label for="end-date">End Date</label>
+            <input type="date" id="end-date" name="end_date" required>
+            <div id="end-date-error" class="text-danger mt-1"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="user-name">User Name</label>
+            <select id="user-name" name="user_name">
+                <option value="">Select User Name</option>
+                {% for user_name in user_name_list %}
+                    <option value="{{ user_name }}" {% if user_name == user_name_selected %}selected{% endif %}>{{ user_name }}</option>
+                {% endfor %}
+            </select>
+            <div id="user-name-error" class="text-danger mt-1"></div>
+        </div>
+
+        <div class="form-group form-button">
+            <button type="submit" class="btn btn-primary px-4">Filter</button>
+        </div>
+    </div>
+</form>
+
+<div class="chart-type-container">
+    <label for="chart-type">Chart Type</label>
+    <select id="chart-type" name="chart-type">
+        <option value="Bar Chart" {% if state == 'Bar Chart' %}selected{% endif %}>Bar Chart</option>
+        <option value="Line Chart" {% if state == 'Line Chart' %}selected{% endif %}>Line Chart</option>
+    </select>
+</div>
+
+<div id="chart-info" class="chart-info">
+    <h2>User login statistics</h2>
+    <p><strong>Total Number of Logins:</strong> {{ count }}</p>
+    <p><strong>Date Range:</strong> {{ date_list[0] }} to {{ date_list[-1] }}</p>
+    {% if user_name %}
+        <p><strong>User Name Filtered:</strong> {{ user_name }}</p>
+    {% else %}
+        <p><strong>All Users:</strong> Data for all users</p>
+    {% endif %}
+</div>
+
+<div id="chart-container">
+    <div id="charts">
+        <canvas id="barChart" class="chart"></canvas>
+        <canvas id="lineChart" class="chart" style="display: none;"></canvas>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const apiData = {{ login_data | tojson }};
+    const dateList = {{ date_list | tojson }};
+
+    const loginData = {};
+    dateList.forEach(date => {
+        loginData[date] = apiData[date] || 0;
+    });
+
+    const labels = Object.keys(loginData);
+    const data = Object.values(loginData);
+
+    const ctx = document.getElementById('barChart').getContext('2d');
+    const loginChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Login Counts',
+                data: data,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Number of Logins'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    }
+                }
+            }
+        }
+    });
+
+    const lineCtx = document.getElementById('lineChart').getContext('2d');
+    const lineChart = new Chart(lineCtx, {
+        type: 'line',
+        data: {
+            labels: labels, 
+            datasets: [{
+                label: 'Login Counts',
+                data: data, 
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            aspectRatio: 2,
+            scales: {
+                x: {
+                    ticks: {
+                        autoSkip: false, 
+                        maxRotation: 45, 
+                        minRotation: 0  
+                    },
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Number of Logins'
+                    }
+                }
+            }
+        }
+    });
+
+    document.getElementById('chart-type').addEventListener('change', function() {
+        const selectedChart = this.value;
+        document.getElementById('barChart').style.display = selectedChart === 'Bar Chart' ? 'block' : 'none';
+        document.getElementById('lineChart').style.display = selectedChart === 'Line Chart' ? 'block' : 'none';
+    });
+</script>
+<script>
+
+    document.getElementById('date-form').addEventListener('submit', function (event) {
+        if (!validateDates()) {
+            event.preventDefault();
+        }
+    });
+
+    document.getElementById('start-date').addEventListener('change', validateDates);
+    document.getElementById('end-date').addEventListener('change', validateDates);
+
+    function validateDates() {
+        var startDate = document.getElementById('start-date').value;
+        var endDate = document.getElementById('end-date').value;
+    
+        var startDateError = document.getElementById('start-date-error');
+        var endDateError = document.getElementById('end-date-error');
+    
+        startDateError.textContent = '';
+        endDateError.textContent = '';
+    
+        var start = new Date(startDate);
+        var end = new Date(endDate);
+    
+        if (start > end) {
+            startDateError.textContent = 'Start Date must be earlier than or equal to End Date.';
+            endDateError.textContent = 'End Date must be later than or equal to Start Date.';
+            return false;
+        }
+    
+        var diffTime = Math.abs(end - start); 
+        var diffDays = diffTime / (1000 * 60 * 60 * 24); 
+        if (diffDays > 30) {
+            startDateError.textContent = 'The date range must not exceed 30 days.';
+            endDateError.textContent = 'Please select a shorter date range.';
+            return false;
+        }
+    
+        return true;
+    }
+</script>
+
+<style>
+    #date-form {
+        margin-bottom: 20px;
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        border: 1px solid #ddd;
+        background-color: #f9f9f9;
+    }
+
+    .form-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .form-group {
+        flex: 1;
+        min-width: 220px;
+    }
+
+    .form-group label {
+        font-size: 14px;
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .form-group input,
+    .form-group select {
+        padding: 8px;
+        margin-bottom: 0px;
+        width: 100%;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        display: block;
+    }
+
+    .form-button {
+        display: flex;
+        align-items: center;
+        margin-top: 20px;
+    }
+
+    .form-button button {
+        padding: 8px 12px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        display: inline-block;
+    }
+
+    .chart-type-container {
+        display: flex;
+        margin-top: 10px;
+    }
+
+    .chart-type-container label {
+        font-size: 14px;
+        font-weight: bold;
+        display: inline-block;
+        margin-right: 10px;
+        align-self: center;
+    }
+
+    .chart-type-container select {
+        padding: 8px;
+        margin-bottom: 10px;
+        width: 220px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        display: inline-block;
+    }
+
+    #chart-container {
+        padding: 20px;
+        font-family: Arial, sans-serif;
+    }
+
+    .chart-info {
+        text-align: left;
+        margin-bottom: 0px;
+        font-size: 16px;
+    }
+    
+    #chart-info h2 {
+        text-align: center;  /* Căn giữa phần tử h2 */
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+    
+    .chart-info p {
+        margin: 5px 0;
+        font-size: 14px;
+    }
+    
+    .chart-info strong {
+        font-weight: bold;
+    }
+
+    #chart-container { 
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .chart {
+        width: 100%;
+        max-width: 1000px;
+    }
+</style>
+{% endblock %}

@@ -28,9 +28,7 @@ Example:
       {% endif %}
       {% endblock %}
       {% block heading_title %}
-      {% set view_count = h.get_view_count(package.id) %}
-      <a href="{{ h.url_for('%s.read' % package.type, id=package.name) }}"
-        title="{{ title }} - {{view_count}} lượt xem ">
+      <a href="{{ h.url_for('%s.read' % package.type, id=package.name) }}">
         {{ title|truncate(80) }}
       </a>
       {% endblock %}

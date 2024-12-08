@@ -5,7 +5,7 @@
     {% block dashboard_nav_links %}
       {{ super() }}
 
-      {{ h.build_nav_icon('dashboard.statistical', h.humanize_entity_type('Charts', 'Charts', 'label') or _('Charts'), icon='chart-line') }}
+      {{ h.build_nav_icon('dashboard.statistical', h.humanize_entity_type('Statistics', 'Statistics', 'label') or _('Statistics'), icon='chart-line') }}
     {% endblock %}
   </ul>
 {% endblock %}

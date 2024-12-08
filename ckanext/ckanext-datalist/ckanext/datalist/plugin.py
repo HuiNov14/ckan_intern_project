@@ -1,5 +1,5 @@
 import ckan.plugins as p
-from .logic.actions import resources_statistics, users_statistics, new_users_statistics
+from .logic.actions import resources_statistics, users_statistics, new_users_statistics, login_activity_show
 from .logic import auth
 import ckan.plugins.toolkit as toolkit
 import ckanext.datalist.views as views
@@ -24,6 +24,7 @@ class DatalistPlugin(p.SingletonPlugin):
             'stats_resources': resources_statistics,
             'stats_users': users_statistics,
             'stats_new_users': new_users_statistics,
+            'login_activity_show': login_activity_show,
         }
 
     def get_auth_functions(self):
