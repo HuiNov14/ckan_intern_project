@@ -14,6 +14,8 @@ class ExtendedTrackingRaw(model.TrackingSummary):
         user_names = data_dict['user_name']
         package_name = data_dict['package_name']
         include_resources = data_dict.get('include_resources')
+        start_date = start_date.replace(hour=0, minute=0, second=0, microsecond=0)
+        end_date = end_date.replace(hour=0, minute=0, second=0, microsecond=0)
         
         try:
             query = meta.Session.query(

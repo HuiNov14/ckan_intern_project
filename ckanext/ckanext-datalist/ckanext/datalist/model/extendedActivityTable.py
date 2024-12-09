@@ -48,8 +48,8 @@ class ExtendedActivityTable(Activity):
                     })
                 
                 results = {
-                    'total_user_login': user_count,
-                    'total_login': query.count(),
+                    # 'total_user_login': user_count,
+                    # 'total_login': query.count(),
                     'login_activity': list(user_tracking_data.values())
                 }
             except Exception as e:
@@ -58,3 +58,6 @@ class ExtendedActivityTable(Activity):
         except Exception as e:
             raise ValidationError(f"database query error: {e}" )
         return results
+    
+    
+    
