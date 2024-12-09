@@ -17,7 +17,8 @@ class DatalistPlugin(p.SingletonPlugin):
     def update_config(self, config):
         toolkit.add_template_directory(config, 'templates')
         toolkit.add_public_directory(config, 'public')
-        toolkit.add_resource('public', 'mycharts')
+        # toolkit.add_resource('public', 'mycharts')
+        toolkit.add_resource('assets', 'ckanext-datalist')
 
     def get_actions(self):
         return {

@@ -7,8 +7,8 @@
 #     preload:
 #       - base/main
 
-# datalist-css:
-#   filter: cssrewrite
-#   output: ckanext-datalist/%(version)s-datalist.css
-#   contents:
-#     - css/datalist.css
+datalist-css:
+  filter: cssrewrite
+  output: ckanext-datalist/%(version)s-datalist.css
+  contents:
+    - style.css
