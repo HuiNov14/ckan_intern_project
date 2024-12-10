@@ -6,7 +6,7 @@ import ckan.plugins as p
 from flask import Flask
 from ckan.common import g, request
 
-from .logic.actions import tracking_by_user, tracking_urls_and_counts, statistical_org_get_sum, statistical_field_get_sum
+from .logic.actions import tracking_by_user, tracking_urls_and_counts, statistical_org_get_sum, statistical_field_get_sum, resources_statistics, users_statistics, new_users_statistics, login_activity_show
 from .logic import auth
 import sqlalchemy as sa
 import re 
@@ -31,14 +31,9 @@ class API_Tracking_Plugin(p.SingletonPlugin, DefaultTranslation):
         return views.get_blueprints()
     
     def update_config(self, config: CKANConfig):
-
-        # Add this plugin's templates dir to CKAN's extra_template_paths, so
-        # that CKAN will use this plugin's custom templates.
-        # 'templates' is the path to the templates dir, relative to this
-        # plugin.py file.
         toolkit.add_template_directory(config, 'templates')
-        # toolkit.add_public_directory(config, 'ckanext/api_tracking/assets')
-        toolkit.add_resource("assets", "api_tracking")
+        toolkit.add_public_directory(config, 'public')
+        toolkit.add_resource('assets', 'api_tracking')
 
     def make_middleware(self, app: CKANApp, config):
         @app.after_request
@@ -71,7 +66,11 @@ class API_Tracking_Plugin(p.SingletonPlugin, DefaultTranslation):
             'tracking_by_user': tracking_by_user,
             'tracking_urls_and_counts': tracking_urls_and_counts,
             'statistical_org_get_sum': statistical_org_get_sum,
-            'statistical_field_get_sum': statistical_field_get_sum
+            'statistical_field_get_sum': statistical_field_get_sum,
+            'stats_resources': resources_statistics,
+            'stats_users': users_statistics,
+            'stats_new_users': new_users_statistics,
+            'login_activity_show': login_activity_show,
         }
         
     def get_auth_functions(self):

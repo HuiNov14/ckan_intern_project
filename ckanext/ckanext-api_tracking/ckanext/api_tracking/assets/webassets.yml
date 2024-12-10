@@ -57,3 +57,9 @@ statistical_field-js:
   extra:
     preload:
       - base/main
+
+statistical_user-css:
+  filter: cssrewrite
+  output: ckanext-api_tracking/%(version)s-statistical_user.css
+  contents:
+    - css/statistical_user.css
