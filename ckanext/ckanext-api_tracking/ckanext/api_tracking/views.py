@@ -3,7 +3,7 @@ from typing import Any
 from flask import Blueprint, request
 import ckan.plugins.toolkit as toolkit
 from ckan.common import config
-import ckanext.api_tracking.logic.auth as auth  # Thay bằng tên extension thực tế của bạn
+import ckanext.api_tracking.logic.auth as auth  
 from datetime import datetime, timedelta
 from ckan import logic
 import ckan.lib.base as base
@@ -24,7 +24,6 @@ def aggregate_package_views(urls_and_counts):
     """Aggregate package views for each unique package."""
     aggregated_data = {}
     
-    # Loop through the tracking data
     for url in urls_and_counts: 
         user_name = url['user_name']
         for tracking in url['tracking']:
@@ -36,7 +35,6 @@ def aggregate_package_views(urls_and_counts):
             print("include_resources===================>",include_resources)
             if not package_id:
                 continue
-            # If package is already in the aggregated data, sum the views
             if package_name in aggregated_data:
                 aggregated_data[package_name]['package_view'] += package_views
                 aggregated_data[package_name]['include_resources'].extend(include_resources)
@@ -50,7 +48,6 @@ def aggregate_package_views(urls_and_counts):
                     'package_id': package_id,
                 }
     
-    # Convert the aggregated data back to a list for rendering
     return list(aggregated_data.values())
 
 #Dashboard/statistical
@@ -226,8 +223,8 @@ def new_user_statistical():
     except logic.NotAuthorized:
         return base.abort(403, toolkit._('Need to be system administrator to administer'))
 
-    start_date = request.args.get('start_date')
-    end_date = request.args.get('end_date')
+    start_date = request.args.get('start_date', '2024-11-11')
+    end_date = request.args.get('end_date', '2024-12-10')
     state = request.args.get('state', 'active')
     date_list = [start_date,end_date]
 
@@ -300,8 +297,8 @@ def user_login_statistical():
         u'date_list': date_list,
         u'login_data': login_data,
         u'count': count,
-        u'user_name': user_name,
-        u'user_name_list': user_name_list
+        u'user_name_filtered': user_name,
+        u'user_name_list': user_name_list,
     }
 
     return base.render('user/user_login_stats.html', extra_vars)

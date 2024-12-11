@@ -15,6 +15,9 @@
         {{ _('Statistics') }}
     </a>
 </li>
+<li class="statistical">
+    <a href="/dashboard/statistical/user-dashboard">{{ _('User Statistics') }}</a>
+</li>
 <li class="active">
     <a href="/dashboard/statistical/user_login_stats">
         {{ _('User Login Statistics') }}
@@ -25,63 +28,62 @@
 {% block secondary %}{% endblock %}
 
 {% block primary %}
-<!-- Filter form -->
+<div class="chart-selector-container">
+    <h2 class="stat-title">Thống kê số lượng đăng nhập người dùng</h2>
+    <div class="stat-selector">
+        <label>Các thống kê khác</label>
+        <select id="chart-selector" name="chart-selector" onchange="navigateToLink(this)">
+            <option value="/dashboard/statistical/user_login_stats">Thống kê số lượng đăng nhập người dùng</option>
+            <option value="/dashboard/statistical/new_user_stats">Thống kê số lượng người dùng mới</option>
+        </select>
+    </div>
+</div>
+
 <form id="date-form" method="GET" action="/dashboard/statistical/user_login_stats">
-    <div class="form-container">
-        <div class="form-group">
-            <label for="start-date">Start Date</label>
-            <input type="date" id="start-date" name="start_date" required>
-            <div id="start-date-error" class="text-danger mt-1"></div>
-        </div>
-        <div class="form-group">
-            <label for="end-date">End Date</label>
-            <input type="date" id="end-date" name="end_date" required>
-            <div id="end-date-error" class="text-danger mt-1"></div>
-        </div>
+    <div class="form-row">
+        <div class="form-container">
+            <div class="form-group">
+                <label for="start-date">Thời gian từ</label>
+                <input type="date" id="start-date" name="start_date" required
+                    value="{{ date_list[0] if date_list else '' }}">
+                <div id="start-date-error" class="text-danger mt-1"></div>
+            </div>
+            <div class="form-group">
+                <label for="end-date">Đến</label>
+                <input type="date" id="end-date" name="end_date" required
+                    value="{{ date_list[-1] if date_list else '' }}">
+                <div id="end-date-error" class="text-danger mt-1"></div>
+            </div>
 
-        <div class="form-group">
-            <label for="user-name">User Name</label>
-            <select id="user-name" name="user_name">
-                <option value="">Select User Name</option>
-                {% for user_name in user_name_list %}
-                    <option value="{{ user_name }}" {% if user_name == user_name_selected %}selected{% endif %}>{{ user_name }}</option>
-                {% endfor %}
-            </select>
-            <div id="user-name-error" class="text-danger mt-1"></div>
+            <div class="form-group">
+                <label for="user-name">Tên người dùng</label>
+                <select id="user-name" name="user_name">
+                    <option value="">Tất cả người dùng</option>
+                    {% for user_name in user_name_list %}
+                    <option value="{{ user_name }}" {% if user_name==user_name_filtered %}selected{% endif %}>
+                        {{ user_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <div id="user-name-error" class="text-danger mt-1"></div>
+            </div>
         </div>
-
         <div class="form-group form-button">
-            <button type="submit" class="btn btn-primary px-4">Filter</button>
+            <button type="submit" class="btn btn-primary px-4">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z" fill="currentColor"/>
+                </svg>
+                Lọc dữ liệu
+            </button>
         </div>
     </div>
 </form>
 
-<div class="chart-type-container">
-    <label for="chart-type">Chart Type</label>
-    <select id="chart-type" name="chart-type">
-        <option value="Bar Chart" {% if state == 'Bar Chart' %}selected{% endif %}>Bar Chart</option>
-        <option value="Line Chart" {% if state == 'Line Chart' %}selected{% endif %}>Line Chart</option>
-    </select>
-</div>
-
-<div id="chart-info" class="chart-info">
-    <h2>User login statistics</h2>
-    <p><strong>Total Number of Logins:</strong> {{ count }}</p>
-    <p><strong>Date Range:</strong> {{ date_list[0] }} to {{ date_list[-1] }}</p>
-    {% if user_name %}
-        <p><strong>User Name Filtered:</strong> {{ user_name }}</p>
-    {% else %}
-        <p><strong>All Users:</strong> Data for all users</p>
-    {% endif %}
-</div>
-
 <div id="chart-container">
     <div id="charts">
-        <canvas id="barChart" class="chart"></canvas>
-        <canvas id="lineChart" class="chart" style="display: none;"></canvas>
+        <canvas id="lineChart" class="chart"></canvas>
     </div>
 </div>
-
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
@@ -96,51 +98,19 @@
     const labels = Object.keys(loginData);
     const data = Object.values(loginData);
 
-    const ctx = document.getElementById('barChart').getContext('2d');
-    const loginChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Login Counts',
-                data: data,
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Number of Logins'
-                    }
-                },
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Date'
-                    }
-                }
-            }
-        }
-    });
-
     const lineCtx = document.getElementById('lineChart').getContext('2d');
     const lineChart = new Chart(lineCtx, {
         type: 'line',
         data: {
-            labels: labels, 
+            labels: labels,
             datasets: [{
-                label: 'Login Counts',
-                data: data, 
+                label: 'Số lượt đăng nhập',
+                data: data,
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 2,
-                fill: true
+                fill: true,
+                tension: 0.2,
             }]
         },
         options: {
@@ -149,31 +119,26 @@
             scales: {
                 x: {
                     ticks: {
-                        autoSkip: false, 
-                        maxRotation: 45, 
-                        minRotation: 0  
+                        autoSkip: false,
+                        maxRotation: 45,
+                        minRotation: 0
                     },
                     title: {
                         display: true,
-                        text: 'Date'
+                        text: 'Ngày'
                     }
                 },
                 y: {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'Number of Logins'
+                        text: 'Số lượt đăng nhập'
                     }
                 }
             }
         }
     });
 
-    document.getElementById('chart-type').addEventListener('change', function() {
-        const selectedChart = this.value;
-        document.getElementById('barChart').style.display = selectedChart === 'Bar Chart' ? 'block' : 'none';
-        document.getElementById('lineChart').style.display = selectedChart === 'Line Chart' ? 'block' : 'none';
-    });
 </script>
 <script>
 
@@ -189,31 +154,38 @@
     function validateDates() {
         var startDate = document.getElementById('start-date').value;
         var endDate = document.getElementById('end-date').value;
-    
+
         var startDateError = document.getElementById('start-date-error');
         var endDateError = document.getElementById('end-date-error');
-    
+
         startDateError.textContent = '';
         endDateError.textContent = '';
-    
+
         var start = new Date(startDate);
         var end = new Date(endDate);
-    
+
         if (start > end) {
-            startDateError.textContent = 'Start Date must be earlier than or equal to End Date.';
-            endDateError.textContent = 'End Date must be later than or equal to Start Date.';
+            startDateError.textContent = 'Ngày bắt đầu cần phải trước ngày kết thúc.';
+            endDateError.textContent = 'Ngày kết thúc cần phải sau ngày bắt đầu.';
             return false;
         }
-    
-        var diffTime = Math.abs(end - start); 
-        var diffDays = diffTime / (1000 * 60 * 60 * 24); 
+
+        var diffTime = Math.abs(end - start);
+        var diffDays = diffTime / (1000 * 60 * 60 * 24);
         if (diffDays > 30) {
-            startDateError.textContent = 'The date range must not exceed 30 days.';
-            endDateError.textContent = 'Please select a shorter date range.';
+            startDateError.textContent = 'Giới hạn khoảng ngày lọc không được quá 30 ngày.';
+            endDateError.textContent = 'Xin hãy chọn khoảng ngày lọc nhỏ hơn.';
             return false;
         }
-    
+
         return true;
+    }
+
+    function navigateToLink(selectElement) {
+        const url = selectElement.value;
+        if (url) {
+            window.location.href = url;
+        }
     }
 </script>
 

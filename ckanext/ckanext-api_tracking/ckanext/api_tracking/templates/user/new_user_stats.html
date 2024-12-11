@@ -11,6 +11,9 @@
   <li class="statistical">
     <a href="/dashboard/statistical">{{ _('Statistics') }}</a>
   </li>
+  <li class="statistical">
+    <a href="/dashboard/statistical/user-dashboard">{{ _('User Statistics') }}</a>
+  </li>
   <li class="active">
     <a href="/dashboard/statistical/new_user_stats">{{ _('New User Statistics') }}</a>
   </li>
@@ -19,51 +22,48 @@
 {% block secondary %}{% endblock %}
 
 {% block primary %}
+<div class="chart-selector-container">
+    <h2 class="stat-title">Thống kê số lượng người dùng mới</h2>
+    <div class="stat-selector">
+        <h2 class="chart-title">Các biểu đồ thống kê khác:</h2>
+        <select id="chart-selector" name="chart-selector" onchange="navigateToLink(this)">
+            <option value="/dashboard/statistical/new_user_stats">Thống kê số lượng người dùng mới</option>
+            <option value="/dashboard/statistical/user_login_stats">Thống kê số lượng đăng nhập người dùng</option>
+        </select>
+    </div>
+</div>
 <!-- Filter form -->
 <form id="date-form" method="GET" action="/dashboard/statistical/new_user_stats">
-    <div class="form-container">
-        <div class="form-group">
-            <label for="start-date">Start Date</label>
-            <input type="date" id="start-date" name="start_date" required>
-            <div id="start-date-error" class="text-danger mt-1"></div>
-        </div>
-        <div class="form-group">
-            <label for="end-date">End Date</label>
-            <input type="date" id="end-date" name="end_date" required>
-            <div id="end-date-error" class="text-danger mt-1"></div>
-        </div>
-        <div class="form-group">
-            <label for="state">State</label>
-            <select id="state" name="state">
-                <option value="active" {% if state == 'active' %}selected{% endif %}>Active</option>
-                <option value="pending" {% if state == 'pending' %}selected{% endif %}>Pending</option>
-            </select>
+    <div class="form-row">
+        <div class="form-container">
+            <div class="form-group">
+                <label for="start-date">Ngày bắt đầu</label>
+                <input type="date" id="start-date" name="start_date" required value="{{ date_list[0] if date_list else '' }}">
+                <div id="start-date-error" class="text-danger mt-1"></div>
+            </div>
+            <div class="form-group">
+                <label for="end-date">Ngày kết thúc</label>
+                <input type="date" id="end-date" name="end_date" required value="{{ date_list[-1] if date_list else '' }}">
+                <div id="end-date-error" class="text-danger mt-1"></div>
+            </div>
+            <div class="form-group">
+                <label for="state">Trạng thái tài khoản</label>
+                <select id="state" name="state">
+                    <option value="active" {% if state == 'active' %}selected{% endif %}>Active</option>
+                    <option value="pending" {% if state == 'pending' %}selected{% endif %}>Pending</option>
+                </select>
+            </div>
         </div>
         <div class="form-group form-button">
-            <button type="submit" class="btn btn-primary px-4">Filter</button>
+            <button type="submit" class="btn btn-primary px-4">Lọc</button>
         </div>
     </div>
 </form>
 
 <!-- Chart -->
-<div class="chart-type-container">
-    <label for="chart-type">Chart Type</label>
-    <select id="chart-type" name="chart-type">
-        <option value="Bar Chart" {% if state == 'Bar Chart' %}selected{% endif %}>Bar Chart</option>
-        <option value="Line Chart" {% if state == 'Line Chart' %}selected{% endif %}>Line Chart</option>
-    </select>
-</div>
-
-<div id="chart-info" class="chart-info">
-    <h2>New user statistics</h2>
-    <p><strong>Total new user created:</strong> {{ count }}</p>
-    <p><strong>Date Range:</strong> {{ date_list[0] }} to {{ date_list[-1] }}</p>
-    <p><strong>State:</strong> {{ state }}</p>
-</div>
 
 <div id="chart-container">
-    <canvas id="barChart"></canvas>
-    <canvas id="lineChart" style="display: none;"></canvas>
+    <canvas id="lineChart"></canvas>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -75,51 +75,19 @@
     const labels = apiData.days.map(item => item.date);
     const data = apiData.days.map(item => item.user_created_count);
 
-    const barCtx = document.getElementById('barChart').getContext('2d');
-    const barChart = new Chart(barCtx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'New Users Created',
-                data: data,
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true, 
-                    title: {
-                        display: true,
-                        text: 'Number of New Users'  
-                    }
-                },
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Date'  
-                    }
-                }
-            }
-        }
-    });
-
     const lineCtx = document.getElementById('lineChart').getContext('2d');
     const lineChart = new Chart(lineCtx, {
         type: 'line',
         data: {
             labels: labels, 
             datasets: [{
-                label: 'New Users Created',
+                label: 'Người dùng mới',
                 data: data, 
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 2,
-                fill: true
+                fill: true,
+                tension: 0.2,
             }]
         },
         options: {
@@ -134,25 +102,20 @@
                     },
                     title: {
                         display: true,
-                        text: 'Date'
+                        text: 'Ngày'
                     }
                 },
                 y: {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'Number of New Users'
+                        text: 'Số lượng người dùng mới'
                     }
                 }
             }
         }
     });
 
-    document.getElementById('chart-type').addEventListener('change', function() {
-        const selectedChart = this.value;
-        document.getElementById('barChart').style.display = selectedChart === 'Bar Chart' ? 'block' : 'none';
-        document.getElementById('lineChart').style.display = selectedChart === 'Line Chart' ? 'block' : 'none';
-    });
 </script>
 <script>
 
@@ -166,21 +129,40 @@
     document.getElementById('end-date').addEventListener('change', validateDates);
     
     function validateDates() {
-        var startDate = document.getElementById('start-date').value
-        var endDate = document.getElementById('end-date').value
-
-        var startDateError = document.getElementById('start-date-error')
-        var endDateError = document.getElementById('end-date-error')
-
-        startDateError.textContent = ''
-        endDateError.textContent = ''
-
-        if (new Date(startDate) > new Date(endDate)) {
-            startDateError.textContent = 'Start Date must be earlier than or equal to End Date.'
-            endDateError.textContent = 'End Date must be later than or equal to Start Date.'
-            return false 
+        var startDate = document.getElementById('start-date').value;
+        var endDate = document.getElementById('end-date').value;
+    
+        var startDateError = document.getElementById('start-date-error');
+        var endDateError = document.getElementById('end-date-error');
+    
+        startDateError.textContent = '';
+        endDateError.textContent = '';
+    
+        var start = new Date(startDate);
+        var end = new Date(endDate);
+    
+        if (start > end) {
+            startDateError.textContent = 'Ngày bắt đầu cần phải trước ngày kết thúc.';
+            endDateError.textContent = 'Ngày kết thúc cần phải sau ngày bắt đầu.';
+            return false;
         }
-    return true
+    
+        var diffTime = Math.abs(end - start); 
+        var diffDays = diffTime / (1000 * 60 * 60 * 24); 
+        if (diffDays > 30) {
+            startDateError.textContent = 'Giới hạn khoảng ngày lọc không được quá 30 ngày.';
+            endDateError.textContent = 'Xin hãy chọn khoảng ngày lọc nhỏ hơn.';
+            return false;
+        }
+    
+        return true;
+    }
+
+    function navigateToLink(selectElement) {
+        const url = selectElement.value; 
+        if (url) {
+            window.location.href = url; 
+        }
     }
 </script>
     
