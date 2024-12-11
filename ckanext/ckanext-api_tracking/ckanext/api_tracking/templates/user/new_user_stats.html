@@ -5,23 +5,24 @@
 {% block breadcrumb_content_selected %}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="dashboard">
+<li class="dashboard">
     <a href="/dashboard/datasets">{{ _('Dashboard') }}</a>
-  </li>
-  <li class="statistical">
+</li>
+<li class="statistical">
     <a href="/dashboard/statistical">{{ _('Statistics') }}</a>
-  </li>
-  <li class="statistical">
+</li>
+<li class="statistical">
     <a href="/dashboard/statistical/user-dashboard">{{ _('User Statistics') }}</a>
-  </li>
-  <li class="active">
+</li>
+<li class="active">
     <a href="/dashboard/statistical/new_user_stats">{{ _('New User Statistics') }}</a>
-  </li>
+</li>
 {% endblock %}
 
 {% block secondary %}{% endblock %}
 
 {% block primary %}
+<!-- Chart Selector Section -->
 <div class="chart-selector-container">
     <h2 class="stat-title">Thống kê số lượng người dùng mới</h2>
     <div class="stat-selector">
@@ -32,44 +33,57 @@
         </select>
     </div>
 </div>
-<!-- Filter form -->
+
+<!-- Filter Form -->
 <form id="date-form" method="GET" action="/dashboard/statistical/new_user_stats">
     <div class="form-row">
         <div class="form-container">
+            <!-- Start Date Field -->
             <div class="form-group">
                 <label for="start-date">Ngày bắt đầu</label>
                 <input type="date" id="start-date" name="start_date" required value="{{ date_list[0] if date_list else '' }}">
                 <div id="start-date-error" class="text-danger mt-1"></div>
             </div>
+
+            <!-- End Date Field -->
             <div class="form-group">
                 <label for="end-date">Ngày kết thúc</label>
                 <input type="date" id="end-date" name="end_date" required value="{{ date_list[-1] if date_list else '' }}">
                 <div id="end-date-error" class="text-danger mt-1"></div>
             </div>
+
+            <!-- Account Status Field -->
             <div class="form-group">
                 <label for="state">Trạng thái tài khoản</label>
                 <select id="state" name="state">
-                    <option value="active" {% if state == 'active' %}selected{% endif %}>Active</option>
-                    <option value="pending" {% if state == 'pending' %}selected{% endif %}>Pending</option>
+                    <option value="active" {% if state=='active' %}selected{% endif %}>Active</option>
+                    <option value="pending" {% if state=='pending' %}selected{% endif %}>Pending</option>
                 </select>
             </div>
         </div>
+
+        <!-- Submit Button -->
         <div class="form-group form-button">
-            <button type="submit" class="btn btn-primary px-4">Lọc</button>
+            <button type="submit" class="btn btn-primary px-4">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z" fill="currentColor"/>
+                </svg>
+                Lọc dữ liệu
+            </button>
         </div>
     </div>
 </form>
 
-<!-- Chart -->
-
+<!-- Chart Section -->
 <div id="chart-container">
     <canvas id="lineChart"></canvas>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    const apiData = {{ urls_and_counts | tojson }};
 
+<script>
+    // Prepare the data for the chart
+    const apiData = {{ urls_and_counts | tojson }};
     apiData.days.sort((a, b) => new Date(a.date) - new Date(b.date));
 
     const labels = apiData.days.map(item => item.date);
@@ -79,10 +93,10 @@
     const lineChart = new Chart(lineCtx, {
         type: 'line',
         data: {
-            labels: labels, 
+            labels: labels,
             datasets: [{
                 label: 'Người dùng mới',
-                data: data, 
+                data: data,
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 2,
@@ -96,9 +110,9 @@
             scales: {
                 x: {
                     ticks: {
-                        autoSkip: false, 
-                        maxRotation: 45, 
-                        minRotation: 0  
+                        autoSkip: false,
+                        maxRotation: 45,
+                        minRotation: 0
                     },
                     title: {
                         display: true,
@@ -117,54 +131,56 @@
     });
 
 </script>
-<script>
 
-    document.getElementById('date-form').addEventListener('submit', function(event) {
+<script>
+    // Form Validation for Date Fields
+    document.getElementById('date-form').addEventListener('submit', function (event) {
         if (!validateDates()) {
-            event.preventDefault(); 
+            event.preventDefault();
         }
     });
-    
+
     document.getElementById('start-date').addEventListener('change', validateDates);
     document.getElementById('end-date').addEventListener('change', validateDates);
-    
+
     function validateDates() {
         var startDate = document.getElementById('start-date').value;
         var endDate = document.getElementById('end-date').value;
-    
+
         var startDateError = document.getElementById('start-date-error');
         var endDateError = document.getElementById('end-date-error');
-    
+
         startDateError.textContent = '';
         endDateError.textContent = '';
-    
+
         var start = new Date(startDate);
         var end = new Date(endDate);
-    
+
         if (start > end) {
             startDateError.textContent = 'Ngày bắt đầu cần phải trước ngày kết thúc.';
             endDateError.textContent = 'Ngày kết thúc cần phải sau ngày bắt đầu.';
             return false;
         }
-    
-        var diffTime = Math.abs(end - start); 
-        var diffDays = diffTime / (1000 * 60 * 60 * 24); 
+
+        var diffTime = Math.abs(end - start);
+        var diffDays = diffTime / (1000 * 60 * 60 * 24);
         if (diffDays > 30) {
             startDateError.textContent = 'Giới hạn khoảng ngày lọc không được quá 30 ngày.';
             endDateError.textContent = 'Xin hãy chọn khoảng ngày lọc nhỏ hơn.';
             return false;
         }
-    
+
         return true;
     }
 
+    // Navigate to selected chart option
     function navigateToLink(selectElement) {
-        const url = selectElement.value; 
+        const url = selectElement.value;
         if (url) {
-            window.location.href = url; 
+            window.location.href = url;
         }
     }
 </script>
-    
+
 {% asset 'api_tracking/statistical_user-css' %}
 {% endblock %}

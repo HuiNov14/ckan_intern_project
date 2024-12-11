@@ -6,22 +6,16 @@
 
 {% block breadcrumb_content %}
 <li class="dashboard">
-    <a href="/dashboard/datasets">
-        {{ _('Dashboard') }}
-    </a>
+    <a href="/dashboard/datasets">{{ _('Dashboard') }}</a>
 </li>
 <li class="statistical">
-    <a href="/dashboard/statistical">
-        {{ _('Statistics') }}
-    </a>
+    <a href="/dashboard/statistical">{{ _('Statistics') }}</a>
 </li>
 <li class="statistical">
     <a href="/dashboard/statistical/user-dashboard">{{ _('User Statistics') }}</a>
 </li>
 <li class="active">
-    <a href="/dashboard/statistical/user_login_stats">
-        {{ _('User Login Statistics') }}
-    </a>
+    <a href="/dashboard/statistical/user_login_stats">{{ _('User Login Statistics') }}</a>
 </li>
 {% endblock %}
 
@@ -39,35 +33,38 @@
     </div>
 </div>
 
+<!-- Form lọc dữ liệu -->
 <form id="date-form" method="GET" action="/dashboard/statistical/user_login_stats">
     <div class="form-row">
         <div class="form-container">
+            <!-- Chọn ngày bắt đầu -->
             <div class="form-group">
                 <label for="start-date">Thời gian từ</label>
-                <input type="date" id="start-date" name="start_date" required
-                    value="{{ date_list[0] if date_list else '' }}">
+                <input type="date" id="start-date" name="start_date" required value="{{ date_list[0] if date_list else '' }}">
                 <div id="start-date-error" class="text-danger mt-1"></div>
             </div>
+            
+            <!-- Chọn ngày kết thúc -->
             <div class="form-group">
                 <label for="end-date">Đến</label>
-                <input type="date" id="end-date" name="end_date" required
-                    value="{{ date_list[-1] if date_list else '' }}">
+                <input type="date" id="end-date" name="end_date" required value="{{ date_list[-1] if date_list else '' }}">
                 <div id="end-date-error" class="text-danger mt-1"></div>
             </div>
 
+            <!-- Chọn tên người dùng -->
             <div class="form-group">
                 <label for="user-name">Tên người dùng</label>
                 <select id="user-name" name="user_name">
                     <option value="">Tất cả người dùng</option>
                     {% for user_name in user_name_list %}
-                    <option value="{{ user_name }}" {% if user_name==user_name_filtered %}selected{% endif %}>
-                        {{ user_name }}
-                    </option>
+                    <option value="{{ user_name }}" {% if user_name == user_name_filtered %}selected{% endif %}>{{ user_name }}</option>
                     {% endfor %}
                 </select>
                 <div id="user-name-error" class="text-danger mt-1"></div>
             </div>
         </div>
+
+        <!-- Nút lọc dữ liệu -->
         <div class="form-group form-button">
             <button type="submit" class="btn btn-primary px-4">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -79,17 +76,21 @@
     </div>
 </form>
 
+<!-- Khu vực hiển thị biểu đồ -->
 <div id="chart-container">
     <div id="charts">
         <canvas id="lineChart" class="chart"></canvas>
     </div>
 </div>
 
+<!-- Thư viện Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+    // Chuẩn bị dữ liệu từ server
     const apiData = {{ login_data | tojson }};
     const dateList = {{ date_list | tojson }};
 
+    // Xử lý dữ liệu đăng nhập
     const loginData = {};
     dateList.forEach(date => {
         loginData[date] = apiData[date] || 0;
@@ -98,8 +99,9 @@
     const labels = Object.keys(loginData);
     const data = Object.values(loginData);
 
+    // Vẽ biểu đồ đường
     const lineCtx = document.getElementById('lineChart').getContext('2d');
-    const lineChart = new Chart(lineCtx, {
+    new Chart(lineCtx, {
         type: 'line',
         data: {
             labels: labels,
@@ -139,9 +141,7 @@
         }
     });
 
-</script>
-<script>
-
+    // Xác thực ngày và điều hướng biểu đồ
     document.getElementById('date-form').addEventListener('submit', function (event) {
         if (!validateDates()) {
             event.preventDefault();
@@ -152,17 +152,17 @@
     document.getElementById('end-date').addEventListener('change', validateDates);
 
     function validateDates() {
-        var startDate = document.getElementById('start-date').value;
-        var endDate = document.getElementById('end-date').value;
+        const startDate = document.getElementById('start-date').value;
+        const endDate = document.getElementById('end-date').value;
 
-        var startDateError = document.getElementById('start-date-error');
-        var endDateError = document.getElementById('end-date-error');
+        const startDateError = document.getElementById('start-date-error');
+        const endDateError = document.getElementById('end-date-error');
 
         startDateError.textContent = '';
         endDateError.textContent = '';
 
-        var start = new Date(startDate);
-        var end = new Date(endDate);
+        const start = new Date(startDate);
+        const end = new Date(endDate);
 
         if (start > end) {
             startDateError.textContent = 'Ngày bắt đầu cần phải trước ngày kết thúc.';
@@ -170,8 +170,8 @@
             return false;
         }
 
-        var diffTime = Math.abs(end - start);
-        var diffDays = diffTime / (1000 * 60 * 60 * 24);
+        const diffTime = Math.abs(end - start);
+        const diffDays = diffTime / (1000 * 60 * 60 * 24);
         if (diffDays > 30) {
             startDateError.textContent = 'Giới hạn khoảng ngày lọc không được quá 30 ngày.';
             endDateError.textContent = 'Xin hãy chọn khoảng ngày lọc nhỏ hơn.';
