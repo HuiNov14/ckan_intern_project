@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const itemCountInput = document.getElementById('itemCount');
   const sortOptions = document.getElementById('sortOptions');
   const chartTypeSelect = document.getElementById('chartType'); // Phần tử select cho kiểu biểu đồ
-  const ctx = document.getElementById('trackingChart').getContext('2d');
+  const ctx = document.getElementById('statisticsChart').getContext('2d');
   const resourceChartCtx = document.getElementById('resourceChart').getContext('2d');
 
   let packageChartInstance = null;
@@ -46,9 +46,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Create Package Chart
   function createPackageChart(displayData) {
-    const labels = displayData.map(pkg => pkg.title);
+    console.log(displayData);
+
+    const labels = displayData.map(pkg => pkg.date_time);
     const viewsData = displayData.map(pkg => pkg.package_view);
-    const downloadData = displayData.map(pkg => pkg.package_download);
 
     if (packageChartInstance) {
       packageChartInstance.destroy();
@@ -69,13 +70,6 @@ document.addEventListener("DOMContentLoaded", function () {
             borderColor: 'rgba(75, 192, 192, 1)',
             borderWidth: 1
           },
-          {
-            label: 'Package Downloads',
-            data: downloadData,
-            backgroundColor: 'rgba(153, 102, 255, 0.2)',
-            borderColor: 'rgba(153, 102, 255, 1)',
-            borderWidth: 1
-          }
         ]
       },
       options: {
@@ -100,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function () {
         mergedResources[res.resource_name].download_count += res.download_count;
       } else {
         // Nếu tài nguyên chưa tồn tại, thêm vào
-        mergedResources[res.resource_name] = { 
+        mergedResources[res.resource_name] = {
           resource_name: res.resource_name,
           resource_view: res.resource_view,
           download_count: res.download_count
@@ -115,9 +109,9 @@ document.addEventListener("DOMContentLoaded", function () {
   // Show Resource Chart
   function showResourceChart(resources) {
     const count = parseInt(itemCountInput.value, 10) || 5;
-    const sortOption = sortOptions.value; 
-    let sortedResources = [...resources]; 
-    sortedResources = sortData(sortedResources, sortOption, true); 
+    const sortOption = sortOptions.value;
+    let sortedResources = [...resources];
+    sortedResources = sortData(sortedResources, sortOption, true);
 
     // Gộp các tài nguyên có cùng tên
     const mergedResources = mergeResources(sortedResources);
@@ -133,10 +127,10 @@ document.addEventListener("DOMContentLoaded", function () {
         resourceChartInstance.destroy();
       }
 
-      const chartType = chartTypeSelect.value;  
+      const chartType = chartTypeSelect.value;
 
       resourceChartInstance = new Chart(resourceChartCtx, {
-        type: chartType,  
+        type: chartType,
         data: {
           labels: resourceLabels,
           datasets: [
@@ -206,13 +200,13 @@ document.addEventListener("DOMContentLoaded", function () {
       console.log("active poitnand", activePoints);
       if (activePoints.length > 0) {
         const dataIndex = activePoints[0].index;
-      console.log("active dataIndex", dataIndex);
-      
-      const resources = limitedData[dataIndex].include_resources;
-      console.log("aresources", resources);
-      showResourceChart(resources);  // Update resource chart after sorting and merging
-      console.log("showressiyurc", showResourceChart(resources) );
-      
+        console.log("active dataIndex", dataIndex);
+
+        const resources = limitedData[dataIndex].include_resources;
+        console.log("aresources", resources);
+        showResourceChart(resources);  // Update resource chart after sorting and merging
+        console.log("showressiyurc", showResourceChart(resources));
+
       } else {
         hideResourceChart();
         document.getElementById('noResourceMessage').style.display = 'block'; // Ẩn thông báo khi có dữ liệu

@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     x: {
                         title: {
                             display: true,
-                            text: 'Package States'
+                            text: 'Organization Name' // Đổi tiêu đề trục X thành "Organization Name"
                         }
                     },
                     y: {
@@ -63,22 +63,22 @@ document.addEventListener('DOMContentLoaded', function () {
         const groupedData = {};
 
         trackingData.forEach(item => {
-            const packageState = item.package_state;
-            if (!groupedData[packageState]) {
-                groupedData[packageState] = {
+            const organizationName = item.organization_name; // Lấy tên tổ chức
+            if (!groupedData[organizationName]) {
+                groupedData[organizationName] = {
                     state_count: 0,
                     public_count: 0,
                     private_count: 0
                 };
             }
 
-            groupedData[packageState].state_count += item.state_count;
-            groupedData[packageState].public_count += item.public_count;
-            groupedData[packageState].private_count += item.private_count;
+            groupedData[organizationName].state_count += item.state_count;
+            groupedData[organizationName].public_count += item.public_count;
+            groupedData[organizationName].private_count += item.private_count;
         });
 
         let sortedData = Object.entries(groupedData).map(([key, value]) => ({
-            package_state: key,
+            organization_name: key, // Tên tổ chức
             ...value
         }));
 
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         sortedData = sortedData.slice(0, itemCount);
 
-        const labels = sortedData.map(item => item.package_state);
+        const labels = sortedData.map(item => item.organization_name); // Hiển thị tên tổ chức
         const activeCounts = sortedData.map(item => item.state_count);
         const publicCounts = sortedData.map(item => item.public_count);
         const privateCounts = sortedData.map(item => item.private_count);
