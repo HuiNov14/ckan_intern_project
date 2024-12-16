@@ -96,4 +96,15 @@ def login_activity_show_schema(not_empty: Validator, ignore_missing: Validator, 
         'limit': [ignore_missing, not_empty, int_validator],
         'offset': [ignore_missing, not_empty, int_validator]
     }
+
+@validator_args    
+def tracking_datatypes_get_sum_schema(not_empty: Validator, ignore_missing: Validator,
+                                     isodate: Validator, int_validator: Validator):
+    return {
+        'start_date': [ignore_missing, not_empty, isodate],
+        'end_date': [ignore_missing, not_empty, isodate],
+        'format_type': [ignore_missing, not_empty],
+        'limit': [ignore_missing, not_empty, int_validator],
+        'offset': [ignore_missing, not_empty, int_validator]
+    }
    

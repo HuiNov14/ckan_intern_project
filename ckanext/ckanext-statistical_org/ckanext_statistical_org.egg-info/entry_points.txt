@@ -1,2 +1,0 @@
-[ckan.plugins]
-statistical_org = ckanext.statistical_org.plugin:StatisticalOrgPlugin

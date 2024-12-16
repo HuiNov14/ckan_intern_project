@@ -1,4 +1,4 @@
-from .schemas import organization_statistics_schema, tracking_by_user_combined_schema, tracking_urls_and_counts_combined_schema, field_statistics_schema, resources_statistics_combined_schema, users_statistics_combined_schema, new_users_statistics_combined_schema, login_activity_show_schema
+from .schemas import organization_statistics_schema, tracking_by_user_combined_schema, tracking_urls_and_counts_combined_schema, field_statistics_schema, resources_statistics_combined_schema, users_statistics_combined_schema, new_users_statistics_combined_schema, login_activity_show_schema,tracking_datatypes_get_sum_schema
 from ..models.extended_tracking_raw import ExtendedTrackingRaw
 from ..models.extended_tracking_summary import ExtendedTrackingSummary
 from ..models.extended_resource_table import ExtendedResourceTable
@@ -6,10 +6,11 @@ from ..models.extended_user_table import ExtendedUserTable
 from ..models.extendedActivityTable import ExtendedActivityTable
 from ..models.statistical_org import OrganizationStatisticsAPI
 from ..models.statistiacal_field import FieldStatisticsAPI
+from ..models.tracking_types_resource import TrackingAPI
 import ckan.model.meta as meta
 import ckan.model as model
 import ckan.plugins.toolkit as toolkit
-from datetime import datetime
+from datetime import datetime, timedelta
 from ckan.plugins.toolkit import side_effect_free, ValidationError
 
 @side_effect_free
@@ -88,11 +89,8 @@ def statistical_org_get_sum(context, data_dict):
         raise toolkit.ValidationError(errors)
 
 
-    if 'organization_name' not in data_dict or data_dict['organization_name'] == '':
-        # Lấy tên tổ chức đầu tiên từ cơ sở dữ liệu
-        first_org_query = meta.Session.query(model.Group.name).filter(model.Group.is_organization == True).first()
-        if first_org_query:
-            data_dict['organization_name'] = first_org_query[0]  # Gán giá trị tổ chức đầu tiên vào data_dict
+    if 'organization_name' not in data_dict:
+        data_dict['organization_name'] = ''
     
     if 'private' not in data_dict:
         data_dict['private'] = None  # Nếu không có giá trị mặc định là None (cả true, false)
@@ -118,7 +116,7 @@ def statistical_field_get_sum(context, data_dict):
         raise toolkit.ValidationError(errors)
 
     if 'field_name' not in data_dict:
-        data_dict['field_name'] = [""]
+        data_dict['field_name'] = ''
    
     if 'private' not in data_dict:
         data_dict['private'] = None  # Nếu không có giá trị mặc định là None (cả true, false)
@@ -190,3 +188,32 @@ def login_activity_show(context, data_dict):
     urls_and_counts = ExtendedActivityTable.get_login_activity_stats(data_dict)
     return urls_and_counts
 
+@side_effect_free
+def resource_access_by_date(context, data_dict):
+   
+    toolkit.check_access("user_check", context, data_dict)
+
+    schema = tracking_datatypes_get_sum_schema()
+    
+    data_dict, errors = toolkit.navl_validate(data_dict, schema)
+   
+    if errors:
+            raise ValidationError(errors)
+        
+    if 'start_date' not in data_dict:
+        current_date = datetime.now()
+        data_dict['start_date'] = current_date
+    
+    if 'end_date' not in data_dict:
+        current_date = datetime.now() + timedelta(days=1)
+        data_dict['end_date'] = current_date
+        
+    if 'format_type' not in data_dict:
+        data_dict['format_type'] = ''
+        
+    limit = data_dict.get('limit', 200)  
+    offset = data_dict.get('offset', 0) 
+
+    resource_access_by_date = TrackingAPI.get_resource_access_count_by_date(data_dict, limit=limit, offset=offset)
+ 
+    return resource_access_by_date

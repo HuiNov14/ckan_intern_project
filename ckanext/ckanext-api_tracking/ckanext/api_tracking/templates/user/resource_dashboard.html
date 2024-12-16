@@ -1,20 +1,8 @@
 {% extends 'page.html' %}
 
-{% block page_title %}
-
-{% endblock %}
-
-{% block breadcrumb_content_selected %}
-
-{% endblock %}
-
 {% block breadcrumb_content %}
-  <li class="dashboard">
-    <a href="/dashboard/datasets">{{ _('Dashboard') }}</a>
-  </li>
-  <li class="statistical">
-    <a href="/dashboard/statistical">{{ _('Statistics') }}</a>
-  </li>
+  {% snippet 'user/snippets/breadcrumd_statistical.html' %}
+
   <li class="active">
     <a href="/dashboard/statistical/resource-dashboard">{{ _('Resource Statistics') }}</a>
   </li>
@@ -25,99 +13,62 @@
 {% endblock %}
 
 {% block primary %}
-  <div class="container my-4">
-    <div class="d-flex align-items-center">
-      <h2 class="mb-0">All Resource Charts</h2>
-      <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">Dropdown button</button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-          <li>
-            <a class="dropdown-item" href="#">Action</a>
-          </li>
-          <li>
-            <a class="dropdown-item" href="#">Another action</a>
-          </li>
-          <li>
-            <a class="dropdown-item" href="#">Something else here</a>
-          </li>
-        </ul>
-      </div>
+  <style>
+    .card-img-top {
+      height: 200px;
+      object-fit: cover;
+    }
+    
+    .card {
+      width: 16rem;
+    }
+  </style>
+
+  <div class="container my-4 px-3">
+    <div style="display: flex; align-items: center; margin-bottom: 16px;">
+      {% snippet 'user/snippets/filter_chart_statistical.html' %}
     </div>
-    <hr class="mt-3" />
     <div class="row row-cols-1 row-cols-md-4 g-4">
       <!-- Card 1 -->
       <div class="col">
         <div class="card h-100">
-          <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Card 1" />
+          <a href="/dashboard/statistical/statistical-org"><img src="/1.png" class="card-img-top" alt="Card 1" /></a>
           <div class="card-body">
-            <h5 class="card-title">Card Title 1</h5>
-            <p class="card-text">This is a short description of the first card.</p>
+            <h5 class="card-title">Organization Statistics</h5>
+            <p class="card-text">This is a statistical chart of data belonging to an organization.</p>
           </div>
         </div>
       </div>
       <!-- Card 2 -->
       <div class="col">
         <div class="card h-100">
-          <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Card 2" />
+          <a href="/dashboard/statistical/statistical-field"><img src="/2.png" class="card-img-top" alt="Card 2" /></a>
+
           <div class="card-body">
-            <h5 class="card-title">Card Title 2</h5>
-            <p class="card-text">This is a short description of the second card.</p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card h-100">
-          <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Card 2" />
-          <div class="card-body">
-            <h5 class="card-title">Card Title 2</h5>
-            <p class="card-text">This is a short description of the second card.</p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card h-100">
-          <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Card 2" />
-          <div class="card-body">
-            <h5 class="card-title">Card Title 2</h5>
-            <p class="card-text">This is a short description of the second card.</p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card h-100">
-          <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Card 2" />
-          <div class="card-body">
-            <h5 class="card-title">Card Title 2</h5>
-            <p class="card-text">This is a short description of the second card.</p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card h-100">
-          <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Card 2" />
-          <div class="card-body">
-            <h5 class="card-title">Card Title 2</h5>
-            <p class="card-text">This is a short description of the second card.</p>
+            <h5 class="card-title">Group Statistics</h5>
+            <p class="card-text">This is a statistical chart of data in a field.</p>
           </div>
         </div>
       </div>
       <!-- Card 3 -->
       <div class="col">
         <div class="card h-100">
-          <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Card 3" />
+          <a href="/dashboard/statistical/statistical-datatypes"><img src="/3.png" class="card-img-top" alt="Card 3" /></a>
+
           <div class="card-body">
-            <h5 class="card-title">Card Title 3</h5>
-            <p class="card-text">This is a short description of the third card.</p>
+            <h5 class="card-title">Datatypes Statistics</h5>
+            <p class="card-text">This is a statistical chart of the number of data types.</p>
           </div>
         </div>
       </div>
       <!-- Card 4 -->
       <div class="col">
         <div class="card h-100">
-          <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Card 4" />
+          <a href="/dashboard/statistical/statistical-tracking"><img src="/4.png" class="card-img-top" alt="Card 4" /></a>
+
           <div class="card-body">
-            <h5 class="card-title">Card Title 4</h5>
-            <p class="card-text">This is a short description of the fourth card.</p>
+            <h5 class="card-title">Tracking Statistics</h5>
+            <p class="card-text">This is a statistical chart that tracks views, downloads of data.</p>
           </div>
         </div>
       </div>
