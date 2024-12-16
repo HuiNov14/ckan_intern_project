@@ -11,6 +11,26 @@ document.addEventListener("DOMContentLoaded", function () {
   let packageChartInstance = null;
   let resourceChartInstance = null;
 
+  // Function to calculate the date range and total package views
+  function updateTitle() {
+    // Sort the package data based on the selected option
+    const sortOption = sortOptions.value;
+
+    let sortedData = [...trackingData]; // Make a copy of the trackingData
+    sortedData = sortData(sortedData, sortOption); // Sort package data
+
+    // Get start and end dates from all data
+    const startDate = sortedData[0]?.date_time || 'N/A';
+    const endDate = sortedData[sortedData.length - 1]?.date_time || 'N/A';
+
+    // Calculate total views for all data (not limited by count)
+    const totalViews = trackingData.reduce((total, pkg) => total + pkg.package_view, 0);
+
+    // Update the title with the date range and total views
+    const titleElement = document.getElementById('packageTitle');
+    titleElement.innerHTML = `From <strong>${startDate}</strong> to <strong>${endDate}</strong><br>Total Package Views: <strong>${totalViews}</strong>`;
+  }
+
   // Sorting function for both package and resource data
   function sortData(data, option, isResource = false) {
     if (isResource) {
@@ -190,6 +210,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Create package chart
     createPackageChart(limitedData);
+
+    // Update the title with the date range and total views
+    updateTitle();
 
     // Hide resource chart initially
     hideResourceChart();
