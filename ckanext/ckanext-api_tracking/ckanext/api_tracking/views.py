@@ -1,4 +1,5 @@
 import json
+from math import log
 from typing import Any
 from flask import Blueprint, request
 import ckan.plugins.toolkit as toolkit
@@ -20,21 +21,32 @@ def resource_dashboard():
 def user_dashboard():
         return base.render('user/user_dashboard.html')
 
+from datetime import date
+
 def aggregate_package_views(urls_and_counts):
     """Aggregate package views for each unique package."""
     aggregated_data = {}
-    
-    for url in urls_and_counts: 
+
+    # Loop through the tracking data
+    for url in urls_and_counts:
         user_name = url['user_name']
         for tracking in url['tracking']:
+            date_time = tracking['date']
             package_name = tracking['package']
             package_id = tracking['package_id']
             package_views = tracking['package_view']
             title = tracking['title']
             include_resources = tracking.get('include_resources', [])
-            print("include_resources===================>",include_resources)
+            print("include_resources===================>", include_resources)
+            
             if not package_id:
                 continue
+            
+            # Convert date_time (if it is a date object) to string (optional: you can use a different format)
+            if isinstance(date_time, date):
+                date_time = date_time.strftime('%Y-%m-%d')  # Chuyển đổi thành chuỗi ngày YYYY-MM-DD
+
+            # If package is already in the aggregated data, sum the views
             if package_name in aggregated_data:
                 aggregated_data[package_name]['package_view'] += package_views
                 aggregated_data[package_name]['include_resources'].extend(include_resources)
@@ -46,9 +58,13 @@ def aggregate_package_views(urls_and_counts):
                     'user_name': user_name,
                     'include_resources': include_resources,
                     'package_id': package_id,
+                    'date_time': date_time,
                 }
     
+
+    # Convert the aggregated data back to a list for rendering
     return list(aggregated_data.values())
+
 
 #Dashboard/statistical
 def statistical():
@@ -125,7 +141,7 @@ def statistical_tracking():
 
 # Đây là chức năng thống kê data theo tổ chức 
 def statistical_org():
-    organization_name = request.form.get('organization_name') or 'organization-yqra-9121-gaar'
+    organization_name = request.form.get('organization_name') or None
     print(organization_name)
     private = request.form.get('private') or None
     state = request.form.get('state') or None
@@ -147,26 +163,17 @@ def statistical_org():
     except logic.ValidationError as e:
         datasets_org = []
  
-    print("========================>",datasets_org)
     organization_list = logic.get_action('organization_list')(data_dict={})
  
     extra_vars: dict[str, Any] = {
-        u'datasets_org': json.dumps(datasets_org),
+        u'datasets_org': json.dumps(datasets_org) if datasets_org else '[]',
         u'organization_list': organization_list,
         u'organization_name': organization_name,
         u'state': state,
         u'private': private,
         u'include_datasets': include_datasets,
     }
-    if isinstance(datasets_org, dict):
-        error_message = datasets_org.get('error', None)
-        if error_message:
-            extra_vars[u'error'] = error_message
-        else:
-            extra_vars[u'id_org'] = datasets_org.get('id_org')
-            extra_vars[u'private'] = datasets_org.get('private')
-            extra_vars[u'state'] = datasets_org.get('state')
-            extra_vars[u'include_datasets'] = datasets_org.get('include_datasets')
+
     return base.render('user/statistical_org.html', extra_vars)
 
 #Dashboard/statistical/statistical_field    
@@ -204,15 +211,6 @@ def statistical_field():
         u'private': private,
         u'include_datasets': include_datasets,
     }
-    if isinstance(datasets_field, dict):
-        error_message = datasets_field.get('error', None)
-        if error_message:
-            extra_vars[u'error'] = error_message
-        else:
-            extra_vars[u'id_field'] = datasets_field.get('id_field')
-            extra_vars[u'private'] = datasets_field.get('private')
-            extra_vars[u'state'] = datasets_field.get('state')
-            extra_vars[u'include_datasets'] = datasets_field.get('include_datasets')
     return base.render('user/statistical_field.html', extra_vars)
 
 #Dashboard/statistical/new_user_stats
@@ -223,8 +221,8 @@ def new_user_statistical():
     except logic.NotAuthorized:
         return base.abort(403, toolkit._('Need to be system administrator to administer'))
 
-    start_date = request.args.get('start_date', '2024-11-11')
-    end_date = request.args.get('end_date', '2024-12-10')
+    start_date = request.args.get('start_date', '2024-11-20')
+    end_date = request.args.get('end_date', '2024-12-16')
     state = request.args.get('state', 'active')
     date_list = [start_date,end_date]
 
@@ -303,6 +301,53 @@ def user_login_statistical():
 
     return base.render('user/user_login_stats.html', extra_vars)
 
+def statistical_datatypes():
+    today = datetime.today().date()     
+    day_tracking_default = today - timedelta(days=int(config.get('ckan.day_default')))
+    start_date = request.form.get('start_date', str(day_tracking_default))  
+    end_date = request.form.get('end_date', str(today)) 
+    format_type = request.form.get('format_type') or None
+    
+    try:
+        logic.check_access('user_check', {})
+    except logic.NotAuthorized:
+        return base.abort(403, toolkit._('Need to be system administrator to administer'))
+    
+    try:
+        action = 'resource_access_by_date'
+        data_types = logic.get_action(action)(data_dict={
+            u'start_date': start_date,
+            u'end_date': end_date,
+            u'format_type': format_type,
+        }) 
+    except logic.ValidationError as e:
+        data_types = []
+    
+    print("-------------->",data_types)
+    list_datatypes = set()
+    
+    # Gọi package_search để lấy dữ liệu
+    results = logic.get_action('package_search')(data_dict={})
+    
+    # Duyệt qua các dataset
+    for package in results.get('results', []):
+        for resource in package.get('resources', []):
+            # Lấy giá trị format
+            format_value = resource.get('format', '').strip().lower()
+            if format_value:
+                list_datatypes.add(format_value)     
+                     
+    extra_vars: dict[str, Any] = {
+            u'data_types': data_types,
+            u'start_date': start_date,
+            u'end_date': end_date,
+            u'list_datatypes': list_datatypes,
+            u'format_type': format_type,
+    }     
+    
+    return base.render('user/statistical_datatypes.html', extra_vars)
+
+
 # Register route list for blueprint
 dashboard.add_url_rule(
     u"/statistical/resource-dashboard", view_func=resource_dashboard, methods=['GET']
@@ -332,6 +377,10 @@ dashboard.add_url_rule(
 )
 dashboard.add_url_rule(
     u"/statistical/new_user_stats", view_func=new_user_statistical, methods=['GET', 'POST']
+)
+
+dashboard.add_url_rule(
+    u"/statistical/statistical-datatypes", view_func=statistical_datatypes,methods=['GET', 'POST']
 )
 
 def get_blueprints():

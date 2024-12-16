@@ -69,25 +69,17 @@
   display: none;
   text-align: center;
   margin-top: 40px;
-}
-
-
-#trackingChart, #statisticsChart {
-    width: 60%;      /* Chiều rộng của biểu đồ, ví dụ 80% chiều rộng của phần tử chứa */
-    height: 200px;   /* Chiều cao của biểu đồ */
-    margin: 0 auto;  /* Căn giữa biểu đồ */
-  }
-  
-  /* Điều chỉnh kích thước của biểu đồ resource */
-  #resourceChart {
-    width: 60%;      /* Chiều rộng của biểu đồ */
-    height: 100px;   /* Chiều cao của biểu đồ */
-    margin: 0 auto;  /* Căn giữa biểu đồ */
-  }
-
-  
+} 
 
    #fieldName {
     height: auto; /* Đảm bảo chiều cao tự động theo nội dung */
     min-height: auto; /* Đặt chiều cao tối thiểu */
+  }
+
+
+  .formCss {
+    background: #e5e7ea;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 24px;
   }

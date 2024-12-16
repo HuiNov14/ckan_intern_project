@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     x: {
                         title: {
                             display: true,
-                            text: 'Package States'
+                            text: 'Group Name'
                         }
                     },
                     y: {
@@ -63,22 +63,22 @@ document.addEventListener('DOMContentLoaded', function () {
         const groupedData = {};
 
         trackingData.forEach(item => {
-            const packageState = item.package_state;
-            if (!groupedData[packageState]) {
-                groupedData[packageState] = {
+            const fieldName = item.field_name;
+            if (!groupedData[fieldName]) {
+                groupedData[fieldName] = {
                     state_count: 0,
                     public_count: 0,
                     private_count: 0
                 };
             }
 
-            groupedData[packageState].state_count += item.state_count;
-            groupedData[packageState].public_count += item.public_count;
-            groupedData[packageState].private_count += item.private_count;
+            groupedData[fieldName].state_count += item.state_count;
+            groupedData[fieldName].public_count += item.public_count;
+            groupedData[fieldName].private_count += item.private_count;
         });
 
         let sortedData = Object.entries(groupedData).map(([key, value]) => ({
-            package_state: key,
+            field_name: key,
             ...value
         }));
 
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         sortedData = sortedData.slice(0, itemCount);
 
-        const labels = sortedData.map(item => item.package_state);
+        const labels = sortedData.map(item => item.field_name);
         const activeCounts = sortedData.map(item => item.state_count);
         const publicCounts = sortedData.map(item => item.public_count);
         const privateCounts = sortedData.map(item => item.private_count);
