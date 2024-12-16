@@ -1,16 +1,11 @@
 {% extends "page.html" %}
 
-{% block page_title %}User Login Statistics{% endblock %}
+{% block page_title %}{{ _("User Login Statistics") }}{% endblock %}
 
 {% block breadcrumb_content_selected %}{% endblock %}
 
 {% block breadcrumb_content %}
-<li class="dashboard">
-    <a href="/dashboard/datasets">{{ _('Dashboard') }}</a>
-</li>
-<li class="statistical">
-    <a href="/dashboard/statistical">{{ _('Statistics') }}</a>
-</li>
+{% snippet 'user/snippets/breadcrumd_statistical.html' %}
 <li class="statistical">
     <a href="/dashboard/statistical/user-dashboard">{{ _('User Statistics') }}</a>
 </li>
@@ -23,7 +18,7 @@
 
 {% block primary %}
 <div class="chart-selector-container">
-    <h2 class="stat-title">Thống kê số lượng đăng nhập người dùng</h2>
+    <h2 class="stat-title">{{ _("User Login Statistics") }}</h2>
     <div class="stat-selector">
         <div>
             {% snippet 'user/snippets/filter_chart_user_statistic.html' %}
@@ -35,21 +30,21 @@
     <div class="form-row">
         <div class="form-container">
             <div class="form-group">
-                <label for="start-date">Thời gian từ</label>
+                <label for="start-date">{{ _("From") }}</label>
                 <input type="date" id="start-date" name="start_date" required value="{{ date_list[0] if date_list else '' }}">
                 <div id="start-date-error" class="text-danger mt-1"></div>
             </div>
             
             <div class="form-group">
-                <label for="end-date">Đến</label>
+                <label for="end-date">{{ _("To") }}</label>
                 <input type="date" id="end-date" name="end_date" required value="{{ date_list[-1] if date_list else '' }}">
                 <div id="end-date-error" class="text-danger mt-1"></div>
             </div>
 
             <div class="form-group">
-                <label for="user-name">Tên người dùng</label>
+                <label for="user-name">{{ _("User Name") }}</label>
                 <select id="user-name" name="user_name">
-                    <option value="">Tất cả người dùng</option>
+                    <option value="">{{ _("All user") }}</option>
                     {% for user_name in user_name_list %}
                     <option value="{{ user_name }}" {% if user_name == user_name_filtered %}selected{% endif %}>{{ user_name }}</option>
                     {% endfor %}
@@ -89,7 +84,7 @@
         data: {
             labels: labels,
             datasets: [{
-                label: 'Số lượt đăng nhập',
+                label: 'Number of login',
                 data: data,
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
@@ -110,14 +105,14 @@
                     },
                     title: {
                         display: true,
-                        text: 'Ngày'
+                        text: 'Date'
                     }
                 },
                 y: {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'Số lượt đăng nhập'
+                        text: 'Number of login'
                     }
                 }
             }
@@ -147,16 +142,16 @@
         const end = new Date(endDate);
 
         if (start > end) {
-            startDateError.textContent = 'Ngày bắt đầu cần phải trước ngày kết thúc.';
-            endDateError.textContent = 'Ngày kết thúc cần phải sau ngày bắt đầu.';
+            startDateError.textContent = 'The start date must be before the end date.';
+            endDateError.textContent = 'The end date must be after the start date.';
             return false;
         }
 
         const diffTime = Math.abs(end - start);
         const diffDays = diffTime / (1000 * 60 * 60 * 24);
         if (diffDays > 30) {
-            startDateError.textContent = 'Giới hạn khoảng ngày lọc không được quá 30 ngày.';
-            endDateError.textContent = 'Xin hãy chọn khoảng ngày lọc nhỏ hơn.';
+            startDateError.textContent = 'The filter date range limit cannot exceed 30 days.';
+            endDateError.textContent = 'Please select a smaller filter date range.';
             return false;
         }
 
