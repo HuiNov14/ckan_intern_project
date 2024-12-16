@@ -25,33 +25,27 @@
 <div class="chart-selector-container">
     <h2 class="stat-title">Thống kê số lượng đăng nhập người dùng</h2>
     <div class="stat-selector">
-        <label>Các thống kê khác</label>
-        <select id="chart-selector" name="chart-selector" onchange="navigateToLink(this)">
-            <option value="/dashboard/statistical/user_login_stats">Thống kê số lượng đăng nhập người dùng</option>
-            <option value="/dashboard/statistical/new_user_stats">Thống kê số lượng người dùng mới</option>
-        </select>
+        <div>
+            {% snippet 'user/snippets/filter_chart_user_statistic.html' %}
+        </div>
     </div>
 </div>
 
-<!-- Form lọc dữ liệu -->
 <form id="date-form" method="GET" action="/dashboard/statistical/user_login_stats">
     <div class="form-row">
         <div class="form-container">
-            <!-- Chọn ngày bắt đầu -->
             <div class="form-group">
                 <label for="start-date">Thời gian từ</label>
                 <input type="date" id="start-date" name="start_date" required value="{{ date_list[0] if date_list else '' }}">
                 <div id="start-date-error" class="text-danger mt-1"></div>
             </div>
             
-            <!-- Chọn ngày kết thúc -->
             <div class="form-group">
                 <label for="end-date">Đến</label>
                 <input type="date" id="end-date" name="end_date" required value="{{ date_list[-1] if date_list else '' }}">
                 <div id="end-date-error" class="text-danger mt-1"></div>
             </div>
 
-            <!-- Chọn tên người dùng -->
             <div class="form-group">
                 <label for="user-name">Tên người dùng</label>
                 <select id="user-name" name="user_name">
@@ -64,33 +58,23 @@
             </div>
         </div>
 
-        <!-- Nút lọc dữ liệu -->
-        <div class="form-group form-button">
-            <button type="submit" class="btn btn-primary px-4">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z" fill="currentColor"/>
-                </svg>
-                Lọc dữ liệu
-            </button>
+        <div class="text-end">
+            <button type="submit" class="btn btn-primary px-4">{{ _("Filter") }}</button>
         </div>
     </div>
 </form>
 
-<!-- Khu vực hiển thị biểu đồ -->
 <div id="chart-container">
     <div id="charts">
         <canvas id="lineChart" class="chart"></canvas>
     </div>
 </div>
 
-<!-- Thư viện Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Chuẩn bị dữ liệu từ server
     const apiData = {{ login_data | tojson }};
     const dateList = {{ date_list | tojson }};
 
-    // Xử lý dữ liệu đăng nhập
     const loginData = {};
     dateList.forEach(date => {
         loginData[date] = apiData[date] || 0;
@@ -99,7 +83,6 @@
     const labels = Object.keys(loginData);
     const data = Object.values(loginData);
 
-    // Vẽ biểu đồ đường
     const lineCtx = document.getElementById('lineChart').getContext('2d');
     new Chart(lineCtx, {
         type: 'line',
@@ -141,7 +124,6 @@
         }
     });
 
-    // Xác thực ngày và điều hướng biểu đồ
     document.getElementById('date-form').addEventListener('submit', function (event) {
         if (!validateDates()) {
             event.preventDefault();
@@ -181,12 +163,6 @@
         return true;
     }
 
-    function navigateToLink(selectElement) {
-        const url = selectElement.value;
-        if (url) {
-            window.location.href = url;
-        }
-    }
 </script>
 
 {% asset 'api_tracking/statistical_user-css' %}
