@@ -4,7 +4,7 @@ from typing import Any
 from flask import Blueprint, request
 import ckan.plugins.toolkit as toolkit
 from ckan.common import config
-import ckanext.api_tracking.logic.auth as auth  # Thay bằng tên extension thực tế của bạn
+import ckanext.api_tracking.logic.auth as auth  
 from datetime import datetime, timedelta
 from ckan import logic
 import ckan.lib.base as base
@@ -60,6 +60,7 @@ def aggregate_package_views(urls_and_counts):
                     'package_id': package_id,
                     'date_time': date_time,
                 }
+    
 
     # Convert the aggregated data back to a list for rendering
     return list(aggregated_data.values())
@@ -220,8 +221,8 @@ def new_user_statistical():
     except logic.NotAuthorized:
         return base.abort(403, toolkit._('Need to be system administrator to administer'))
 
-    start_date = request.args.get('start_date')
-    end_date = request.args.get('end_date')
+    start_date = request.args.get('start_date', '2024-11-20')
+    end_date = request.args.get('end_date', '2024-12-16')
     state = request.args.get('state', 'active')
     date_list = [start_date,end_date]
 
@@ -294,8 +295,8 @@ def user_login_statistical():
         u'date_list': date_list,
         u'login_data': login_data,
         u'count': count,
-        u'user_name': user_name,
-        u'user_name_list': user_name_list
+        u'user_name_filtered': user_name,
+        u'user_name_list': user_name_list,
     }
 
     return base.render('user/user_login_stats.html', extra_vars)
