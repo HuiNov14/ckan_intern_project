@@ -1,2 +1,0 @@
-[ckan.plugins]
-tracking_datatypes = ckanext.tracking_datatypes.plugin:TrackingDatatypesPlugin
