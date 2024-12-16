@@ -22,7 +22,6 @@
 {% block secondary %}{% endblock %}
 
 {% block primary %}
-<!-- Chart Selector Section -->
 <div class="chart-selector-container">
     <h2 class="stat-title">Thống kê số lượng người dùng mới</h2>
     <div class="stat-selector">
@@ -34,25 +33,21 @@
     </div>
 </div>
 
-<!-- Filter Form -->
 <form id="date-form" method="GET" action="/dashboard/statistical/new_user_stats">
     <div class="form-row">
         <div class="form-container">
-            <!-- Start Date Field -->
             <div class="form-group">
                 <label for="start-date">Ngày bắt đầu</label>
                 <input type="date" id="start-date" name="start_date" required value="{{ date_list[0] if date_list else '' }}">
                 <div id="start-date-error" class="text-danger mt-1"></div>
             </div>
 
-            <!-- End Date Field -->
             <div class="form-group">
                 <label for="end-date">Ngày kết thúc</label>
                 <input type="date" id="end-date" name="end_date" required value="{{ date_list[-1] if date_list else '' }}">
                 <div id="end-date-error" class="text-danger mt-1"></div>
             </div>
 
-            <!-- Account Status Field -->
             <div class="form-group">
                 <label for="state">Trạng thái tài khoản</label>
                 <select id="state" name="state">
@@ -62,7 +57,6 @@
             </div>
         </div>
 
-        <!-- Submit Button -->
         <div class="form-group form-button">
             <button type="submit" class="btn btn-primary px-4">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -74,7 +68,6 @@
     </div>
 </form>
 
-<!-- Chart Section -->
 <div id="chart-container">
     <canvas id="lineChart"></canvas>
 </div>
@@ -82,7 +75,6 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    // Prepare the data for the chart
     const apiData = {{ urls_and_counts | tojson }};
     apiData.days.sort((a, b) => new Date(a.date) - new Date(b.date));
 
@@ -133,7 +125,6 @@
 </script>
 
 <script>
-    // Form Validation for Date Fields
     document.getElementById('date-form').addEventListener('submit', function (event) {
         if (!validateDates()) {
             event.preventDefault();
@@ -173,7 +164,6 @@
         return true;
     }
 
-    // Navigate to selected chart option
     function navigateToLink(selectElement) {
         const url = selectElement.value;
         if (url) {

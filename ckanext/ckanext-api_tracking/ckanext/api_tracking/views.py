@@ -223,8 +223,8 @@ def new_user_statistical():
     except logic.NotAuthorized:
         return base.abort(403, toolkit._('Need to be system administrator to administer'))
 
-    start_date = request.args.get('start_date', '2024-11-11')
-    end_date = request.args.get('end_date', '2024-12-10')
+    start_date = request.args.get('start_date', '2024-11-20')
+    end_date = request.args.get('end_date', '2024-12-16')
     state = request.args.get('state', 'active')
     date_list = [start_date,end_date]
 

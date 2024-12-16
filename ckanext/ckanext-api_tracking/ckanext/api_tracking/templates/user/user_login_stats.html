@@ -33,25 +33,21 @@
     </div>
 </div>
 
-<!-- Form lọc dữ liệu -->
 <form id="date-form" method="GET" action="/dashboard/statistical/user_login_stats">
     <div class="form-row">
         <div class="form-container">
-            <!-- Chọn ngày bắt đầu -->
             <div class="form-group">
                 <label for="start-date">Thời gian từ</label>
                 <input type="date" id="start-date" name="start_date" required value="{{ date_list[0] if date_list else '' }}">
                 <div id="start-date-error" class="text-danger mt-1"></div>
             </div>
             
-            <!-- Chọn ngày kết thúc -->
             <div class="form-group">
                 <label for="end-date">Đến</label>
                 <input type="date" id="end-date" name="end_date" required value="{{ date_list[-1] if date_list else '' }}">
                 <div id="end-date-error" class="text-danger mt-1"></div>
             </div>
 
-            <!-- Chọn tên người dùng -->
             <div class="form-group">
                 <label for="user-name">Tên người dùng</label>
                 <select id="user-name" name="user_name">
@@ -64,7 +60,6 @@
             </div>
         </div>
 
-        <!-- Nút lọc dữ liệu -->
         <div class="form-group form-button">
             <button type="submit" class="btn btn-primary px-4">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -76,21 +71,17 @@
     </div>
 </form>
 
-<!-- Khu vực hiển thị biểu đồ -->
 <div id="chart-container">
     <div id="charts">
         <canvas id="lineChart" class="chart"></canvas>
     </div>
 </div>
 
-<!-- Thư viện Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Chuẩn bị dữ liệu từ server
     const apiData = {{ login_data | tojson }};
     const dateList = {{ date_list | tojson }};
 
-    // Xử lý dữ liệu đăng nhập
     const loginData = {};
     dateList.forEach(date => {
         loginData[date] = apiData[date] || 0;
@@ -99,7 +90,6 @@
     const labels = Object.keys(loginData);
     const data = Object.values(loginData);
 
-    // Vẽ biểu đồ đường
     const lineCtx = document.getElementById('lineChart').getContext('2d');
     new Chart(lineCtx, {
         type: 'line',
@@ -141,7 +131,6 @@
         }
     });
 
-    // Xác thực ngày và điều hướng biểu đồ
     document.getElementById('date-form').addEventListener('submit', function (event) {
         if (!validateDates()) {
             event.preventDefault();
