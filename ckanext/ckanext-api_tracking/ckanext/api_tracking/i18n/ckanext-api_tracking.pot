@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-api_tracking 0.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-11-29 16:12+0700\n"
+"POT-Creation-Date: 2024-12-16 09:27+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.16.0\n"
 
-#: ckanext/api_tracking/views.py:71
+#: ckanext/api_tracking/views.py:75 ckanext/api_tracking/views.py:93
+#: ckanext/api_tracking/views.py:152 ckanext/api_tracking/views.py:188
+#: ckanext/api_tracking/views.py:222 ckanext/api_tracking/views.py:255
+#: ckanext/api_tracking/views.py:314
 msgid "Need to be system administrator to administer"
 msgstr ""
 

@@ -1,16 +1,15 @@
-# Vietnamese translations for ckanext-api_tracking.
+# Vietnamese translations for PROJECT.
 # Copyright (C) 2024 ORGANIZATION
-# This file is distributed under the same license as the
-# ckanext-api_tracking
-# project.
+# This file is distributed under the same license as the PROJECT project.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: ckanext-api_tracking 0.0.1\n"
+"Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-11-29 16:12+0700\n"
-"PO-Revision-Date: 2024-11-29 16:01+0700\n"
+"POT-Creation-Date: 2024-12-16 09:27+0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: vi\n"
 "Language-Team: vi <LL@li.org>\n"
@@ -20,203 +19,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.16.0\n"
 
-#: ckanext/api_tracking/views.py:71
+#: ckanext/api_tracking/views.py:75 ckanext/api_tracking/views.py:93
+#: ckanext/api_tracking/views.py:152 ckanext/api_tracking/views.py:188
+#: ckanext/api_tracking/views.py:222 ckanext/api_tracking/views.py:255
+#: ckanext/api_tracking/views.py:314
 msgid "Need to be system administrator to administer"
 msgstr ""
 
-#~ msgid "Filter Tracking Datasets"
-#~ msgstr "Lọc lượng theo dõi bộ dữ liệu"
-
-#~ msgid "Start Date"
-#~ msgstr "Ngày bắt đầu"
-
-#~ msgid "End Date"
-#~ msgstr "Ngày kết thúc"
-
-#~ msgid "Package Name"
-#~ msgstr "Tên bộ dữ liệu"
-
-#~ msgid "User Name"
-#~ msgstr "Tên người dùng"
-
-#~ msgid "All User"
-#~ msgstr "Tất cả người dùng"
-
-#~ msgid "Filter"
-#~ msgstr "Lọc"
-
-#~ msgid "Select number of items to display"
-#~ msgstr "Lựa chọn số lượng cột hiển thị"
-
-#~ msgid "Sort by"
-#~ msgstr "Lọc theo"
-
-#~ msgid "Views (Ascending)"
-#~ msgstr "Cao đến thấp"
-
-#~ msgid "Views (Descending)"
-#~ msgstr "Thấp đến cao"
-
-#~ msgid "Name (A-Z)"
-#~ msgstr "Từ a đến z"
-
-#~ msgid "Name (Z-A)"
-#~ msgstr "Từ z đến a"
-
-#~ msgid "Select Chart Type"
-#~ msgstr "Lựa chọn biểu đồ"
-
-#~ msgid "Bar Chart"
-#~ msgstr "Dạng cột"
-
-#~ msgid "Line Chart"
-#~ msgstr "Dạng đường kẻ"
-
-#~ msgid "Pie Chart"
-#~ msgstr "Dạng hình tròn"
-
-#~ msgid "TRACKING DATASETS"
-#~ msgstr "Theo dõi bộ dữ liệu"
-
-#~ msgid "No datasets available."
-#~ msgstr "Không có bộ dữ liệu nào."
-
-#~ msgid "Resource Statistics"
-#~ msgstr "Thống kê tài nguyên"
-
-#~ msgid "No resources have been accessed."
-#~ msgstr "Không có tài nguyên nào được truy cập."
-
-#~ msgid "Statistical"
-#~ msgstr "Thống kê"
-
-
-ckanext/api_tracking/templates/dashboard_statistical:8
-msgid "Statistical Trackings"
-msgstr "Thống kê theo dõi"
-ckanext/api_tracking/templates/dashboard_statistical:14
-msgid "Statistical Organizations"
-msgstr "Thống kê theo tổ chức"
-ckanext/api_tracking/templates/dashboard_statistical:20
-msgid "Statistical Fields"
-msgstr "Thống kê theo lĩnh vực"
-ckanext/api_tracking/templates/dashboard
-msgid "Statistical"
-msgstr "Thống kê"
-
-# Thống kê lượng theo dõi
-ckanext/api_tracking/templates/statistical_tracking
-
-msgid "Filter Tracking Datasets"
-msgstr "Lọc lượng theo dõi bộ dữ liệu"
-
-msgid "Start Date"
-msgstr "Ngày bắt đầu"
-
-msgid "End Date"
-msgstr "Ngày kết thúc"
-
-msgid "Package Name"
-msgstr "Tên bộ dữ liệu"
-
-msgid "User Name"
-msgstr "Tên người dùng"
-
-msgid "All User"
-msgstr "Tất cả người dùng"
-
-msgid "Filter"
-msgstr "Lọc"
-
-msgid "Select number of items to display"
-msgstr "Lựa chọn số cột hiển thị"
-
-msgid "Sort by"
-msgstr "Sắp xếp theo"
-
-msgid "Views (Ascending)"
-msgstr "Tăng dần"
-
-msgid "Views (Descending)"
-msgstr "Giảm dần"
-
-msgid "Name (A-Z)"
-msgstr "Tên từ Z đến A"
-
-msgid "Name (Z-A)"
-msgstr "Tên từ A đến Z"
-
-msgid "Select Chart Type"
-msgstr "Lựa chọn loại biểu đồ"
-
-msgid "Bar Chart"
-msgstr "Biều đồ cột"
-
-msgid "Line Chart"
-msgstr "Biểu đồ đường"
-
-msgid "Pie Chart"
-msgstr "Biểu đồ tròn"
-
-msgid "TRACKING DATASETS"
-msgstr "Thống kê theo dõi bộ dữ liệu"
-
-msgid "No datasets available."
-msgstr "Không có lượng truy cập bộ dữ liệu."
-
-msgid "Resource Statistics"
-msgstr "Thống kê lượng theo dõi tài nguyên"
-
-msgid "No resources have been accessed."
-msgstr "Không có tài nguyên nào được truy cập."
-
-
-
-
-
-
-
-
-# Thống kê dữ liệu thuộc tổ chức
-ckanext/api_tracking/templates/statistical_organzitions
-
-msgid "Filter Organization Datasets"
-msgstr "Lọc dữ liệu của từng tổ chức"
-
-msgid "Organization Name"
-msgstr "Tên tổ chức"
-
-msgid "All"
-msgstr "Tất cả"
-
-msgid "Statistical Organizations"
-msgstr "Thống kê dữ liệu thuộc tổ chức"
-
-msgid "No datasets available."
-msgstr "Không có lượng truy cập bộ dữ liệu."
-
-msgid "Resource Statistics"
-msgstr "Thống kê lượng theo dõi tài nguyên"
-
-msgid "No resources have been accessed."
-msgstr "Không có tài nguyên nào được truy cập."
-
-
-
-
-# Thống kê dữ liệu thuộc tổ chức
-ckanext/api_tracking/templates/statistical_field
-
-
-
-msgid "Filter Field Datasets"
-msgstr "Lọc dữ liệu thuộc lĩnh vực"
-
-msgid "Field Name"
-msgstr "Tên tổ chức"
-
-msgid "All Fields"
-msgstr "Tất cả tổ chức"
-
-msgid "Statistical Field"
-msgstr "Thống kê dữ liệu thuộc lĩnh vực"
