@@ -222,7 +222,7 @@ def new_user_statistical():
         return base.abort(403, toolkit._('Need to be system administrator to administer'))
 
     start_date = request.args.get('start_date', '2024-11-20')
-    end_date = request.args.get('end_date', '2024-12-16')
+    end_date = request.args.get('end_date', datetime.now().strftime('%Y-%m-%d'))
     state = request.args.get('state', 'active')
     date_list = [start_date,end_date]
 

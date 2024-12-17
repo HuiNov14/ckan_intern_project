@@ -1,0 +1,34 @@
+
+<label for="adadad" class="form-label">{{ _("Other statistics") }}</label>
+<div class="ms-3">
+  <select id="statistics_select" class="form-select">
+    <option value="/dashboard/statistical/user-dashboard">All statistics</option>
+    <option value="/dashboard/statistical/new_user_stats">New User Statistics</option>
+    <option value="/dashboard/statistical/user_login_stats">User Login Statistics</option>
+
+  </select>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const statisticsSelect = document.getElementById('statistics_select');
+  
+  // Đặt giá trị mặc định dựa trên URL hiện tại
+  const currentUrl = window.location.pathname;
+  Array.from(statisticsSelect.options).forEach(option => {
+    if (option.value === currentUrl) {
+      option.selected = true;
+    }
+  });
+
+  // Lắng nghe sự kiện thay đổi (change) trên dropdown
+  statisticsSelect.addEventListener('change', function () {
+    const selectedValue = this.value;
+    if (selectedValue) {
+      // Chuyển hướng người dùng đến URL tương ứng
+      window.location.href = selectedValue;
+    }
+  });
+});
+
+</script>

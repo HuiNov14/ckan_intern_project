@@ -1,16 +1,11 @@
 {% extends "page.html" %}
 
-{% block page_title %}New User Statistics{% endblock %}
+{% block page_title %}{{ _('New User Statistics') }}{% endblock %}
 
 {% block breadcrumb_content_selected %}{% endblock %}
 
 {% block breadcrumb_content %}
-<li class="dashboard">
-    <a href="/dashboard/datasets">{{ _('Dashboard') }}</a>
-</li>
-<li class="statistical">
-    <a href="/dashboard/statistical">{{ _('Statistics') }}</a>
-</li>
+{% snippet 'user/snippets/breadcrumd_statistical.html' %}
 <li class="statistical">
     <a href="/dashboard/statistical/user-dashboard">{{ _('User Statistics') }}</a>
 </li>
@@ -23,13 +18,11 @@
 
 {% block primary %}
 <div class="chart-selector-container">
-    <h2 class="stat-title">Thống kê số lượng người dùng mới</h2>
+    <h2 class="stat-title">{{ _('New User Statistics') }}</h2>
     <div class="stat-selector">
-        <h2 class="chart-title">Các biểu đồ thống kê khác:</h2>
-        <select id="chart-selector" name="chart-selector" onchange="navigateToLink(this)">
-            <option value="/dashboard/statistical/new_user_stats">Thống kê số lượng người dùng mới</option>
-            <option value="/dashboard/statistical/user_login_stats">Thống kê số lượng đăng nhập người dùng</option>
-        </select>
+        <div>
+            {% snippet 'user/snippets/filter_chart_user_statistic.html' %}
+        </div>
     </div>
 </div>
 
@@ -37,19 +30,21 @@
     <div class="form-row">
         <div class="form-container">
             <div class="form-group">
-                <label for="start-date">Ngày bắt đầu</label>
-                <input type="date" id="start-date" name="start_date" required value="{{ date_list[0] if date_list else '' }}">
+                <label for="start-date">{{ _('From') }}</label>
+                <input type="date" id="start-date" name="start_date" required
+                    value="{{ date_list[0] if date_list else '' }}">
                 <div id="start-date-error" class="text-danger mt-1"></div>
             </div>
 
             <div class="form-group">
-                <label for="end-date">Ngày kết thúc</label>
-                <input type="date" id="end-date" name="end_date" required value="{{ date_list[-1] if date_list else '' }}">
+                <label for="end-date">{{ _('To') }}</label>
+                <input type="date" id="end-date" name="end_date" required
+                    value="{{ date_list[-1] if date_list else '' }}">
                 <div id="end-date-error" class="text-danger mt-1"></div>
             </div>
 
             <div class="form-group">
-                <label for="state">Trạng thái tài khoản</label>
+                <label for="state">{{ _('State') }}</label>
                 <select id="state" name="state">
                     <option value="active" {% if state=='active' %}selected{% endif %}>Active</option>
                     <option value="pending" {% if state=='pending' %}selected{% endif %}>Pending</option>
@@ -57,13 +52,8 @@
             </div>
         </div>
 
-        <div class="form-group form-button">
-            <button type="submit" class="btn btn-primary px-4">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z" fill="currentColor"/>
-                </svg>
-                Lọc dữ liệu
-            </button>
+        <div class="text-end">
+            <button type="submit" class="btn btn-primary px-4">{{ _("Filter") }}</button>
         </div>
     </div>
 </form>
@@ -87,7 +77,7 @@
         data: {
             labels: labels,
             datasets: [{
-                label: 'Người dùng mới',
+                label: 'New User',
                 data: data,
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
@@ -108,20 +98,19 @@
                     },
                     title: {
                         display: true,
-                        text: 'Ngày'
+                        text: 'Date'
                     }
                 },
                 y: {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'Số lượng người dùng mới'
+                        text: 'Number of new user'
                     }
                 }
             }
         }
     });
-
 </script>
 
 <script>
@@ -135,40 +124,33 @@
     document.getElementById('end-date').addEventListener('change', validateDates);
 
     function validateDates() {
-        var startDate = document.getElementById('start-date').value;
-        var endDate = document.getElementById('end-date').value;
+        const startDate = document.getElementById('start-date').value;
+        const endDate = document.getElementById('end-date').value;
 
-        var startDateError = document.getElementById('start-date-error');
-        var endDateError = document.getElementById('end-date-error');
+        const startDateError = document.getElementById('start-date-error');
+        const endDateError = document.getElementById('end-date-error');
 
         startDateError.textContent = '';
         endDateError.textContent = '';
 
-        var start = new Date(startDate);
-        var end = new Date(endDate);
+        const start = new Date(startDate);
+        const end = new Date(endDate);
 
         if (start > end) {
-            startDateError.textContent = 'Ngày bắt đầu cần phải trước ngày kết thúc.';
-            endDateError.textContent = 'Ngày kết thúc cần phải sau ngày bắt đầu.';
+            startDateError.textContent = 'The start date must be before the end date.';
+            endDateError.textContent = 'The end date must be after the start date.';
             return false;
         }
 
-        var diffTime = Math.abs(end - start);
-        var diffDays = diffTime / (1000 * 60 * 60 * 24);
+        const diffTime = Math.abs(end - start);
+        const diffDays = diffTime / (1000 * 60 * 60 * 24);
         if (diffDays > 30) {
-            startDateError.textContent = 'Giới hạn khoảng ngày lọc không được quá 30 ngày.';
-            endDateError.textContent = 'Xin hãy chọn khoảng ngày lọc nhỏ hơn.';
+            startDateError.textContent = 'The filter date range limit cannot exceed 30 days.';
+            endDateError.textContent = 'Please select a smaller filter date range.';
             return false;
         }
 
         return true;
-    }
-
-    function navigateToLink(selectElement) {
-        const url = selectElement.value;
-        if (url) {
-            window.location.href = url;
-        }
     }
 </script>
 
