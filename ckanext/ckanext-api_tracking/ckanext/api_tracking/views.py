@@ -301,6 +301,42 @@ def user_login_statistical():
 
     return base.render('user/user_login_stats.html', extra_vars)
 
+#Dashboard/statistical/last_active_stats
+def last_active_statistical():
+
+    try:
+        logic.check_access('user_check', {})
+    except logic.NotAuthorized:
+        return base.abort(403, toolkit._('Need to be system administrator to administer'))
+
+    recent_active_days = request.form.get('recent_active_days', 30)
+    sys_admin = request.form.get('sys_admin', 'false')
+    start_created_date = request.form.get('start_created_date')
+    end_created_date = request.form.get('end_created_date')
+    target_active_date = request.form.get('target_date', datetime.now().strftime('%Y-%m-%d'))
+
+    try:
+        action = 'stats_users'
+        data_dict = {
+            u'recent_active_days': recent_active_days,
+            u'target_active_date': target_active_date,
+    
+        }
+        # if user_name:  
+        #     data_dict[u'user_name'] = user_name
+
+        urls_and_counts = logic.get_action(action)(data_dict=data_dict) 
+    except Exception as e:
+        raise toolkit.ValidationError(f"api request error: {e}")  
+    print(recent_active_days)
+                
+    extra_vars: dict[str, Any] = {
+        u'dataset_org': json.dumps(urls_and_counts) if urls_and_counts else '[]',
+        u'recent_active_days': recent_active_days,
+    }
+    
+    return base.render('user/last_active_stats.html', extra_vars)
+
 def statistical_datatypes():
     today = datetime.today().date()     
     day_tracking_default = today - timedelta(days=int(config.get('ckan.day_default')))
@@ -377,6 +413,9 @@ dashboard.add_url_rule(
 )
 dashboard.add_url_rule(
     u"/statistical/new_user_stats", view_func=new_user_statistical, methods=['GET', 'POST']
+)
+dashboard.add_url_rule(
+    u"/statistical/last_active_stats", view_func=last_active_statistical, methods=['GET', 'POST']
 )
 
 dashboard.add_url_rule(
