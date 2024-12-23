@@ -111,4 +111,30 @@ statistical_last_active-js:
     preload:
       - base/main
 
+statistical_new_user-js:
+  filter: rjsmin
+  output: ckanext-api_tracking/%(version)s-statistical_new_user.js
+  contents:
+    - js/bootstrap.js
+    - js/jquery.js
+    - js/base.js
+    - js/chart.js
+    - js/custom_chart_new_user.js
+  extra:
+    preload:
+      - base/main
+
+statistical_user_login-js:
+  filter: rjsmin
+  output: ckanext-api_tracking/%(version)s-statistical_user_login.js
+  contents:
+    - js/bootstrap.js
+    - js/jquery.js
+    - js/base.js
+    - js/chart.js
+    - js/custom_chart_user_login.js
+  extra:
+    preload:
+      - base/main
+
 
