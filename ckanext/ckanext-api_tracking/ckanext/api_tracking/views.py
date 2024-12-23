@@ -221,7 +221,7 @@ def new_user_statistical():
     except logic.NotAuthorized:
         return base.abort(403, toolkit._('Need to be system administrator to administer'))
 
-    start_date = request.args.get('start_date', '2024-11-20')
+    start_date = request.args.get('start_date', (datetime.now() - timedelta(days=29)).strftime('%Y-%m-%d'))
     end_date = request.args.get('end_date', datetime.now().strftime('%Y-%m-%d'))
     state = request.args.get('state', 'active')
     date_list = [start_date,end_date]
@@ -253,7 +253,7 @@ def user_login_statistical():
         logic.check_access('user_check', {})
     except logic.NotAuthorized:
         return base.abort(403, toolkit._('Need to be system administrator to administer'))
-    start_date = request.args.get('start_date', "2024-11-20")
+    start_date = request.args.get('start_date', (datetime.now() - timedelta(days=29)).strftime('%Y-%m-%d'))
     end_date = request.args.get('end_date', datetime.now().strftime('%Y-%m-%d'))
     user_name = request.args.get('user_name')
     state = request.args.get('state', 'active')
@@ -313,13 +313,14 @@ def last_active_statistical():
     sys_admin = request.form.get('sys_admin', 'false')
     start_created_date = request.form.get('start_created_date')
     end_created_date = request.form.get('end_created_date')
-    target_active_date = request.form.get('target_date', datetime.now().strftime('%Y-%m-%d'))
+    target_active_date = request.form.get('target_active_date', datetime.now().strftime('%Y-%m-%d'))
 
     try:
         action = 'stats_users'
         data_dict = {
             u'recent_active_days': recent_active_days,
             u'target_active_date': target_active_date,
+            u'sys_admin': sys_admin,
     
         }
         # if user_name:  
@@ -333,6 +334,8 @@ def last_active_statistical():
     extra_vars: dict[str, Any] = {
         u'dataset_org': json.dumps(urls_and_counts) if urls_and_counts else '[]',
         u'recent_active_days': recent_active_days,
+        u'sys_admin': sys_admin,
+        u'target_active_date': target_active_date,
     }
     
     return base.render('user/last_active_stats.html', extra_vars)
