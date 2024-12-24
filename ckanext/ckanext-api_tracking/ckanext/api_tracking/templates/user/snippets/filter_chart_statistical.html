@@ -1,5 +1,7 @@
-
-  <label for="adadad" class="form-label">{{ _("Other Statistical") }}</label>
+<div class="d-flex align-items-center justify-content-end">
+   <div class="text-center"> 
+    <label for="adadad">{{ _("Other Statistical") }}</label>
+  </div>
   <div class="ms-3">
     <select id="statistics_select" class="form-select">
       <option value="/dashboard/statistical/resource-dashboard">All Statistics</option>
@@ -7,7 +9,9 @@
       <option value="/dashboard/statistical/statistical-field">Group Statistics</option>
       <option value="/dashboard/statistical/statistical-datatypes">Datatypes Statistics</option>
       <option value="/dashboard/statistical/statistical-tracking">Tracking Statistics</option>
+      <option value="/dashboard/statistical/statistical-api">API Statistics</option>
     </select>
+  </div>
   </div>
 
 <script>
@@ -31,5 +35,4 @@
       }
     });
   });
-  
 </script>

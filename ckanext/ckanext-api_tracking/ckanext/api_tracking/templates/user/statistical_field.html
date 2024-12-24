@@ -31,7 +31,7 @@
     <div class="row mb-3">
       <div class="col-md-4">
         <label for="fieldName" class="form-label">{{ _("Field Name") }}</label>
-        <select id="fieldName" name="field_name" class="form-select" multiple>
+        <select style="line-height: 2.5;" id="fieldName" name="field_name" class="form-select" multiple>
           <option value="" {% if field_name == [""] %}selected{% endif %}>{{ _("All Fields") }}</option>
           {% for field in tag_list %}
             <option value="{{ field }}" {% if field in field_name %}selected{% endif %}>
@@ -44,7 +44,7 @@
 
       <div class="col-md-4">
         <label for="state" class="form-label">{{ _("State") }}</label>
-        <select id="state" name="state" class="form-select" style="line-height: 2.5;">
+        <select style="line-height: 2.5;" id="state" name="state" class="form-select" style="line-height: 2.5;">
           <option value="" {% if state == None %}selected{% endif %}>{{ _("All") }}</option>
           <option value="active" {% if state == 'active' %}selected{% endif %}>{{ _("Active") }}</option>
           <option value="draft" {% if state == 'draft' %}selected{% endif %}>{{ _("Draft") }}</option>
@@ -54,7 +54,7 @@
 
       <div class="col-md-4">
         <label for="private" class="form-label">{{ _("Private") }}</label>
-        <select id="private" name="private" class="form-select" style="line-height: 2.5;">
+        <select style="line-height: 2.5;" id="private" name="private" class="form-select" style="line-height: 2.5;">
           <option value="" {% if private == None %}selected{% endif %}>{{ _("All") }}</option>
           <option value="true" {% if private == 'true' %}selected{% endif %}>{{ _("True") }}</option>
           <option value="false" {% if private == 'false' %}selected{% endif %}>{{ _("False") }}</option>

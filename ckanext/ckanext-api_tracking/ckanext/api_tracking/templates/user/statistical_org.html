@@ -34,7 +34,7 @@
         <div class="row mb-3">
           <div class="col-md-4">
               <label for="organization_name" class="form-label">{{ _("Organization Name") }}</label>
-              <select name="organization_name" class="form-select">
+              <select style="line-height: 2.5;" name="organization_name" class="form-select">
                 <option value="" {% if organization_name == None %}selected{% endif %}>{{ _("All") }}</option>  
                   {% for org in organization_list %}
                       <option value="{{ org }}" {% if org == organization_name %}selected{% endif %}>
@@ -45,7 +45,7 @@
           </div>
           <div class="col-md-4">
               <label for="state" class="form-label">{{ _("State") }}</label>
-              <select name="state" class="form-select">
+              <select style="line-height: 2.5;" name="state" class="form-select">
                   <option value="" {% if state == None %}selected{% endif %}>{{ _("All") }}</option>  
                   <option value="active" {% if state == 'active' %}selected{% endif %}>{{ _("Active") }}</option>
                   <option value="draft" {% if state == 'draft' %}selected{% endif %}>{{ _("Draft") }}</option>
@@ -54,7 +54,7 @@
           </div>
           <div class="col-md-4">
               <label for="private" class="form-label">{{ _("Private") }}</label>
-              <select name="private" class="form-select">
+              <select style="line-height: 2.5;" name="private" class="form-select">
                 <option value="" {% if private == None %}selected{% endif %}>{{ _("All") }}</option>  
                 <option value="true" {% if private == 'true' %}selected{% endif %}>{{ _("True") }}</option>
                 <option value="false" {% if private == 'false' %}selected{% endif %}>{{ _("False") }}</option>

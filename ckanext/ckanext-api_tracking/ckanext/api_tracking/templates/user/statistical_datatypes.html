@@ -51,7 +51,7 @@
           </div>
           <div class="col-md-4">
               <label for="format_type" class="form-label">{{ _("Format Name") }}</label>
-              <select name="format_type" class="form-select" style="height: 48px;">
+              <select name="format_type" class="form-select" style="line-height: 2.5;">
                 <option value="" {% if format_type == None %}selected{% endif %}>{{ _("All") }}</option>  
                  
                 {% for data in list_datatypes %}
@@ -68,10 +68,12 @@
       </div>
     </form>
   </div>
-  <div id="dateRangeTitle" ></div>
-<div id="totalAccessTitle" ></div>
+  <div class="container mt-5 p-4 border rounded shadow-sm bg-light">
+    <div id="dateRangeTitle" ></div>
+    <div id="totalAccessTitle" ></div>
+    {% snippet 'user/snippets/sort_chart_statistical.html' %}
+  </div>
 
-  {% snippet 'user/snippets/sort_chart_statistical.html' %}
 </div>
 </div>
 </div>
