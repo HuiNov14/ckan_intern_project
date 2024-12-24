@@ -1,18 +1,18 @@
 {% extends 'user/dashboard.html' %}
 
 {% block page_primary_action %}
-  <div class="">
+  <div class="dataset-list-container">
     <ul class="dataset-list list-unstyled">
-      <li class="dataset-item">
-        <div class="dataset-content">
-          <h2 class="dataset-heading"><a class="" href="/dashboard/statistical/resource-dashboard"><i class="fa fa-chart-line"></i>{{ _('Resources Statistical') }}</a></h2>
-          <p class="empty">Collection of charts related to data statistics</p>
+      <li class="dataset-item mb-4">
+        <div class="dataset-content p-4 border rounded shadow-sm bg-light">
+          <h2 class="dataset-heading"><a href="/dashboard/statistical/resource-dashboard" class="text-decoration-none text-primary d-flex align-items-center"><i class="fa fa-chart-bar mr-2"></i>{{ _('Resources Statistical') }}</a></h2>
+          <p class="empty text-muted">Collection of charts related to data statistics</p>
         </div>
       </li>
-      <li class="dataset-item">
-        <div class="dataset-content">
-          <h2 class="dataset-heading"><a class="" href="/dashboard/statistical/user-dashboard"><i class="fa fa-chart-line"></i>{{ _('Users Statistical') }}</a></h2>
-          <p class="empty">No description yet</p>
+      <li class="dataset-item mb-4">
+        <div class="dataset-content p-4 border rounded shadow-sm bg-info text-white">
+          <h2 class="dataset-heading"><a href="/dashboard/statistical/user-dashboard" class="text-decoration-none text-white d-flex align-items-center"><i class="fa fa-users mr-2"></i>{{ _('Users Statistical') }}</a></h2>
+          <p class="empty text-light">No description yet</p>
         </div>
       </li>
     </ul>
