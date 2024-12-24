@@ -1,4 +1,5 @@
 import json
+import requests
 from math import log
 from typing import Any
 from flask import Blueprint, request
@@ -10,6 +11,7 @@ from ckan import logic
 import ckan.lib.base as base
 from ckan.lib.helpers import helper_functions as h
 from ckan.lib.helpers import Page
+from datetime import date
 
 # Blueprint for tracking
 dashboard = Blueprint('tracking_blueprint', __name__, url_prefix=u'/dashboard/')
@@ -20,8 +22,8 @@ def resource_dashboard():
 
 def user_dashboard():
         return base.render('user/user_dashboard.html')
+    
 
-from datetime import date
 
 def aggregate_package_views(urls_and_counts):
     """Aggregate package views for each unique package."""
@@ -212,6 +214,60 @@ def statistical_field():
     }
     return base.render('user/statistical_field.html', extra_vars)
 
+def statistical_api():
+      # Lấy ngày hiện tại và ngày mặc định
+    today = datetime.today().date()
+    day_tracking_default = today - timedelta(days=int(config.get('ckan.day_default', 7)))  # Mặc định 7 ngày nếu không có cấu hình
+
+    # Lấy tham số từ form hoặc sử dụng giá trị mặc định
+    start_date = request.form.get('start_date', str(day_tracking_default))
+    end_date = request.form.get('end_date', str(today))
+    creator_select = request.args.get('creator_select', 'all')
+
+    # Định nghĩa API URL
+    api_url = "https://opendata.vnptit.vn/api/3/action/show_api_statistics?limit=100"
+
+    # Tham số gửi đi trong request
+    payload = {
+        "start_date": start_date,
+        "end_date": end_date,
+        "creator_select": creator_select
+    }
+
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJzZlVLMHdWMkZpMG83SGlhaUl3QVdqRDVoVnZvTndUTnJZWmFibHoxVkFVIiwiaWF0IjoxNzM0OTIyMjU5fQ.DkI4tf1gEuhoKKX4D40PH60XsJAqkz0dEHJfC2EalKI"  # Thay thế YOUR_API_KEY bằng key thực tế
+    }
+
+    try:
+        # Gửi request đến API
+        response = requests.get(api_url, json=payload, headers=headers)
+        response.raise_for_status()  # Kiểm tra lỗi HTTP
+
+        # Lấy dữ liệu trả về
+        data = response.json()
+        if data.get("success"):
+            static_api = data.get("result", [])
+            print("Đây là Data API ==============>",static_api)
+            for dataa in static_api:
+                print("adadadadadada",dataa)
+        else:
+            static_api = []
+            print("API Error:", data.get("error", "Unknown error"))
+
+    except requests.exceptions.RequestException as e:
+        static_api = []
+        print("Request Exception:", str(e))
+    
+    extra_vars: dict[str, Any] = {
+        u'static_api': static_api,
+        u'start_date': start_date,
+        u'end_date': end_date,
+        u'creator_select': creator_select
+    }
+
+    # Trả về trang giao diện với dữ liệu đã lọc
+    return base.render('user/statistical_api.html', extra_vars)
 #Dashboard/statistical/new_user_stats
 def new_user_statistical():
 
@@ -366,6 +422,10 @@ dashboard.add_url_rule(
 
 dashboard.add_url_rule(
     u"/statistical/statistical-field", view_func=statistical_field, methods=['GET', 'POST']
+)
+
+dashboard.add_url_rule(
+    u"/statistical/statistical-api", view_func=statistical_api, methods=['GET', 'POST']
 )
 
 dashboard.add_url_rule(
