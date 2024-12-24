@@ -1,74 +1,6 @@
-{% extends "page.html" %}
-
-{% block page_title %}{{ _("User Login Statistics") }}{% endblock %}
-
-{% block breadcrumb_content_selected %}{% endblock %}
-
-{% block breadcrumb_content %}
-{% snippet 'user/snippets/breadcrumd_statistical.html' %}
-<li class="statistical">
-    <a href="/dashboard/statistical/user-dashboard">{{ _('User Statistics') }}</a>
-</li>
-<li class="active">
-    <a href="/dashboard/statistical/user_login_stats">{{ _('User Login Statistics') }}</a>
-</li>
-{% endblock %}
-
-{% block secondary %}{% endblock %}
-
-{% block primary %}
-<div class="chart-selector-container">
-    <h2 class="stat-title">{{ _("User Login Statistics") }}</h2>
-    <div class="stat-selector">
-        <div>
-            {% snippet 'user/snippets/filter_chart_user_statistic.html' %}
-        </div>
-    </div>
-</div>
-
-<form id="date-form" method="GET" action="/dashboard/statistical/user_login_stats">
-    <div class="form-row">
-        <div class="form-container">
-            <div class="form-group">
-                <label for="start-date">{{ _("From") }}</label>
-                <input type="date" id="start-date" name="start_date" required value="{{ date_list[0] if date_list else '' }}">
-                <div id="start-date-error" class="text-danger mt-1"></div>
-            </div>
-            
-            <div class="form-group">
-                <label for="end-date">{{ _("To") }}</label>
-                <input type="date" id="end-date" name="end_date" required value="{{ date_list[-1] if date_list else '' }}">
-                <div id="end-date-error" class="text-danger mt-1"></div>
-            </div>
-
-            <div class="form-group">
-                <label for="user-name">{{ _("User Name") }}</label>
-                <select id="user-name" name="user_name">
-                    <option value="">{{ _("All user") }}</option>
-                    {% for user_name in user_name_list %}
-                    <option value="{{ user_name }}" {% if user_name == user_name_filtered %}selected{% endif %}>{{ user_name }}</option>
-                    {% endfor %}
-                </select>
-                <div id="user-name-error" class="text-danger mt-1"></div>
-            </div>
-        </div>
-
-        <div class="text-end">
-            <button type="submit" class="btn btn-primary px-4">{{ _("Filter") }}</button>
-        </div>
-    </div>
-</form>
-
-<div id="chart-container">
-    <div id="charts">
-        <canvas id="lineChart" class="chart"></canvas>
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    const apiData = {{ login_data | tojson }};
-    const dateList = {{ date_list | tojson }};
+document.addEventListener('DOMContentLoaded', function () {
+    const apiData = window.apiData || {};
+    const dateList = window.dateList || [];
 
     const loginData = {};
     dateList.forEach(date => {
@@ -157,9 +89,4 @@
 
         return true;
     }
-
-</script>
-
-{% asset 'api_tracking/statistical_user-js' %}
-{% asset 'api_tracking/statistical_user-css' %}
-{% endblock %}
+});

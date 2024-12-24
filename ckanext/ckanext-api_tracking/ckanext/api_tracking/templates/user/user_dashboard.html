@@ -25,20 +25,27 @@
 {% endblock %}
 
 {% block primary %}
-  <div class="container my-4">
+  <style>
+    .card-img-top {
+      height: 200px;
+      object-fit: cover;
+    }
+    
+    .card {
+      width: 16rem;
+    }
+  </style>
+  <div class="container my-4 px-3">
     <div style="display: flex; align-items: center; margin-bottom: 16px;">
       {% snippet 'user/snippets/filter_chart_user_statistic.html' %}
     </div>
-    <hr class="mt-3" />
     <div class="row row-cols-1 row-cols-md-4 g-4">
       <!-- Card 1 -->
       <div class="col">
         <div class="card h-100">
-          <img src="https://www.ft.com/__origami/service/image/v2/images/raw/ftcms%3A347ece48-0f69-11e9-a3aa-118c761d2745?source=ig" class="card-img-top" alt="Card 1" />
+          <a class="" href="/dashboard/statistical/new_user_stats"><img src="/1.png" class="card-img-top" alt="Card 1" /></a>
           <div class="card-body">
-            <a class="" href="/dashboard/statistical/new_user_stats">
-              <h5 class="card-title">{{ _('New User Statistics') }}</h5>
-            </a> 
+            <h5 class="card-title">{{ _('New User Statistics') }}</h5>
             <p class="card-text">{{ _('Statistics of new users (new accounts created) over time') }}</p>
           </div>
         </div>
@@ -46,26 +53,13 @@
       <!-- Card 2 -->
       <div class="col">
         <div class="card h-100">
-          <img src="https://www.ft.com/__origami/service/image/v2/images/raw/ftcms%3A347ece48-0f69-11e9-a3aa-118c761d2745?source=ig" class="card-img-top" alt="Card 2" />
+          <a class="" href="/dashboard/statistical/user_login_stats"><img src="/2.png" class="card-img-top" alt="Card 2" /></a>
           <div class="card-body">
-            <a class="" href="/dashboard/statistical/user_login_stats">
-              <h5 class="card-title">{{ _('User login statistics') }}</h5>
-            </a>  
+            <h5 class="card-title">{{ _('User login statistics') }}</h5>
             <p class="card-text">{{ _('Statistics of user logins by time and user.') }}</p>
           </div>
         </div>
       </div>
-      <!-- <div class="col">
-        <div class="card h-100">
-          <img src="https://www.ft.com/__origami/service/image/v2/images/raw/ftcms%3A347ece48-0f69-11e9-a3aa-118c761d2745?source=ig" class="card-img-top" alt="Card 2" />
-          <div class="card-body">
-            <a class="" href="/dashboard/statistical/last_active_stats">
-              <h5 class="card-title">{{ _('Last active statistics') }}</h5>
-            </a>  
-            <p class="card-text">{{ _('Statistics of last active by account and time.') }}</p>
-          </div>
-        </div>
-      </div> -->
     </div>
   </div>
 {% endblock %}
