@@ -217,21 +217,28 @@ def statistical_field():
 def statistical_api():
       # Lấy ngày hiện tại và ngày mặc định
     today = datetime.today().date()
-    day_tracking_default = today - timedelta(days=int(config.get('ckan.day_default', 7)))  # Mặc định 7 ngày nếu không có cấu hình
+    day_default = int(config.get('ckan.day_defaul', 7))
+    day_tracking_default = today - timedelta(days=day_default)
 
     # Lấy tham số từ form hoặc sử dụng giá trị mặc định
-    start_date = request.form.get('start_date', str(day_tracking_default))
-    end_date = request.form.get('end_date', str(today))
-    creator_select = request.args.get('creator_select', 'all')
-
+    start_time = request.form.get('start_time', str(day_tracking_default))
+    end_time = request.form.get('end_time', str(today))
+    print("start_time", start_time)
+    print("end_time", end_time)
+    creator_select = request.form.get('creator_select', 'all')
+    limit = request.form.get('limit', 100)
+    
+    
+    print("creator_select", creator_select)
     # Định nghĩa API URL
-    api_url = "https://opendata.vnptit.vn/api/3/action/show_api_statistics?limit=100"
+    api_url = "https://opendata.vnptit.vn/api/3/action/show_api_statistics"
 
     # Tham số gửi đi trong request
     payload = {
-        "start_date": start_date,
-        "end_date": end_date,
-        "creator_select": creator_select
+        "start_time": start_time,
+        "end_time": end_time,
+        "creator_select": creator_select,
+        "limit": limit,
     }
 
     headers = {
@@ -248,9 +255,7 @@ def statistical_api():
         data = response.json()
         if data.get("success"):
             static_api = data.get("result", [])
-            print("Đây là Data API ==============>",static_api)
-            for dataa in static_api:
-                print("adadadadadada",dataa)
+            print("API Result:", static_api)
         else:
             static_api = []
             print("API Error:", data.get("error", "Unknown error"))
@@ -259,15 +264,22 @@ def statistical_api():
         static_api = []
         print("Request Exception:", str(e))
     
+    creators = static_api.get("creators", [])  # Lấy danh sách creators
+    for creator in creators:
+        print(f"Value: {creator.get('value')}, Text: {creator.get('text')}")
     extra_vars: dict[str, Any] = {
         u'static_api': static_api,
-        u'start_date': start_date,
-        u'end_date': end_date,
-        u'creator_select': creator_select
+        u'creators': creators,
+        u'start_time': start_time,
+        u'end_time': end_time,
+        u'creator_select': creator_select,
+        u'limit': limit
     }
 
     # Trả về trang giao diện với dữ liệu đã lọc
     return base.render('user/statistical_api.html', extra_vars)
+
+
 #Dashboard/statistical/new_user_stats
 def new_user_statistical():
 
