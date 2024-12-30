@@ -17,49 +17,48 @@
 {% block secondary %}{% endblock %}
 
 {% block primary %}
-<div class="chart-selector-container">
-    <h2 class="stat-title">{{ _('New User Statistics') }}</h2>
-    <div class="stat-selector">
-        <div>
-            {% snippet 'user/snippets/filter_chart_user_statistic.html' %}
+<div class="container my-4 px-3">
+<div class="container rounded">
+    <div class="d-flex justify-content-between">
+        <h4 class="mb-4">{{ _("Filter Organization Datasets") }}</h4>
+        <div class="col-md-4">
+          {% snippet 'user/snippets/filter_chart_user_statistic.html' %}
+        </div>
+      </div>
+    </div>
+<hr class="mt-3" />
+
+
+<form id="date-form" class="formCss" method="GET" action="/dashboard/statistical/new_user_stats">
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label for="start-date" class="form-label">{{_("Start Date")}}</label>
+            <input type="date" id="start-date" name="start_date" class="form-control" style="line-height: 2.5;" required value="{{ date_list[0] if date_list else '' }}">
+            <div id="start-date-error" class="text-danger mt-1"></div>
+        </div>
+        <div class="col-md-4">  
+            <label for="end-date" class="form-label">{{_("End Date")}}</label>
+            <input type="date" id="end-date" name="end_date" class="form-control" style="line-height: 2.5;" required value="{{ date_list[-1] if date_list else '' }}">
+            <div id="end-date-error" class="text-danger mt-1"></div>
+        </div>
+        <div class="col-md-4">
+
+            <label for="state" class="form-label">{{ _("User Name") }}</label>
+            <select name="state" id="state" class="form-select" style="line-height: 2.5;">
+                <option value="active" {% if state=='active' %}selected{% endif %}>Active</option>
+                <option value="pending" {% if state=='pending' %}selected{% endif %}>Pending</option>
+            </select>
         </div>
     </div>
-</div>
-
-<form id="date-form" method="GET" action="/dashboard/statistical/new_user_stats">
-    <div class="form-row">
-        <div class="form-container">
-            <div class="form-group">
-                <label for="start-date">{{ _('From') }}</label>
-                <input type="date" id="start-date" name="start_date" required
-                    value="{{ date_list[0] if date_list else '' }}">
-                <div id="start-date-error" class="text-danger mt-1"></div>
-            </div>
-
-            <div class="form-group">
-                <label for="end-date">{{ _('To') }}</label>
-                <input type="date" id="end-date" name="end_date" required
-                    value="{{ date_list[-1] if date_list else '' }}">
-                <div id="end-date-error" class="text-danger mt-1"></div>
-            </div>
-
-            <div class="form-group">
-                <label for="state">{{ _('State') }}</label>
-                <select id="state" name="state">
-                    <option value="active" {% if state=='active' %}selected{% endif %}>Active</option>
-                    <option value="pending" {% if state=='pending' %}selected{% endif %}>Pending</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="text-end">
-            <button type="submit" class="btn btn-primary px-4">{{ _("Filter") }}</button>
-        </div>
+    <div class="text-end">
+        <button type="submit" class="btn btn-primary px-4">{{ _("Filter") }}</button>
     </div>
+
 </form>
 
-<div id="chart-container">
-    <canvas id="lineChart"></canvas>
+<div class="container mt-5 p-4 border rounded shadow-sm bg-light">
+    {% snippet 'user/snippets/sort_chart_statistical.html' %}
+</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -71,7 +70,7 @@
     const labels = apiData.days.map(item => item.date);
     const data = apiData.days.map(item => item.user_created_count);
 
-    const lineCtx = document.getElementById('lineChart').getContext('2d');
+    const lineCtx = document.getElementById('statisticsChart').getContext('2d');
     const lineChart = new Chart(lineCtx, {
         type: 'line',
         data: {

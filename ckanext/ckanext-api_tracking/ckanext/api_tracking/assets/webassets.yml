@@ -92,8 +92,8 @@ statistical_user-css:
   filter: cssrewrite
   output: ckanext-api_tracking/%(version)s-statistical_user.css
   contents:
-    - css/statistical_user.css
-    
+    - css/base.css
+    - css/choices.min.css
 list-css:
   filter: cssrewrite
   output: ckanext-api_tracking/%(version)s-list.css
@@ -130,6 +130,6 @@ statistical_api-css:
   filter: cssrewrite
   output: ckanext-api_tracking/%(version)s-statistical_api.css
   contents:
-    - css/datatable.css
     - css/base.css
+    - css/choices.min.css
 
