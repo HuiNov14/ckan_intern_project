@@ -215,7 +215,7 @@ def statistical_field():
     return base.render('user/statistical_field.html', extra_vars)
 
 def statistical_api():
-      # Lấy ngày hiện tại và ngày mặc định
+    # Lấy ngày hiện tại và ngày mặc định
     today = datetime.today().date()
     day_default = int(config.get('ckan.day_defaul', 7))
     day_tracking_default = today - timedelta(days=day_default)
@@ -223,13 +223,18 @@ def statistical_api():
     # Lấy tham số từ form hoặc sử dụng giá trị mặc định
     start_time = request.form.get('start_time', str(day_tracking_default))
     end_time = request.form.get('end_time', str(today))
-    print("start_time", start_time)
-    print("end_time", end_time)
     creator_select = request.form.get('creator_select', 'all')
-    limit = request.form.get('limit', 100)
     
-    
-    print("creator_select", creator_select)
+    # Lấy tham số từ request args
+    limit = int(request.args.get('limit', 100))  # Giá trị mặc định là 100
+    page = int(request.args.get('page', 1))  # Giá trị mặc định là 1
+
+    print("start_time:", start_time)
+    print("end_time:", end_time)
+    print("creator_select:", creator_select)
+    print("limit:", limit)
+    print("page:", page)
+
     # Định nghĩa API URL
     api_url = "https://opendata.vnptit.vn/api/3/action/show_api_statistics"
 
@@ -239,11 +244,12 @@ def statistical_api():
         "end_time": end_time,
         "creator_select": creator_select,
         "limit": limit,
+        "page": page  # Thêm tham số page
     }
 
     headers = {
         "Content-Type": "application/json",
-        "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJzZlVLMHdWMkZpMG83SGlhaUl3QVdqRDVoVnZvTndUTnJZWmFibHoxVkFVIiwiaWF0IjoxNzM0OTIyMjU5fQ.DkI4tf1gEuhoKKX4D40PH60XsJAqkz0dEHJfC2EalKI"  # Thay thế YOUR_API_KEY bằng key thực tế
+        "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJzZlVLMHdWMkZpMG83SGlhaUl3QVdqRDVoVnZvTndUTnJZWmFibHoxVkFVIiwiaWF0IjoxNzM0OTIyMjU5fQ.DkI4tf1gEuhoKKX4D40PH60XsJAqkz0dEHJfC2EalKI"  # Thay thế bằng key thực tế
     }
 
     try:
@@ -267,17 +273,21 @@ def statistical_api():
     creators = static_api.get("creators", [])  # Lấy danh sách creators
     for creator in creators:
         print(f"Value: {creator.get('value')}, Text: {creator.get('text')}")
-    extra_vars: dict[str, Any] = {
-        u'static_api': static_api,
-        u'creators': creators,
-        u'start_time': start_time,
-        u'end_time': end_time,
-        u'creator_select': creator_select,
-        u'limit': limit
+
+    # Tạo extra_vars để truyền sang template
+    extra_vars = {
+        'static_api': static_api,
+        'creators': creators,
+        'start_time': start_time,
+        'end_time': end_time,
+        'creator_select': creator_select,
+        'limit': limit,
+        'page': page  # Truyền thêm page để render trong giao diện
     }
 
     # Trả về trang giao diện với dữ liệu đã lọc
     return base.render('user/statistical_api.html', extra_vars)
+
 
 
 #Dashboard/statistical/new_user_stats

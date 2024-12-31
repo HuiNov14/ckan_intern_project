@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
     console.log("===================>", window.trackingData);
-
     drawCharts(window.trackingData);
 });
 
@@ -17,15 +16,15 @@ function drawCharts(data) {
     // Tạo dữ liệu tổng (total) tương ứng
     const apiTotal = Array(uniqueApis.length).fill(data.total); // Gán giá trị `total` cho mỗi API duy nhất
 
-    // Gộp dữ liệu theo ngày và tính tổng size
+    // Gộp dữ liệu theo ngày và tính tổng size (chuyển sang KiB)
     const groupedByDate = {};
     data.data.forEach(item => {
         const dateKey = new Date(item.created).toLocaleDateString(); // Chuyển ngày về định dạng ngắn gọn
-        const sizeInBytes = parseSizeToBytes(item.size); // Chuyển đổi size về bytes
+        const sizeInKiB = parseSizeToKiB(item.size); // Chuyển đổi size về KiB
         if (groupedByDate[dateKey]) {
-            groupedByDate[dateKey] += sizeInBytes; // Cộng thêm size nếu đã tồn tại ngày
+            groupedByDate[dateKey] += sizeInKiB; // Cộng thêm size nếu đã tồn tại ngày
         } else {
-            groupedByDate[dateKey] = sizeInBytes; // Khởi tạo ngày nếu chưa tồn tại
+            groupedByDate[dateKey] = sizeInKiB; // Khởi tạo ngày nếu chưa tồn tại
         }
     });
 
@@ -33,15 +32,15 @@ function drawCharts(data) {
     const groupedDates = Object.keys(groupedByDate); // Các ngày đã gộp
     const groupedSizes = Object.values(groupedByDate); // Tổng size tương ứng với từng ngày
 
-    // Gộp dữ liệu theo `resource_name` và tính tổng size
+    // Gộp dữ liệu theo `resource_name` và tính tổng size (chuyển sang KiB)
     const groupedByResource = {};
     data.data.forEach(item => {
         const resourceKey = item.resource_name; // Tên tài nguyên
-        const sizeInBytes = parseSizeToBytes(item.size); // Chuyển đổi size về bytes
+        const sizeInKiB = parseSizeToKiB(item.size); // Chuyển đổi size về KiB
         if (groupedByResource[resourceKey]) {
-            groupedByResource[resourceKey] += sizeInBytes; // Cộng thêm size nếu đã tồn tại tài nguyên
+            groupedByResource[resourceKey] += sizeInKiB; // Cộng thêm size nếu đã tồn tại tài nguyên
         } else {
-            groupedByResource[resourceKey] = sizeInBytes; // Khởi tạo tài nguyên nếu chưa tồn tại
+            groupedByResource[resourceKey] = sizeInKiB; // Khởi tạo tài nguyên nếu chưa tồn tại
         }
     });
 
@@ -86,8 +85,8 @@ function drawCharts(data) {
         data: {
             labels: groupedDates, // Các ngày đã gộp
             datasets: [{
-                label: 'Total Resource Size (in bytes)',
-                data: groupedSizes, // Tổng kích thước đã gộp
+                label: 'Total Resource Size (in KiB)', // Chỉnh lại label thành KiB
+                data: groupedSizes, // Tổng size đã gộp
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1,
@@ -98,7 +97,7 @@ function drawCharts(data) {
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        callback: value => value + ' bytes',
+                        callback: value => value.toFixed(2) + ' KiB', // Hiển thị kết quả với đơn vị KiB
                     },
                 },
                 x: {
@@ -118,7 +117,7 @@ function drawCharts(data) {
         data: {
             labels: shortenedResourceNames, // Tên tài nguyên đã gộp và thu gọn
             datasets: [{
-                label: 'Total Resource Size (in bytes)',
+                label: 'Total Resource Size (in KiB)', // Chỉnh lại label thành KiB
                 data: groupedResourceSizes, // Tổng size đã gộp
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
@@ -130,7 +129,7 @@ function drawCharts(data) {
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        callback: value => value + ' bytes',
+                        callback: value => value.toFixed(2) + ' KiB', // Hiển thị kết quả với đơn vị KiB
                     },
                 },
                 x: {
@@ -145,15 +144,15 @@ function drawCharts(data) {
     });
 }
 
-// Hàm chuyển đổi size về bytes
-function parseSizeToBytes(sizeString) {
+// Hàm chuyển đổi size từ bytes sang KiB
+function parseSizeToKiB(sizeString) {
     const sizeLower = sizeString.toLowerCase(); // Chuyển về chữ thường để kiểm tra đơn vị
     if (sizeLower.includes('kib')) {
-        // Nếu đơn vị là KiB, chuyển sang bytes
-        return parseFloat(sizeLower.replace(' kib', '').replace(',', '.')) * 1024;
+        // Nếu đơn vị là KiB, giữ nguyên giá trị
+        return parseFloat(sizeLower.replace(' kib', '').replace(',', '.'));
     } else if (sizeLower.includes('bytes')) {
-        // Nếu đơn vị là bytes, giữ nguyên
-        return parseInt(sizeLower.replace(' bytes', '').replace(',', ''));
+        // Nếu đơn vị là bytes, chuyển đổi sang KiB
+        return parseInt(sizeLower.replace(' bytes', '').replace(',', '')) / 1024;
     } else {
         // Mặc định trả về 0 nếu không xác định được đơn vị
         return 0;
