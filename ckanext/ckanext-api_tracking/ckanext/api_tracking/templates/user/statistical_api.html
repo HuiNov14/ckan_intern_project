@@ -38,14 +38,14 @@
       
       <div class="row mb-3">
           <div class="col-md-6">
-              <label for="start_date" class="form-label">{{_("Start Date")}}</label>
-              <input type="date" id="start_date" name="start_date" class="form-control" style="line-height: 2.5;" value="{{ start_date }}" max="{{ today }}">
-              <div id="start-date-error" class="text-danger mt-1"></div>
+              <label for="start_time" class="form-label">{{_("Start time")}}</label>
+              <input type="date" id="start_time" name="start_time" class="form-control" style="line-height: 2.5;" value="{{ start_time }}" max="{{ today }}">
+              <div id="start-time-error" class="text-danger mt-1"></div>
           </div>
           <div class="col-md-6">
-              <label for="end_date" class="form-label">{{_("End Date")}}</label>
-              <input type="date" id="end_date" name="end_date" class="form-control" style="line-height: 2.5;" value="{{ end_date }}" max="{{ today }}">
-              <div id="end-date-error" class="text-danger mt-1"></div>
+              <label for="end_time" class="form-label">{{_("End time")}}</label>
+              <input type="date" id="end_time" name="end_time" class="form-control" style="line-height: 2.5;" value="{{ end_time }}" max="{{ today }}">
+              <div id="end-time-error" class="text-danger mt-1"></div>
           </div>
       </div>
   
@@ -53,8 +53,8 @@
         <div class="col-md-6">
             <label for="creator_select" class="form-label">{{ _("User Name") }}</label>
             <select name="creator_select" id="creator_select" class="form-control select2" style="line-height: 2.5;">
-                {% if static_api and static_api.creators is defined and static_api.creators is iterable %}
-                    {% for user in static_api.creators %}
+                {% if creators is defined and creators is iterable %}
+                    {% for user in creators %}
                         <option value="{{ user.value }}" {% if user.value == creator_select %}selected{% endif %}>
                             {{ user.text }}
                         </option>
@@ -66,14 +66,62 @@
         </div>
       
       <div class="text-end">
+
+        
+
           <button type="submit" class="btn btn-primary px-4">{{_("Filter")}}</button>
       </div>
     </form>
   </div>
-
   <div class="container mt-5 p-4 border rounded shadow-sm bg-light">
-    {% snippet 'user/snippets/sort_chart_statistical.html' %}
+    <div class="row g-0" style="display: flex; justify-content: flex-end; align-items: center;">
+       <div class="col-md-4 mb-3" style="flex: 1; max-width: 100px; padding: 0;">
+        <div class="form-group" style="font-size: 10px; margin: 0 5px; display: flex; flex-direction: column; align-items: center;">
+          <input type="number" id="itemCount" min="100" max="1000" value="10" class="form-control" oninput="updateChartData()" style="height: 22px; font-size: 10px; padding: 2px 4px; width: 80px;" />
+        </div>
+      </div> 
+     
+      <!--
+        <div class="col-md-4 mb-3" style="flex: 1; max-width: 100px; padding: 0;">
+        <div class="form-group" style="font-size: 10px; margin: 0 5px; display: flex; flex-direction: column; align-items: center;">
+          <select id="sortOptions" class="form-select" onchange="sortData(this.value)" style="height: 22px; font-size: 10px; padding: 0px 2px; width: 80px;">
+            <option value="asc">{{ _('Ascending') }}</option>
+            <option value="desc">{{ _('Descending') }}</option>
+            <option value="nameAsc">{{ _('A-Z') }}</option>
+            <option value="nameDesc">{{ _('Z-A') }}</option>
+          </select>
+        </div>
+      </div> 
+    -->
+      <!-- Loại biểu đồ -->
+      <div class="col-md-4 mb-3" style="flex: 1; max-width: 100px; padding: 0;">
+        <div class="form-group" style="font-size: 10px; margin: 0 5px; display: flex; flex-direction: column; align-items: center;">
+          <select id="chartType" class="form-select" style="height: 22px; font-size: 10px; padding: 2px 4px; width: 80px;">
+            <option value="bar">{{ _('Bar Chart') }}</option>
+            <option value="line">{{ _('Line Chart') }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="row mb-3">
+      <div class="col-md-12 mb-4">
+          <label for="">Thống kê tổng API được truy cập</label>
+          <canvas id="statisticsChart"></canvas>
+      </div>
+      <div class="col-md-12 mb-4">
+          <label for="">Thống kê kích thước tài nguyên được tạo theo ngày</label>
+          <canvas id="sizeChart"></canvas>
+      </div>
+      <div class="col-md-12 mb-4">
+          <label for="">Thống kê kích thước tài nguyên được tạo theo tên resources</label>
+          <canvas id="resourceSizeChart"></canvas>
+      </div>
   </div>
+  
+  
+</div>
 </div>
 </div>
 </div>
@@ -85,3 +133,5 @@
   {% endif %}
 </script>
   {% endblock %} 
+
+  
