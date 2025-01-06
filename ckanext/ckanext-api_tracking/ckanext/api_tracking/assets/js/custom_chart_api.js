@@ -1,19 +1,29 @@
 document.addEventListener('DOMContentLoaded', function () {
     console.log("===================>", window.trackingData);
-    drawCharts(window.trackingData);
+
+    const chartTypeSelector = document.getElementById('chartType');
+
+    // Vẽ biểu đồ lần đầu với loại mặc định là "bar"
+    let currentChartType = 'bar';
+    drawCharts(window.trackingData, currentChartType);
+
+    // Lắng nghe sự kiện thay đổi loại biểu đồ
+    chartTypeSelector.addEventListener('change', function () {
+        currentChartType = chartTypeSelector.value;
+        drawCharts(window.trackingData, currentChartType);
+    });
 });
 
-function drawCharts(data) {
+function drawCharts(data, chartType) {
     console.log("Data", data);
 
+    // Lấy các ngữ cảnh canvas
     const totalCtx = document.getElementById('statisticsChart').getContext('2d');
     const sizeCtx = document.getElementById('sizeChart').getContext('2d');
     const resourceCtx = document.getElementById('resourceSizeChart').getContext('2d');
 
     // Lọc danh sách API để lấy tên duy nhất
     const uniqueApis = [...new Set(data.data.map(item => item.api))]; // Lấy danh sách API duy nhất
-
-    // Tạo dữ liệu tổng (total) tương ứng
     const apiTotal = Array(uniqueApis.length).fill(data.total); // Gán giá trị `total` cho mỗi API duy nhất
 
     // Gộp dữ liệu theo ngày và tính tổng size (chuyển sang KiB)
@@ -27,36 +37,36 @@ function drawCharts(data) {
             groupedByDate[dateKey] = sizeInKiB; // Khởi tạo ngày nếu chưa tồn tại
         }
     });
-
-    // Chuyển groupedByDate thành mảng để vẽ biểu đồ
-    const groupedDates = Object.keys(groupedByDate); // Các ngày đã gộp
-    const groupedSizes = Object.values(groupedByDate); // Tổng size tương ứng với từng ngày
+    const groupedDates = Object.keys(groupedByDate);
+    const groupedSizes = Object.values(groupedByDate);
 
     // Gộp dữ liệu theo `resource_name` và tính tổng size (chuyển sang KiB)
     const groupedByResource = {};
     data.data.forEach(item => {
-        const resourceKey = item.resource_name; // Tên tài nguyên
-        const sizeInKiB = parseSizeToKiB(item.size); // Chuyển đổi size về KiB
+        const resourceKey = item.resource_name;
+        const sizeInKiB = parseSizeToKiB(item.size);
         if (groupedByResource[resourceKey]) {
-            groupedByResource[resourceKey] += sizeInKiB; // Cộng thêm size nếu đã tồn tại tài nguyên
+            groupedByResource[resourceKey] += sizeInKiB;
         } else {
-            groupedByResource[resourceKey] = sizeInKiB; // Khởi tạo tài nguyên nếu chưa tồn tại
+            groupedByResource[resourceKey] = sizeInKiB;
         }
     });
+    const groupedResourceNames = Object.keys(groupedByResource);
+    const groupedResourceSizes = Object.values(groupedByResource);
 
-    // Chuyển groupedByResource thành mảng để vẽ biểu đồ
-    const groupedResourceNames = Object.keys(groupedByResource); // Tên tài nguyên đã gộp
-    const groupedResourceSizes = Object.values(groupedByResource); // Tổng size tương ứng với từng tài nguyên
-
-    // Thu hẹp tên tài nguyên nếu quá dài
     const maxLabelLength = 15;
     const shortenedResourceNames = groupedResourceNames.map(name =>
         name.length > maxLabelLength ? name.substring(0, maxLabelLength) + '...' : name
     );
 
+    // Xóa biểu đồ cũ nếu có
+    Chart.getChart('statisticsChart')?.destroy();
+    Chart.getChart('sizeChart')?.destroy();
+    Chart.getChart('resourceSizeChart')?.destroy();
+
     // Vẽ biểu đồ "Total"
     new Chart(totalCtx, {
-        type: 'bar',
+        type: chartType,
         data: {
             labels: uniqueApis,
             datasets: [{
@@ -79,14 +89,14 @@ function drawCharts(data) {
         },
     });
 
-    // Vẽ biểu đồ "Size" theo ngày đã gộp
+    // Vẽ biểu đồ "Size" theo ngày
     new Chart(sizeCtx, {
-        type: 'bar',
+        type: chartType,
         data: {
-            labels: groupedDates, // Các ngày đã gộp
+            labels: groupedDates,
             datasets: [{
-                label: 'Total Resource Size (in KiB)', // Chỉnh lại label thành KiB
-                data: groupedSizes, // Tổng size đã gộp
+                label: 'Total Resource Size (in KiB)',
+                data: groupedSizes,
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1,
@@ -97,7 +107,7 @@ function drawCharts(data) {
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        callback: value => value.toFixed(2) + ' KiB', // Hiển thị kết quả với đơn vị KiB
+                        callback: value => value.toFixed(2) + ' KiB',
                     },
                 },
                 x: {
@@ -111,14 +121,14 @@ function drawCharts(data) {
         },
     });
 
-    // Vẽ biểu đồ "Resource Size" theo tên tài nguyên đã gộp
+    // Vẽ biểu đồ "Resource Size"
     new Chart(resourceCtx, {
-        type: 'bar',
+        type: chartType,
         data: {
-            labels: shortenedResourceNames, // Tên tài nguyên đã gộp và thu gọn
+            labels: shortenedResourceNames,
             datasets: [{
-                label: 'Total Resource Size (in KiB)', // Chỉnh lại label thành KiB
-                data: groupedResourceSizes, // Tổng size đã gộp
+                label: 'Total Resource Size (in KiB)',
+                data: groupedResourceSizes,
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1,
@@ -129,7 +139,7 @@ function drawCharts(data) {
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        callback: value => value.toFixed(2) + ' KiB', // Hiển thị kết quả với đơn vị KiB
+                        callback: value => value.toFixed(2) + ' KiB',
                     },
                 },
                 x: {
@@ -146,15 +156,12 @@ function drawCharts(data) {
 
 // Hàm chuyển đổi size từ bytes sang KiB
 function parseSizeToKiB(sizeString) {
-    const sizeLower = sizeString.toLowerCase(); // Chuyển về chữ thường để kiểm tra đơn vị
+    const sizeLower = sizeString.toLowerCase();
     if (sizeLower.includes('kib')) {
-        // Nếu đơn vị là KiB, giữ nguyên giá trị
         return parseFloat(sizeLower.replace(' kib', '').replace(',', '.'));
     } else if (sizeLower.includes('bytes')) {
-        // Nếu đơn vị là bytes, chuyển đổi sang KiB
         return parseInt(sizeLower.replace(' bytes', '').replace(',', '')) / 1024;
     } else {
-        // Mặc định trả về 0 nếu không xác định được đơn vị
         return 0;
     }
 }
