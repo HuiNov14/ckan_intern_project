@@ -425,7 +425,6 @@ def statistical_datatypes():
     return base.render('user/statistical_datatypes.html', extra_vars)
 
 
-# Register route list for blueprint
 dashboard.add_url_rule(
     u"/statistical/resource-dashboard", view_func=resource_dashboard, methods=['GET']
 )
@@ -433,7 +432,6 @@ dashboard.add_url_rule(
     u"/statistical/user-dashboard", view_func=user_dashboard, methods=['GET']
 )
 
-# Register route tracking for blueprint
 dashboard.add_url_rule(
     u"/statistical/statistical-tracking", view_func=statistical_tracking, methods=['GET', 'POST']
 )
