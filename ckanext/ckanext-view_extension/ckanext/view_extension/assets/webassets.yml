@@ -1,0 +1,14 @@
+# view_extension-js:
+#   filter: rjsmin
+#   output: ckanext-view_extension/%(version)s-view_extension.js
+#   contents:
+#     - js/view_extension.js
+#   extra:
+#     preload:
+#       - base/main
+
+# view_extension-css:
+#   filter: cssrewrite
+#   output: ckanext-view_extension/%(version)s-view_extension.css
+#   contents:
+#     - css/view_extension.css

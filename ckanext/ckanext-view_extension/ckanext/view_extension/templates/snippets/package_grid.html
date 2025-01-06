@@ -1,0 +1,12 @@
+{% block package_list %}
+{% if packages %}
+{% block package_list_inner %}
+{% for package in packages %}
+<div class="package-item">
+	{% snippet 'snippets/package_grid_item.html', package=package, item_class=item_class,
+	hide_resources=hide_resources %}
+</div>
+{% endfor %}
+{% endblock %}
+{% endif %}
+{% endblock %}

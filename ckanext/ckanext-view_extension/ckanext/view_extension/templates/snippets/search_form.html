@@ -1,0 +1,225 @@
+{% import 'macros/form.html' as form %}
+
+{% set placeholder = placeholder if placeholder else _('Search datasets...') %}
+{% set sorting = sorting if sorting else [(_('Name Ascending'), 'name asc'), (_('Name Descending'), 'name desc')] %}
+{% set search_class = search_class if search_class else 'search-giant' %}
+{% set no_bottom_border = no_bottom_border if no_bottom_border else false %}
+{% set form_id = form_id if form_id else false %}
+
+<form {% if form_id %}id="{{ form_id }}" {% endif %}class="search-form" method="get" data-module="select-switch">
+
+  <!-- Search Box -->
+  <div class="search-box">
+    <input aria-label="{% block header_site_search_label %}{{ placeholder }}{% endblock %}" id="field-giant-search"
+      type="text" class="form-control input-lg" name="q" value="{{ query }}" autocomplete="off"
+      placeholder="{{_('Search datasets...')}}">
+    <button class="btn-search" type="submit" value="search" aria-label="{{_('Submit')}}">
+      <i class="fas fa-search"></i>
+    </button>
+  </div>
+
+  <div class="search-reuslt-container">
+    <div>
+      <!-- Search Fields (Hidden Inputs) -->
+      {% block search_search_fields %}
+      {% if fields -%}
+      <span>{{ form.hidden_from_list(fields=fields) }}</span>
+      {%- endif %}
+      {% endblock %}
+
+      {% if show_empty and count == 0 and not error %}
+      {% trans %}
+      <p class="extra">Please try another search.</p>
+      {% endtrans %}
+      {% endif %}
+
+      {% if error %}
+      {% trans %}
+      <p id="search-error"><strong>There was an error while searching.</strong> Please try again.</p>
+      {% endtrans %}
+      {% endif %}
+
+      <!-- Search Title -->
+      {% block search_title %}
+      {% if not error %}
+      <h2 class="result_text">{% snippet 'snippets/search_result_text.html', query=query, count=count, type=type %}</h2>
+      {% else %}
+      <h2>Error</h2>
+      {% endif %}
+      {% endblock %}
+
+      <!-- Search Facets -->
+      {% block search_facets %}
+      {% if facets %}
+      <div class="filter-list">
+        {% for field in facets.fields %}
+        <p>
+          <span class="facet">{{ facets.titles.get(field) }}:</span>
+        </p>
+        <div class="active-filters">
+          {% set search_facets_items = facets.search.get(field)['items'] if facets.search and field in facets.search else [] %}
+          {% for value in facets.fields[field] %}
+          <span class="filter-tag">
+            {%- if facets.translated_fields and (field, value) in facets.translated_fields -%}
+            {{ facets.translated_fields[(field, value)] }}
+            {%- else -%}
+            {{ h.list_dict_filter(search_facets_items, 'name', 'display_name', value) }}
+            {%- endif %}
+            <a href="{{ facets.remove_field(field, value) }}" class="btn-remove" title="{{ _('Remove') }}">
+              <i class="fa fa-times"></i>
+            </a>
+          </span>
+          {% endfor %}
+        </div>
+        {% endfor %}
+      </div>
+      
+
+      <a class="show-filters btn btn-default">{{ _('Filter Results') }}</a>
+      {% endif %}
+      {% endblock %}
+    </div>
+
+    <!-- Search Options -->
+    <div class="search-options">
+      <select id="field-order-by" name="sort" class="sort-select">
+        {% for label, value in sorting %}
+        {% if label and value %}
+        <option value="{{ value }}" {% if sorting_selected==value %} selected="selected" {% endif %}>{{ label }}
+        </option>
+        {% endif %}
+        {% endfor %}
+      </select>
+
+      <!-- View Options -->
+      <div class="view-options">
+        <button type="button" class="btn-view active" data-view="grid">
+          <i class="fas fa-th-large"></i>
+        </button>
+        <button type="button" class="btn-view" data-view="list">
+          <i class="fas fa-list"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</form>
+
+<style>
+  .search-form {
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+    border-bottom: 0px;
+  }
+
+  .search-reuslt-container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .search-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+
+  .search-box input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #dcdde1;
+    border-radius: 6px;
+    font-size: 1rem;
+  }
+
+  .btn-search {
+    padding: 0 20px;
+    background: #0072bc;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .search-options {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .sort-select {
+    padding: 8px 12px;
+    border: 1px solid #dcdde1;
+    border-radius: 6px;
+    background: white;
+    height: 40px;
+    align-self: flex-start;
+    margin-right: 20px;
+  }
+
+  .view-options {
+    display: flex;
+    align-self: flex-start;
+    gap: 10px;
+  }
+
+  .btn-view {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #dcdde1;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .btn-view.active {
+    background: #0072bc;
+    color: white;
+    border-color: #0072bc;
+  }
+
+  .result_text {
+    margin-top: 10px;
+  }
+
+  .filter-list p {
+    margin-bottom: 10px;
+  }
+
+  .active-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .filter-tag {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    background: white;
+    border: 1px solid #dcdde1;
+    border-radius: 20px;
+    font-size: 0.9rem;
+  }
+
+  .btn-remove {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #34495e;
+    padding: 0 5px;
+  }
+</style>
+
+<script>
+  document.querySelectorAll('.btn-view').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.btn-view').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      // Thực hiện logic thay đổi chế độ hiển thị ở đây
+    });
+  });  
+</script>

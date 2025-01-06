@@ -1,0 +1,133 @@
+{% set url_action = pkg.type ~ ('_resource.edit' if url_is_edit and can_edit else '_resource.read') %}
+{% set url = url or h.url_for(url_action, id=pkg.name, resource_id=res.id) %}
+
+<div class="resource-item" data-id="{{ res.id }}">
+  <div class="resource-info">
+    {% block resource_item_title %}
+    <div class="format-badge">
+      <span class="format-label" property="dc:format" data-format="{{ res.format.lower() or 'data' }}">{{
+        h.get_translated(res, 'format') }}</span>
+    </div>
+    <div class="resource-details">
+      <a class="heading" href="{{ url }}" title="{{ res.name or res.description }}">
+        <h5>
+          {{ h.resource_display_name(res) | truncate(50) }}
+          {{ h.popular('views', res.tracking_summary.total, min=10) if res.tracking_summary }}
+        </h5>
+        {% block resource_item_description %}
+        <span class="resource-meta">
+          {% if res.description %}
+          {{ h.markdown_extract(h.get_translated(res, 'description'), extract_length=80) }}
+          {% endif %}
+        </span>
+        {% endblock %}
+      </a>
+    </div>
+    {% endblock %}
+  </div>
+  <div class="resource-actions">
+    {% block resource_item_actions %}
+    <a href="{{ url }}">
+      <button class="btn-preview">
+        {% if res.has_views %}
+        <i class="fa fa-chart-bar"></i>
+        {{ _('') }}
+        {% else %}
+        <i class="fas fa-eye"></i>
+        {{ _('') }}
+        {% endif %}
+      </button>
+    </a>
+
+    {% if res.url and h.is_url(res.url) %}
+    <a href="{{ res.url }}">
+      <button class="btn-download" href="{{ res.url }}" target="_blank" rel="noreferrer">
+        {% if res.has_views or res.url_type == 'upload' %}
+        <i class="fas fa-download"></i>
+        {{ _('') }}
+        {% else %}
+        <i class="fa fa-external-link"></i>
+        {{ _('') }}
+        {% endif %}
+      </button>
+    </a>
+    {% endif %}
+    {% endblock %}
+  </div>
+
+</div>
+
+<style>
+  .resource-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .resource-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: #f5f6fa;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+  }
+
+  .resource-item:hover {
+    background: #f0f2f5;
+  }
+
+  .resource-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+  }
+
+  .format-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    margin-right: 15px;
+  }
+
+  .resource-details {
+    flex: 1;
+  }
+
+  .resource-details h5 {
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+    color: #2c3e50;
+  }
+
+  .resource-meta {
+    font-size: 0.85rem;
+    color: #34495e;
+  }
+
+  .resource-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .resource-actions button {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #dcdde1;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+    color: #34495e;
+  }
+
+  .resource-actions button:hover {
+    background: #0072bc;
+    color: white;
+    border-color: #0072bc;
+  }
+</style>

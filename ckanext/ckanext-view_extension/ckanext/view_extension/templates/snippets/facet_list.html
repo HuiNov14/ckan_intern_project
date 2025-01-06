@@ -1,0 +1,127 @@
+{% block facet_list %}
+
+{% set hide_empty = hide_empty or false %}
+{% with items = items or h.get_facet_items_dict(name, search_facets) %}
+{% if items or not hide_empty %}
+{% block facet_list_item %}
+<section class="">
+    {% block facet_list_heading %}
+    <div class="filter-header">
+        <span>{{ title }}</span>
+        <button class="btn-collapse">
+            <i class="fas fa-chevron-down"></i>
+        </button>
+    </div>
+    {% endblock %}
+    {% block facet_list_items %}
+    {% with items = items or h.get_facet_items_dict(name, search_facets) %}
+    {% if items %}
+    <nav aria-label="{{ title }}">
+        {% for item in items %}
+        {% set href = h.remove_url_param(name, item.name, extras=extras,
+        alternative_url=alternative_url) if item.active else h.add_url_param(new_params={name:
+        item.name}, extras=extras, alternative_url=alternative_url) %}
+        {% set label = label_function(item) if label_function else item.display_name %}
+        {% set label_truncated = label|truncate(22) if not label_function else label %}
+        {% set count = count_label(item['count']) if count_label else ('%d' % item['count']) %}
+        <div class="filter-options">
+            <h5 class="filter-option">
+                <a href="{{ href }}" title="{{ label if label != label_truncated else '' }}" class="facet-item" onclick="toggleCheckbox(this)">
+                    <div class="facet-content">
+                        <input type="checkbox" {% if item.active %}checked{% endif %}>
+                    </div>
+                </a>
+                
+                <span class="option-label">{{ label_truncated }}</span>
+                <span class="option-count">{{ count }}</span>
+                
+            </h5>
+        </div>
+        {% endfor %}
+        </ul>
+    </nav>
+
+    <p class="module-footer">
+        {% if h.get_param_int('_%s_limit' % name) %}
+        {% if h.has_more_facets(name, search_facets) %}
+        <a href="{{ h.remove_url_param('_%s_limit' % name, replace=0, extras=extras, alternative_url=alternative_url) }}"
+            class="read-more">{{ _('Show More {facet_type}').format(facet_type=title) }}</a>
+        {% endif %}
+        {% else %}
+        <a href="{{ h.remove_url_param('_%s_limit' % name, extras=extras, alternative_url=alternative_url) }}"
+            class="read-more">{{ _('Show Only Popular {facet_type}').format(facet_type=title) }}</a>
+        {% endif %}
+    </p>
+    {% else %}
+    <p class="module-content empty">{{ _('There are no {facet_type} that match this
+        search').format(facet_type=title) }}</p>
+    {% endif %}
+    {% endwith %}
+    {% endblock %}
+</section>
+{% endblock %}
+{% endif %}
+{% endwith %}
+
+<style>
+    .filter-header {
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .filter-options {
+        padding: 0 20px 15px;
+    }
+
+    .filter-option {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 0;
+        cursor: pointer;
+    }
+
+    .option-count {
+        margin-left: auto;
+        background: #f5f6fa;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.9rem;
+    }
+
+    .facet-item {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    
+    .facet-content {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    input[type="checkbox"] {
+        pointer-events: none; /* Bỏ sự kiện nhấp chuột trực tiếp vào checkbox */
+    }
+</style>
+
+<script>
+    function toggleCheckbox(anchor) {
+        const checkbox = anchor.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+            // Đảo trạng thái checkbox
+            checkbox.checked = !checkbox.checked;
+    
+            // Chuyển hướng theo liên kết
+            window.location.href = anchor.getAttribute('href');
+        }
+    }
+    
+</script>
+
+{% endblock %}

@@ -1,0 +1,181 @@
+{% set title = package.title or package.name %}
+{% set notes = h.markdown_extract(package.notes, extract_length=180) %}
+
+{% block package_item %}
+<div class="{{ item_class or " dataset-item" }}">
+  {% block content %}
+  <div class="dataset-content">
+    {% block heading %}
+    <h2 class="dataset-heading">
+      {% block heading_private %}
+      {% if package.private %}
+      <span class="dataset-private badge bg-secondary">
+        <i class="fa fa-lock"></i>
+        {{ _('Private') }}
+      </span>
+      {% endif %}
+      {% endblock %}
+      {% block heading_title %}
+      <div class="data-card">
+        <div class="card-header">
+          <div class="organization-info">
+            <img src="{{ h.get_org_img_url_by_id(package.owner_org) }}" alt="Organization Logo" class="org-logo">
+            <div class="org-details">
+              <a href="{{ h.url_for('%s.read' % package.type, id=package.name) }}">
+                <span class="org-name">{{ h.get_org_name_by_id(package.owner_org) }}</span>
+              </a>
+              <span class="org-type">
+                {{ h.get_org_type_by_id(package.owner_org) }}
+            </span>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button title="Chia sẻ">
+              <i class="fas fa-share-alt"></i>
+            </button>
+            <button title="Xem chi tiết">
+              <a href="{{ h.url_for('%s.read' % package.type, id=package.name) }}">
+                <i class="fas fa-external-link-alt"></i>
+              </a>
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <h3>{{ title|truncate(80) }}</h3>
+          {% block notes %}
+          {% if notes %}
+          <div><p>{{ notes|urlize }}</p></div>
+          {% else %}
+          <p class="empty">{{ h.humanize_entity_type('package', package.type, 'no description') or _("There is no
+            description
+            for this dataset") }}</p>
+          {% endif %}
+          {% endblock %}
+
+          <div class="dataset-resources">
+            {% block package_resources %}
+            {% snippet "package/snippets/custom_resources_list.html", pkg=package, resources=package.resources %}
+            {% endblock %}
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="metadata">
+            <span><i class="far fa-calendar"></i> Cập nhật: 19/12/2024</span>
+            <span><i class="fas fa-download"></i> 1,234 lượt tải</span>
+            <span><i class="fas fa-star"></i> 4.5/5 (128 đánh giá)</span>
+          </div>
+          <div class="tags">
+            <span class="tag">Nông nghiệp</span>
+            <span class="tag">Thống kê</span>
+            <span class="tag">Sản xuất</span>
+          </div>
+        </div>
+        {% endblock %}
+    </h2>
+    {% endblock %}
+
+  </div>
+  {% endblock %}
+</div>
+{% endblock %}
+
+<style>
+  /* Organization Styles */
+  .organization-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .org-name {
+    font-weight: 500;
+    color: #0072bc;
+  }
+
+  .org-type {
+    font-size: 0.8rem;
+    color: #34495e;
+  }
+
+  .org-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+
+  .org-details {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .card-actions button {
+    width: 32px;
+    height: 32px;
+    border: 1px solid black;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .card-actions button:hover {
+    background: #0072bc;
+    color: white;
+    border-color: #0072bc;
+  }
+
+  .card-header {
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Update existing card styles */
+  .data-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+    border: 1px solid #dcdde1;
+  }
+
+  .data-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  .card-header {
+    padding: 16px;
+    border-bottom: 1px solid #dcdde1;
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+
+  .card-footer {
+    padding: 16px;
+    background: #f5f6fa;
+  }
+
+  .metadata {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    color: #34495e;
+    font-size: 0.9rem;
+  }
+
+  .dataset-resources h4 {
+    margin-bottom: 20px;
+  }
+
+</style>
