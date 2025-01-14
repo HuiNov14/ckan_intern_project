@@ -450,9 +450,6 @@ dashboard.add_url_rule(
 dashboard.add_url_rule(
     u"/statistical/new_user_stats", view_func=new_user_statistical, methods=['GET', 'POST']
 )
-dashboard.add_url_rule(
-    u"/statistical/last_active_stats", view_func=last_active_statistical, methods=['GET', 'POST']
-)
 
 dashboard.add_url_rule(
     u"/statistical/statistical-datatypes", view_func=statistical_datatypes,methods=['GET', 'POST']
