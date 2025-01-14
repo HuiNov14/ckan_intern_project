@@ -38,16 +38,7 @@ class API_Tracking_Plugin(p.SingletonPlugin, DefaultTranslation):
         toolkit.add_template_directory(config, 'templates')
         toolkit.add_public_directory(config, 'public')
         toolkit.add_resource('assets', 'api_tracking')
-        tracking_package.init_db()
-        tracking_package.update_tracking_info(
-    url="http://example.com_6",
-    user_key="abzbzbzb",
-    package_id="example_package_2",
-    tracking_type = "resource",
-    count=100,
-    running_total=200,
-    recent_views=5,
-    tracking_date=datetime.now())
+ 
         
     def get_helpers(self):
         return {
