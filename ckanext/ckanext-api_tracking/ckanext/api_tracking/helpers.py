@@ -1,3 +1,4 @@
+from flask import request, url_for
 import hashlib
 import six
 import re
@@ -87,3 +88,81 @@ def check_download(url):
         CKANApp.logger.error(f"Error checking resource: {e}")
         
     return False
+
+
+def get_statistics_options():
+    # Lấy URL hiện tại
+    current_url = request.path
+
+    # Danh sách các tùy chọn với endpoint
+    options = [
+        {"endpoint": "tracking_blueprint.resource_dashboard", "label": "All Statistics"},
+        {"endpoint": "tracking_blueprint.statistical_org", "label": "Organization Statistics"},
+        {"endpoint": "tracking_blueprint.statistical_field", "label": "Group Statistics"},
+        {"endpoint": "tracking_blueprint.statistical_datatypes", "label": "Datatypes Statistics"},
+        {"endpoint": "tracking_blueprint.statistical_tracking", "label": "Tracking Statistics"},
+        {"endpoint": "tracking_blueprint.statistical_api", "label": "API Statistics"},
+    ]
+
+    # Tạo URL từ endpoint và đánh dấu 'selected'
+    for option in options:
+        try:
+            option["value"] = url_for(option["endpoint"])
+            option["selected"] = option["value"] == current_url
+        except Exception:
+            # Xử lý nếu endpoint không tồn tại
+            option["value"] = None
+            option["selected"] = False
+
+    # Loại bỏ các tùy chọn không hợp lệ (không tạo được URL)
+    options = [option for option in options if option["value"]]
+
+    return options
+    
+    
+    
+def get_breadcrumb_links():
+    return [
+        {"url": "/dashboard/statistical/resource_dashboard", "label": "Resource Statistics"},
+    ]
+
+
+def get_statistical_cards():
+    return [
+        {
+            "url": "tracking_blueprint.statistical_org",
+            "img_src": "/1.png",
+            "title": "Organization Statistics",
+            "description": "This is a statistical chart of data belonging to an organization.",
+        },
+        {
+            "url": "tracking_blueprint.statistical_field",
+            "img_src": "/2.png",
+            "title": "Group Statistics",
+            "description": "This is a statistical chart of data in a field.",
+        },
+        {
+            "url": "tracking_blueprint.statistical_datatypes",
+            "img_src": "/3.png",
+            "title": "Datatypes Statistics",
+            "description": "This is a statistical chart of the number of data types.",
+        },
+        {
+            "url": "tracking_blueprint.statistical_tracking",
+            "img_src": "/4.png",
+            "title": "Tracking Statistics",
+            "description": "This is a statistical chart that tracks views, downloads of data.",
+        },
+        {
+            "url": "tracking_blueprint.statistical_api",
+            "img_src": "/4.png",
+            "title": "API Statistics",
+            "description": "This is a statistical chart that tracks views, downloads of data.",
+        },
+    ]
+
+def get_chart_type():
+    return [
+        {"value": "line", "label": "Line"},
+        {"value": "bar", "label": "Bar"},
+    ]

@@ -1,3 +1,4 @@
+from datetime import datetime
 from math import log
 
 import requests
@@ -17,6 +18,8 @@ from ckan.common import CKANConfig
 import ckan.plugins.toolkit as toolkit
 import ckanext.api_tracking.views as views
 from ckan.lib.plugins import DefaultTranslation
+from .models import tracking_package
+from .helpers import get_statistics_options, get_breadcrumb_links, get_statistical_cards,get_chart_type
 
 
 class API_Tracking_Plugin(p.SingletonPlugin, DefaultTranslation):
@@ -26,6 +29,7 @@ class API_Tracking_Plugin(p.SingletonPlugin, DefaultTranslation):
     p.implements(p.IConfigurer)
     p.implements(p.IBlueprint)
     p.implements(p.ITranslation)
+    p.implements(p.ITemplateHelpers)
    
     def get_blueprint(self):
         return views.get_blueprints()
@@ -34,6 +38,24 @@ class API_Tracking_Plugin(p.SingletonPlugin, DefaultTranslation):
         toolkit.add_template_directory(config, 'templates')
         toolkit.add_public_directory(config, 'public')
         toolkit.add_resource('assets', 'api_tracking')
+        tracking_package.init_db()
+        tracking_package.update_tracking_info(
+    url="http://example.com_6",
+    user_key="abzbzbzb",
+    package_id="example_package_2",
+    tracking_type = "resource",
+    count=100,
+    running_total=200,
+    recent_views=5,
+    tracking_date=datetime.now())
+        
+    def get_helpers(self):
+        return {
+            'get_statistics_options': get_statistics_options,
+            'get_breadcrumb_links': get_breadcrumb_links,
+            'get_statistical_cards': get_statistical_cards,
+            'get_chart_type': get_chart_type,
+        }
 
     def make_middleware(self, app: CKANApp, config):
         @app.after_request

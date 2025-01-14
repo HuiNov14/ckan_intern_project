@@ -1,3 +1,4 @@
+from ckan.common import config
 from .schemas import organization_statistics_schema, tracking_by_user_combined_schema, tracking_urls_and_counts_combined_schema, field_statistics_schema, resources_statistics_combined_schema, users_statistics_combined_schema, new_users_statistics_combined_schema, login_activity_show_schema,tracking_datatypes_get_sum_schema
 from ..models.extended_tracking_raw import ExtendedTrackingRaw
 from ..models.extended_tracking_summary import ExtendedTrackingSummary
@@ -79,6 +80,10 @@ def tracking_by_user(context, data_dict):
 
 @side_effect_free
 def statistical_org_get_sum(context, data_dict):
+    
+    if context.get('method', '').upper() != 'GET':
+        raise toolkit.ValidationError("This API only supports the GET method.")
+    
     toolkit.check_access("user_check", context, data_dict)
 
     schema = organization_statistics_schema()
@@ -197,16 +202,25 @@ def resource_access_by_date(context, data_dict):
     
     data_dict, errors = toolkit.navl_validate(data_dict, schema)
    
+   
     if errors:
             raise ValidationError(errors)
-        
+    
+    today = datetime.today().date()
+    
+    # Lấy giá trị mặc định từ cấu hình, xử lý lỗi nếu config không tồn tại
+    try:
+        day_default = int(config.get('ckan.day_default', 7))  # Giá trị mặc định là 7 ngày nếu không được cấu hình
+    except ValueError:
+        day_default = 7  # Giá trị mặc định nếu không thể chuyển đổi sang số nguyên
+    
+    day_tracking_default = (today - timedelta(days=day_default)).isoformat()    
+    
     if 'start_date' not in data_dict:
-        current_date = datetime.now()
-        data_dict['start_date'] = current_date
+        data_dict['start_date'] = day_tracking_default
     
     if 'end_date' not in data_dict:
-        current_date = datetime.now() + timedelta(days=1)
-        data_dict['end_date'] = current_date
+        data_dict['end_date'] = today.isoformat()
         
     if 'format_type' not in data_dict:
         data_dict['format_type'] = ''

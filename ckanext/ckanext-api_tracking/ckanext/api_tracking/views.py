@@ -87,12 +87,7 @@ def statistical_tracking():
     package_name = request.form.getlist('package_name') or [""] 
     user_name = request.form.getlist('user_name') or [""]
     include_resources = request.form.get('include_resources') == 'on'  
-    
-    try:
-        logic.check_access('user_check', {})
-    except logic.NotAuthorized:
-        return base.abort(403, toolkit._('Need to be system administrator to administer'))
- 
+
     try:
         action = 'tracking_by_user'
         urls_and_counts = logic.get_action(action)(data_dict={
@@ -103,8 +98,8 @@ def statistical_tracking():
             u'include_resources': True,
         }) 
 
-    except logic.ValidationError as e:
-        urls_and_counts = []
+    except logic.NotAuthorized:
+        return base.abort(403, toolkit._('Need to be system administrator to administer'))
         
     aggregated_urls_and_counts = json.dumps(aggregate_package_views(urls_and_counts))
     
@@ -147,11 +142,7 @@ def statistical_org():
     private = request.form.get('private') or None
     state = request.form.get('state') or None
     include_datasets = request.form.get('include_datasets', 'false').lower() == 'true'
-    try:
-        logic.check_access('user_check', {})
-    except logic.NotAuthorized:
-        return base.abort(403, toolkit._('Need to be system administrator to administer'))
- 
+    
     try:
         action = 'statistical_org_get_sum'
         datasets_org = logic.get_action(action)(data_dict={
@@ -161,8 +152,8 @@ def statistical_org():
             'include_datasets': include_datasets
         })  
         
-    except logic.ValidationError as e:
-        datasets_org = []
+    except logic.NotAuthorized:
+        return base.abort(403, toolkit._('Need to be system administrator to administer'))
  
     organization_list = logic.get_action('organization_list')(data_dict={})
  
@@ -183,10 +174,6 @@ def statistical_field():
     private = request.form.get('private') or None
     state = request.form.get('state') or None
     include_datasets = request.form.get('include_datasets', 'false').lower() == 'true'
-    try:
-        logic.check_access('user_check', {})
-    except logic.NotAuthorized:
-        return base.abort(403, toolkit._('Need to be system administrator to administer'))
  
     try:
         action = 'statistical_field_get_sum'
@@ -197,10 +184,8 @@ def statistical_field():
             'include_datasets': include_datasets
         }) 
         
-    except logic.ValidationError as e:
-        datasets_field = []
-        
-        print('field name =====>',field_name)
+    except logic.NotAuthorized:
+        return base.abort(403, toolkit._('Need to be system administrator to administer'))
  
     tag_list = logic.get_action('tag_list')(data_dict={})
  
@@ -378,17 +363,25 @@ def user_login_statistical():
 
     return base.render('user/user_login_stats.html', extra_vars)
 
+def json_serial(obj):
+    if isinstance(obj, (datetime, date)):
+        return obj.isoformat()  # Chuyển thành chuỗi định dạng ISO 8601
+    raise TypeError(f"Type {type(obj)} not serializable")
+
 def statistical_datatypes():
-    today = datetime.today().date()     
-    day_tracking_default = today - timedelta(days=int(config.get('ckan.day_default')))
-    start_date = request.form.get('start_date', str(day_tracking_default))  
-    end_date = request.form.get('end_date', str(today)) 
-    format_type = request.form.get('format_type') or None
+    today = datetime.today().date()
     
+    # Lấy giá trị mặc định từ cấu hình, xử lý lỗi nếu config không tồn tại
     try:
-        logic.check_access('user_check', {})
-    except logic.NotAuthorized:
-        return base.abort(403, toolkit._('Need to be system administrator to administer'))
+        day_default = int(config.get('ckan.day_default', 7))  # Giá trị mặc định là 7 ngày nếu không được cấu hình
+    except ValueError:
+        day_default = 7  # Giá trị mặc định nếu không thể chuyển đổi sang số nguyên
+    
+    day_tracking_default = (today - timedelta(days=day_default)).isoformat()    
+    
+    start_date = request.form.get('start_date', day_tracking_default)  
+    end_date = request.form.get('end_date', str(today.isoformat())) 
+    format_type = request.form.get('format_type') or None
     
     try:
         action = 'resource_access_by_date'
@@ -396,11 +389,12 @@ def statistical_datatypes():
             u'start_date': start_date,
             u'end_date': end_date,
             u'format_type': format_type,
-        }) 
-    except logic.ValidationError as e:
-        data_types = []
+        })
+    except logic.NotAuthorized:
+        return base.abort(403, toolkit._('Need to be system administrator to administer'))
     
-    print("-------------->",data_types)
+    print(data_types)
+    
     list_datatypes = set()
     
     # Gọi package_search để lấy dữ liệu
@@ -415,15 +409,13 @@ def statistical_datatypes():
                 list_datatypes.add(format_value)     
                      
     extra_vars: dict[str, Any] = {
-            u'data_types': data_types,
+            u'data_types': json.dumps(data_types, default=json_serial),  # Sử dụng hàm `json_serial` để xử lý date
             u'start_date': start_date,
             u'end_date': end_date,
             u'list_datatypes': list_datatypes,
             u'format_type': format_type,
     }     
-    
     return base.render('user/statistical_datatypes.html', extra_vars)
-
 
 dashboard.add_url_rule(
     u"/statistical/resource-dashboard", view_func=resource_dashboard, methods=['GET']

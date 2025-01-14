@@ -15,7 +15,7 @@ class TrackingAPI:
         :return: JSON chứa thông tin về các loại resource và số lượt truy cập.
         """
         start_date = data_dict.get('start_date')
-        end_date = data_dict.get('end_date') + datetime.timedelta(days=1)
+        end_date = data_dict.get('end_date')
         format_type = data_dict.get('format_type')
         try:
             query = meta.Session.query(
