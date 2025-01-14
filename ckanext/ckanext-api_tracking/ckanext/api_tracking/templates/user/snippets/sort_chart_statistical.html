@@ -1,28 +1,14 @@
-<div class="row g-0" style="display: flex; justify-content: flex-end; align-items: center;">
-  <!-- Số lượng mục hiển thị -->
-  <div class="col-md-4 mb-3" style="flex: 1; max-width: 100px; padding: 0;">
-    <div class="form-group" style="font-size: 10px; margin: 0 5px; display: flex; flex-direction: column; align-items: center;">
-      <input type="number" id="itemCount" min="1" max="1000" value="10" class="form-control" oninput="updateChartData()" style="height: 22px; font-size: 10px; padding: 2px 4px; width: 80px;" />
-    </div>
-  </div>
-  <!-- Sắp xếp -->
-  <div class="col-md-4 mb-3" style="flex: 1; max-width: 100px; padding: 0;">
-    <div class="form-group" style="font-size: 10px; margin: 0 5px; display: flex; flex-direction: column; align-items: center;">
-      <select id="sortOptions" class="form-select" onchange="sortData(this.value)" style="height: 22px; font-size: 10px; padding: 0px 2px; width: 80px;">
-        <option value="asc">{{ _('Ascending') }}</option>
-        <option value="desc">{{ _('Descending') }}</option>
-        <option value="nameAsc">{{ _('A-Z') }}</option>
-        <option value="nameDesc">{{ _('Z-A') }}</option>
-      </select>
-    </div>
-  </div>
+{% asset 'api_tracking/sort_chart-css' %}
+<div class="row g-0 justify-content-end align-items-center">
   <!-- Loại biểu đồ -->
-  <div class="col-md-4 mb-3" style="flex: 1; max-width: 100px; padding: 0;">
-    <div class="form-group" style="font-size: 10px; margin: 0 5px; display: flex; flex-direction: column; align-items: center;">
-      <select id="chartType" class="form-select" style="height: 22px; font-size: 10px; padding: 2px 4px; width: 80px;">
-        <option value="bar">{{ _('Bar Chart') }}</option>
-        <option value="line">{{ _('Line Chart') }}</option>
-        <option value="pie">{{ _('Pie Chart') }}</option>
+  <div class="col-md-4 mb-3 custom-col">
+    <div class="d-flex flex-column align-items-end">
+      <select id="chartType">
+        {% for option in h.get_chart_type() %}
+        <option value="{{ option['value'] }}" {% if option['selected'] %}selected{% endif %}>
+          {{ option['label'] }}
+        </option>
+        {% endfor %}
       </select>
     </div>
   </div>

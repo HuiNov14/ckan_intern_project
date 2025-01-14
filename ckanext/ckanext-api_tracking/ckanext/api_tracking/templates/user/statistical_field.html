@@ -2,12 +2,7 @@
 
 {% block breadcrumb_content %}
 {% snippet 'user/snippets/breadcrumd_statistical.html' %}
-  <li class="statistical">
-    <a href="/dashboard/statistical/resource-dashboard">{{ _('Resource Statistics') }}</a>
-  </li>
-  <li class="active">
-    <a href="/dashboard/statistical/statistical-tracking">{{ _('Group Statistics') }}</a>
-  </li>
+
 {% endblock %}
 
 {% block secondary %}{% endblock %}
@@ -63,7 +58,10 @@
     </div>
 
     <div class="text-end">
-      <button type="submit" class="btn btn-primary px-4">{{ _("Filter") }}</button>
+      <button type="submit"
+      data-module="custom_chart_field" 
+      data-module-chart_field="{{ datasets_field }}"  
+      class="btn btn-primary px-4">{{ _("Filter") }}</button>
     </div>
   </form>
 </div>
@@ -71,12 +69,4 @@
 <div class="container mt-5 p-4 border rounded shadow-sm bg-light">
   {% snippet 'user/snippets/sort_chart_statistical.html' %}
 </div>
-    <!-- Dữ liệu datasets được inject vào đây -->
-    <script>
-        {% if datasets_field is not undefined and datasets_field is not none %}
-            window.trackingData = {{ datasets_field | tojson }};
-        {% else %}
-            window.trackingDapta = [];
-        {% endif %}
-      </script>
 {% endblock %}

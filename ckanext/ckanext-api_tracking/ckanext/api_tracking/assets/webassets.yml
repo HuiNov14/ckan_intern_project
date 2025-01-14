@@ -22,6 +22,15 @@ dataset-css:
     - css/base.css
     - css/choices.min.css
 
+test-js:
+  filter: rjsmin
+  output: ckanext-api_tracking/%(version)s-test.js
+  contents:
+    - js/test.js
+  extra:
+    preload:
+      - base/main
+
 
 statistical_org-js:
   filter: rjsmin
@@ -131,5 +140,20 @@ statistical_api-css:
   output: ckanext-api_tracking/%(version)s-statistical_api.css
   contents:
     - css/base.css
-    - css/choices.min.css
 
+
+filter_chart-js:
+  filter: rjsmin
+  output: ckanext-api_tracking/%(version)s-filter_chart.js
+  contents:
+    - js/filter_chart.js
+  extra:
+    preload:
+      - base/main
+
+
+sort_chart-css:
+  filter: cssrewrite
+  output: ckanext-api_tracking/%(version)s-sort_chart.css
+  contents:
+    - css/sort_chart.css

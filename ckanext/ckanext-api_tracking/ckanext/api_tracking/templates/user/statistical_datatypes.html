@@ -3,12 +3,6 @@
 
 {% block breadcrumb_content %}
 {% snippet 'user/snippets/breadcrumd_statistical.html' %}
-  <li class="statistical">
-    <a href="/dashboard/statistical/resource-dashboard">{{ _('Resource Statistics') }}</a>
-  </li>
-  <li class="active">
-    <a href="/dashboard/statistical/statistical-datatypes">{{ _('Datatype Statistics') }}</a>
-  </li>
 {% endblock %}
 
 {% block secondary %}{% endblock %}
@@ -18,13 +12,6 @@
     {% asset 'api_tracking/dataset-css' %}
     {% asset 'api_tracking/statistical_datatypes-js' %}
   
-  <script>
-    {% if data_types is not undefined and data_types is not none %}
-    window.trackingData = {{ data_types | tojson }};
-    {% else %}
-    window.trackingData = [];
-    {% endif %}
-  </script>
   <div>
     <div class="container rounded">
       <div class="d-flex justify-content-between">
@@ -64,7 +51,10 @@
       </div>     
      
       <div class="text-end">
-          <button type="submit" class="btn btn-primary px-4">{{_("Filter")}}</button>
+          <button type="submit"
+          data-module="custom_chart_datatypes" 
+          data-module-chart_datatypes="{{ data_types }}"  
+          class="btn btn-primary px-4">{{_("Filter")}}</button>
       </div>
     </form>
   </div>

@@ -9,12 +9,7 @@
 
 {% block breadcrumb_content %}
 {% snippet 'user/snippets/breadcrumd_statistical.html' %}
-  <li class="statistical">
-    <a href="/dashboard/statistical/resource-dashboard">{{ _('Resource Statistics') }}</a>
-  </li>
-  <li class="active">
-    <a href="/dashboard/statistical/statistical-tracking">{{ _('Tracking Statistics') }}</a>
-  </li>
+
 {% endblock %}
 
 {% block secondary %}{% endblock %}
@@ -23,17 +18,10 @@
 {% asset 'api_tracking/dataset-css' %}
 {% asset 'api_tracking/dataset-js' %}
 
-<script>
-  {% if urls_and_counts is not undefined and urls_and_counts is not none %}
-      window.trackingData = {{ urls_and_counts | tojson }};
-  {% else %}
-      window.trackingData = [];
-  {% endif %}
-</script>
 <div class="container my-4 px-3">
   <div class="container rounded ">
     <div class="d-flex justify-content-between">
-      <h4 class="mb-4">{{ _("Filter Organization Datasets") }}</h4>
+      <h4 class="mb-4">{{ _("Filter Tracking Datasets") }}</h4>
       <div class="col-md-4">
         {% snippet 'user/snippets/filter_chart_statistical.html' %}
       </div>
@@ -84,7 +72,10 @@
     
       
       <div class="text-end">
-          <button type="submit" class="btn btn-primary px-4">{{_("Filter")}}</button>
+          <button type="submit"
+          data-module="custom_chartjs" 
+          data-module-chart_tracking="{{ urls_and_counts }}"  
+          class="btn btn-primary px-4">{{_("Filter")}}</button>
       </div>
     </form>
   </div>

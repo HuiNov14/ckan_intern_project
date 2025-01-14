@@ -2,16 +2,10 @@
 
 {% block breadcrumb_content %}
   {% snippet 'user/snippets/breadcrumd_statistical.html' %}
-
-  <li class="active">
-    <a href="/dashboard/statistical/resource-dashboard">{{ _('Resource Statistics') }}</a>
-  </li>
 {% endblock %}
-
 {% block secondary %}
 
 {% endblock %}
-
 {% block primary %}
   <style>
     .card-img-top {
@@ -29,59 +23,17 @@
       {% snippet 'user/snippets/filter_chart_statistical.html' %}
     </div>
     <div class="row row-cols-1 row-cols-md-4 g-4">
-      <!-- Card 1 -->
-      <div class="col">
-        <div class="card h-100">
-          <a href="/dashboard/statistical/statistical-org"><img src="/1.png" class="card-img-top" alt="Card 1" /></a>
-          <div class="card-body">
-            <h5 class="card-title">Organization Statistics</h5>
-            <p class="card-text">This is a statistical chart of data belonging to an organization.</p>
+      {% for card in h.get_statistical_cards() %}
+        <div class="col">
+          <div class="card h-100">
+            <a href="{{ url_for(card.url) }}"><img src="{{ card.img_src }}" class="card-img-top" alt="{{ card.title }}" /></a>
+            <div class="card-body">
+              <h5 class="card-title">{{ card.title }}</h5>
+              <p class="card-text">{{ card.description }}</p>
+            </div>
           </div>
         </div>
-      </div>
-      <!-- Card 2 -->
-      <div class="col">
-        <div class="card h-100">
-          <a href="/dashboard/statistical/statistical-field"><img src="/2.png" class="card-img-top" alt="Card 2" /></a>
-
-          <div class="card-body">
-            <h5 class="card-title">Group Statistics</h5>
-            <p class="card-text">This is a statistical chart of data in a field.</p>
-          </div>
-        </div>
-      </div>
-      <!-- Card 3 -->
-      <div class="col">
-        <div class="card h-100">
-          <a href="/dashboard/statistical/statistical-datatypes"><img src="/3.png" class="card-img-top" alt="Card 3" /></a>
-
-          <div class="card-body">
-            <h5 class="card-title">Datatypes Statistics</h5>
-            <p class="card-text">This is a statistical chart of the number of data types.</p>
-          </div>
-        </div>
-      </div>
-      <!-- Card 4 -->
-      <div class="col">
-        <div class="card h-100">
-          <a href="/dashboard/statistical/statistical-tracking"><img src="/4.png" class="card-img-top" alt="Card 4" /></a>
-
-          <div class="card-body">
-            <h5 class="card-title">Tracking Statistics</h5>
-            <p class="card-text">This is a statistical chart that tracks views, downloads of data.</p>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card h-100">
-          <a href="/dashboard/statistical/statistical-api"><img src="/4.png" class="card-img-top" alt="Card 4" /></a>
-
-          <div class="card-body">
-            <h5 class="card-title">API Statistics</h5>
-            <p class="card-text">This is a statistical chart that tracks views, downloads of data.</p>
-          </div>
-        </div>
-      </div>
+      {% endfor %}
     </div>
   </div>
 {% endblock %}
