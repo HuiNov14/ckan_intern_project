@@ -18,7 +18,6 @@ from ckan.common import CKANConfig
 import ckan.plugins.toolkit as toolkit
 import ckanext.api_tracking.views as views
 from ckan.lib.plugins import DefaultTranslation
-from .models import tracking_package
 from .helpers import get_statistics_options, get_breadcrumb_links, get_statistical_cards,get_chart_type
 
 
