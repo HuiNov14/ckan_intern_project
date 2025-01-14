@@ -154,6 +154,17 @@
             border-top-left-radius: 8px;
         }
 
+        .search-form {
+            margin-bottom: 0px !important;
+            padding-bottom: 0px !important;
+            border-bottom: 0px !important;
+        }
+
+        .search-reuslt-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
         .search-box {
             display: flex;
             gap: 10px;
@@ -178,6 +189,7 @@
         }
 
         .search-options {
+            margin-top: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -188,13 +200,15 @@
             border: 1px solid #dcdde1;
             border-radius: 6px;
             background: white;
+            height: 40px;
+            align-self: flex-start;
+            margin-right: 20px;
         }
 
         .view-options {
             display: flex;
+            align-self: flex-start;
             gap: 10px;
-            margin-bottom: 30px;
-            justify-content: flex-end;
         }
 
         .btn-view {
@@ -219,6 +233,14 @@
         }
 
         .results-info h2 {
+            margin-bottom: 10px;
+        }
+
+        .result_text {
+            margin-top: 10px;
+        }
+
+        .filter-list p {
             margin-bottom: 10px;
         }
 
@@ -283,22 +305,21 @@
 
         .data-card {
             background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
             transition: transform 0.3s, box-shadow 0.3s;
+            overflow: hidden;
+            border: 1px solid #dcdde1;
         }
 
         .data-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            transform: translateY(-4px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
         }
 
         .card-header {
-            padding: 15px;
+            padding: 16px;
             border-bottom: 1px solid #dcdde1;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
         .format-badge {
@@ -321,7 +342,7 @@
         .card-actions button {
             width: 32px;
             height: 32px;
-            border: 1px solid #dcdde1;
+            border: 1px solid black;
             background: white;
             border-radius: 4px;
             cursor: pointer;
@@ -335,7 +356,25 @@
         }
 
         .card-body {
-            padding: 15px;
+            padding: 20px;
+        }
+
+        .facet-item {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .facet-content {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        input[type="checkbox"] {
+            pointer-events: none;
+            /* Bỏ sự kiện nhấp chuột trực tiếp vào checkbox */
         }
 
         .card-body h3 {
@@ -375,13 +414,14 @@
         }
 
         .card-footer {
-            padding: 15px;
-            border-top: 1px solid #dcdde1;
+            padding: 16px;
+            background: #f5f6fa;
         }
 
         .metadata {
             display: flex;
-            gap: 15px;
+            flex-wrap: wrap;
+            gap: 16px;
             color: #34495e;
             font-size: 0.9rem;
         }
@@ -483,15 +523,16 @@
         }
 
         .dataset-resources h4 {
-            font-size: 1rem;
-            margin-bottom: 12px;
-            color: #2c3e50;
+            margin-bottom: 20px;
         }
 
         .resource-list {
+            margin-top: 10px;
             display: flex;
             flex-direction: column;
             gap: 12px;
+            height: 150px;
+            overflow-y: auto;
         }
 
         .resource-item {
@@ -521,6 +562,7 @@
             font-size: 0.8rem;
             font-weight: 500;
             text-transform: uppercase;
+            margin-right: 15px;
         }
 
         .format-badge.csv {
@@ -607,8 +649,12 @@
         }
 
         .card-header {
-            padding: 16px;
-            border-bottom: 1px solid #dcdde1;
+            background-color: white !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            padding: 16px !important;
+            border-bottom: 1px solid #dcdde1 !important;
         }
 
         .card-body {
@@ -668,7 +714,7 @@
                     <!-- Tổ chức Filter -->
                     <div class="filter-section">
                         {% for facet in facet_titles %}
-                        {{ h.snippet('snippets/facet_list.html', title=facet_titles[facet], name=facet,
+                        {{ h.snippet('snippets/custom_facet_list.html', title=facet_titles[facet], name=facet,
                         search_facets=search_facets) }}
                         {% endfor %}
                     </div>
@@ -695,7 +741,8 @@
                     (_('Last Modified'), 'metadata_modified desc'),
                     (_('Popular'), 'views_recent desc') if g.tracking_enabled else (false, false) ]
                     %}
-                    {% snippet 'snippets/search_form.html', form_id='dataset-search-form', type=dataset_type, query=q,
+                    {% snippet 'snippets/custom_search_form.html', form_id='dataset-search-form', type=dataset_type,
+                    query=q,
                     sorting=sorting, sorting_selected=sort_by_selected, count=page.item_count,
                     placeholder=h.humanize_entity_type('package', dataset_type, 'search placeholder') or _('Search
                     datasets...'),
@@ -724,6 +771,18 @@
     </div>
 
     <script>
+
+        function toggleCheckbox(anchor) {
+            const checkbox = anchor.querySelector('input[type="checkbox"]');
+            if (checkbox) {
+                // Đảo trạng thái checkbox
+                checkbox.checked = !checkbox.checked;
+
+                // Chuyển hướng theo liên kết
+                window.location.href = anchor.getAttribute('href');
+            }
+        }
+
         // Toggle filter sections
         document.querySelectorAll('.filter-header').forEach(header => {
             header.addEventListener('click', () => {

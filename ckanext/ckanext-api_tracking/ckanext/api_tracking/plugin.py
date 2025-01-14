@@ -17,7 +17,9 @@ from ckan.common import CKANConfig
 import ckan.plugins.toolkit as toolkit
 import ckanext.api_tracking.views as views
 from ckan.lib.plugins import DefaultTranslation
-
+from .models import tracking_package
+import threading
+from datetime import datetime
 
 class API_Tracking_Plugin(p.SingletonPlugin, DefaultTranslation):
     p.implements(p.IMiddleware, inherit=True)
@@ -25,7 +27,7 @@ class API_Tracking_Plugin(p.SingletonPlugin, DefaultTranslation):
     p.implements(p.IAuthFunctions)
     p.implements(p.IConfigurer)
     p.implements(p.IBlueprint)
-    p.implements(p.ITranslation)
+    p.implements(p.ITranslation)        
    
     def get_blueprint(self):
         return views.get_blueprints()
@@ -34,6 +36,8 @@ class API_Tracking_Plugin(p.SingletonPlugin, DefaultTranslation):
         toolkit.add_template_directory(config, 'templates')
         toolkit.add_public_directory(config, 'public')
         toolkit.add_resource('assets', 'api_tracking')
+        tracking_package.init_db()
+        tracking_package.update_tracking_info()
 
     def make_middleware(self, app: CKANApp, config):
         @app.after_request
@@ -77,4 +81,5 @@ class API_Tracking_Plugin(p.SingletonPlugin, DefaultTranslation):
     def get_auth_functions(self):
         return auth.get_auth_functions()
 
+    
     
