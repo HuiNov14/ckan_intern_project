@@ -163,6 +163,6 @@ def get_statistical_cards():
 
 def get_chart_type():
     return [
-        {"value": "line", "label": "Line"},
         {"value": "bar", "label": "Bar"},
+        {"value": "line", "label": "Line"},
     ]

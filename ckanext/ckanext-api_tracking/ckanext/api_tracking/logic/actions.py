@@ -81,8 +81,6 @@ def tracking_by_user(context, data_dict):
 @side_effect_free
 def statistical_org_get_sum(context, data_dict):
     
-    if context.get('method', '').upper() != 'GET':
-        raise toolkit.ValidationError("This API only supports the GET method.")
     
     toolkit.check_access("user_check", context, data_dict)
 

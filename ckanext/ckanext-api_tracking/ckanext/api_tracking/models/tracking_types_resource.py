@@ -2,6 +2,7 @@ import datetime
 from ckan.plugins.toolkit import ValidationError
 import ckan.model.meta as meta
 import ckan.model as model
+from ..models import tracking_package
 from sqlalchemy import func
 
 
@@ -17,21 +18,23 @@ class TrackingAPI:
         start_date = data_dict.get('start_date')
         end_date = data_dict.get('end_date')
         format_type = data_dict.get('format_type')
+        
+        print("====================================>", tracking_package.tracking_packages_table)
         try:
             query = meta.Session.query(
-              model.Resource.format.label('format_type'),
-                func.count(model.tracking_raw_table.c.url).label('total_access'),
+                model.Resource.format.label('format_type'),
+                func.sum(tracking_package.tracking_packages_table.c.count).label('total_access'),
                 model.Resource.id.label('resource_id'),
                 model.Resource.name.label('resource_name'),
                 func.date(model.Resource.created).label('date'),
-                func.date(model.tracking_raw_table.c.access_timestamp).label('date_updated'),
-                func.count(model.tracking_raw_table.c.url).label('resource_access_count')
+                func.date(tracking_package.tracking_packages_table.c.tracking_date).label('date_updated'),
+                func.sum(tracking_package.tracking_packages_table.c.count).label('resource_access_count')
             ).join(
                 model.Resource,
-                func.split_part(model.tracking_raw_table.c.url, '/', -1) == model.Resource.id
+                tracking_package.tracking_packages_table.c.resource_id == model.Resource.id
             ).filter(
-                model.tracking_raw_table.c.access_timestamp >= start_date,
-                model.tracking_raw_table.c.access_timestamp < end_date
+                tracking_package.tracking_packages_table.c.tracking_date >= start_date,
+                tracking_package.tracking_packages_table.c.tracking_date < end_date
             )
             
             if format_type:
@@ -41,7 +44,7 @@ class TrackingAPI:
                 model.Resource.id,
                 model.Resource.name,
                 model.Resource.created,
-                model.tracking_raw_table.c.access_timestamp
+                tracking_package.tracking_packages_table.c.tracking_date
             ).limit(limit).offset(offset).all()
 
             # Đóng gói kết quả trả về dưới dạng JSON

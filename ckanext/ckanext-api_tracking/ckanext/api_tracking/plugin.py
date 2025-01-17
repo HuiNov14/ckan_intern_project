@@ -19,7 +19,7 @@ import ckan.plugins.toolkit as toolkit
 import ckanext.api_tracking.views as views
 from ckan.lib.plugins import DefaultTranslation
 from .helpers import get_statistics_options, get_breadcrumb_links, get_statistical_cards,get_chart_type
-
+from .models import tracking_package
 
 class API_Tracking_Plugin(p.SingletonPlugin, DefaultTranslation):
     p.implements(p.IMiddleware, inherit=True)
@@ -37,6 +37,8 @@ class API_Tracking_Plugin(p.SingletonPlugin, DefaultTranslation):
         toolkit.add_template_directory(config, 'templates')
         toolkit.add_public_directory(config, 'public')
         toolkit.add_resource('assets', 'api_tracking')
+        tracking_package.init_db()
+        tracking_package.update_tracking_info()
  
         
     def get_helpers(self):
