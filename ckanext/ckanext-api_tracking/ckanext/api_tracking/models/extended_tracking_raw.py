@@ -3,6 +3,7 @@ from sqlalchemy import func
 import ckan.model as model
 import ckan.model.meta as meta
 from ckan.plugins.toolkit import ValidationError
+from ..models import tracking_package
 
 class ExtendedTrackingRaw(model.TrackingSummary):
 
@@ -20,29 +21,29 @@ class ExtendedTrackingRaw(model.TrackingSummary):
         try:
             query = meta.Session.query(
                 model.user_table.c.name,
-                model.tracking_raw_table.c.url,
-                model.tracking_raw_table.c.tracking_type,
-                model.tracking_raw_table.c.user_key,
-                func.date(model.tracking_raw_table.c.access_timestamp).label('date'),
-                func.count(model.tracking_raw_table.c.user_key).label('request_count')
+                tracking_package.tracking_packages_table.c.url,
+                tracking_package.tracking_packages_table.c.tracking_type,
+                tracking_package.tracking_packages_table.c.user_key,
+                func.date(tracking_package.tracking_packages_table.c.tracking_date).label('date'),
+                func.count(tracking_package.tracking_packages_table.c.user_key).label('request_count')
             ).join(
                 model.user_table,  
-                model.tracking_raw_table.c.user_key == model.user_table.c.id  
+                tracking_package.tracking_packages_table.c.user_key == model.user_table.c.id  
             ).filter(
-                model.tracking_raw_table.c.url.like(f'/dataset/%'),
-                model.tracking_raw_table.c.tracking_type == 'page',
-                func.date(model.tracking_raw_table.c.access_timestamp) >= start_date,
-                func.date(model.tracking_raw_table.c.access_timestamp) < end_date,
+                tracking_package.tracking_packages_table.c.url.like(f'/dataset/%'),
+                tracking_package.tracking_packages_table.c.tracking_type == 'page',
+                func.date(tracking_package.tracking_packages_table.c.tracking_date) >= start_date,
+                func.date(tracking_package.tracking_packages_table.c.tracking_date) < end_date,
                 model.user_table.c.name.in_(user_names) if data_dict['user_name'] != [""] else True,
-                func.replace(model.tracking_raw_table.c.url, '/dataset/', '').in_(package_name) if data_dict['package_name'] != [""] else True
+                func.replace(tracking_package.tracking_packages_table.c.url, '/dataset/', '').in_(package_name) if data_dict['package_name'] != [""] else True
             ).group_by(
                 model.user_table.c.name,  
-                model.tracking_raw_table.c.url,
-                model.tracking_raw_table.c.tracking_type,
-                model.tracking_raw_table.c.user_key,
-                func.date(model.tracking_raw_table.c.access_timestamp),
+                tracking_package.tracking_packages_table.c.url,
+                tracking_package.tracking_packages_table.c.tracking_type,
+                tracking_package.tracking_packages_table.c.user_key,
+                func.date(tracking_package.tracking_packages_table.c.tracking_date),
             ).order_by(
-                func.date(model.tracking_raw_table.c.access_timestamp).desc()
+                func.date(tracking_package.tracking_packages_table.c.tracking_date).desc()
             )
         except Exception as e:
             raise ValidationError(f"Database query error: {e}")
@@ -115,14 +116,14 @@ class ExtendedTrackingRaw(model.TrackingSummary):
                 resource_id = res.id
                 
                 resource_query = meta.Session.query(
-                    model.tracking_raw_table.c.url,
+                    tracking_package.tracking_packages_table.c.url,
                 ).filter(
-                    model.tracking_raw_table.c.url.like(f'%/{res.id}%'), 
-                    func.date(model.tracking_raw_table.c.access_timestamp) == row.date,
-                    model.tracking_raw_table.c.user_key == row.user_key,
-                    model.tracking_raw_table.c.tracking_type.in_(['download', 'resource'])            
+                    tracking_package.tracking_packages_table.c.url.like(f'%/{res.id}%'), 
+                    func.date(tracking_package.tracking_packages_table.c.tracking_date) == row.date,
+                    tracking_package.tracking_packages_table.c.user_key == row.user_key,
+                    tracking_package.tracking_packages_table.c.tracking_type.in_(['download', 'resource'])            
                 ).group_by(
-                    model.tracking_raw_table.c.url,
+                    tracking_package.tracking_packages_table.c.url,
                 ).first()
                 
                 if resource_query:
@@ -150,12 +151,12 @@ class ExtendedTrackingRaw(model.TrackingSummary):
     def _get_view_count(cls, resource_id, row, tracking_type):
         try:
             resource_query = meta.Session.query(
-                func.count(model.tracking_raw_table.c.url).label('count')
+                func.count(tracking_package.tracking_packages_table.c.url).label('count')
             ).filter(
-                model.tracking_raw_table.c.url.like(f'%{resource_id}%'),
-                func.date(model.tracking_raw_table.c.access_timestamp) == row.date,
-                model.tracking_raw_table.c.user_key == row.user_key,
-                model.tracking_raw_table.c.tracking_type == tracking_type
+                tracking_package.tracking_packages_table.c.url.like(f'%{resource_id}%'),
+                func.date(tracking_package.tracking_packages_table.c.tracking_date) == row.date,
+                tracking_package.tracking_packages_table.c.user_key == row.user_key,
+                tracking_package.tracking_packages_table.c.tracking_type == tracking_type
             ).first()
             return resource_query.count if resource_query else 0
 
