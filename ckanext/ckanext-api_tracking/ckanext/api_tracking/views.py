@@ -24,7 +24,6 @@ def user_dashboard():
         return base.render('user/user_dashboard.html')
     
 
-
 def aggregate_package_views(urls_and_counts):
     """Aggregate package views for each unique package."""
     aggregated_data = {}
@@ -187,12 +186,14 @@ def statistical_field():
         
     except logic.NotAuthorized:
         return base.abort(403, toolkit._('Need to be system administrator to administer'))
- 
-    tag_list = logic.get_action('tag_list')(data_dict={})
+    
+    field_name_list = [dataset.get('field_name') for dataset in datasets_field if 'field_name' in dataset]
+    unique_field_name_list = list(set(field_name_list))  # Loại bỏ trùng lặp nếu cần thiết
+    print('===============================>',unique_field_name_list)
  
     extra_vars: dict[str, Any] = {
         u'datasets_field': json.dumps(datasets_field),
-        u'tag_list': tag_list,
+        u'group_list': unique_field_name_list,
         u'field_name': field_name,
         u'state': state,
         u'private': private,
@@ -257,6 +258,7 @@ def statistical_api():
         print("Request Exception:", str(e))
     
     creators = static_api.get("creators", [])  # Lấy danh sách creators
+    
     for creator in creators:
         print(f"Value: {creator.get('value')}, Text: {creator.get('text')}")
 
@@ -278,7 +280,6 @@ def statistical_api():
 
 #Dashboard/statistical/new_user_stats
 def new_user_statistical():
-
     try:
         logic.check_access('user_check', {})
     except logic.NotAuthorized:
@@ -311,7 +312,6 @@ def new_user_statistical():
 
 #Dashboard/statistical/user_login_stats
 def user_login_statistical():
-
     try:
         logic.check_access('user_check', {})
     except logic.NotAuthorized:

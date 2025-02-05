@@ -7,7 +7,7 @@ class FieldStatisticsAPI:
     @classmethod
     def get_field_package_status(cls, data_dict):
         field_names = data_dict.get('field_name', [])
-        
+
         # Kiểm tra nếu field_names là chuỗi trống hoặc chứa [""] thì bỏ lọc
         if not field_names or (isinstance(field_names, list) and "" in field_names):
             field_names = None
@@ -19,20 +19,22 @@ class FieldStatisticsAPI:
         try:
             # Truy vấn cơ bản lấy số liệu thống kê
             query = meta.Session.query(
-                model.Tag.name.label('field_name'),
+                model.Group.name.label('field_name'),
                 model.Package.state.label('package_state'),
                 func.count(model.Package.id).label('state_count'),
                 func.sum(case([(model.Package.private == False, 1)], else_=0)).label('public_count'),
                 func.sum(case([(model.Package.private == True, 1)], else_=0)).label('private_count')
             ).join(
-                model.PackageTag, model.Package.id == model.PackageTag.package_id
+                model.Member, model.Package.id == model.Member.table_id
             ).join(
-                model.Tag, model.Tag.id == model.PackageTag.tag_id
+                model.Group, model.Group.id == model.Member.group_id
+            ).filter(
+                model.Group.is_organization == False
             )
 
             # Chỉ áp dụng bộ lọc field_names nếu field_names có giá trị hợp lệ
             if field_names:
-                query = query.filter(model.Tag.name.in_(field_names))
+                query = query.filter(model.Group.name.in_(field_names))
 
             if private is not None:
                 query = query.filter(model.Package.private == private)
@@ -41,7 +43,7 @@ class FieldStatisticsAPI:
                 query = query.filter(model.Package.state == state)
 
             query = query.group_by(
-                model.Tag.name,
+                model.Group.name,
                 model.Package.state
             ).all()
 
@@ -63,15 +65,17 @@ class FieldStatisticsAPI:
                     model.Package.state.label('package_state'),
                     model.Package.private.label('is_private'),
                     model.Package.metadata_modified.label('package_created'),
-                    model.Tag.name.label('field_name')
+                    model.Group.name.label('field_name')
                 ).join(
-                    model.PackageTag, model.Package.id == model.PackageTag.package_id
+                    model.Member, model.Package.id == model.Member.table_id
                 ).join(
-                    model.Tag, model.Tag.id == model.PackageTag.tag_id
+                    model.Group, model.Group.id == model.Member.group_id
+                ).filter(
+                   model.Group.is_organization == False
                 )
 
                 if field_names:
-                    dataset_query = dataset_query.filter(model.Tag.name.in_(field_names))
+                    dataset_query = dataset_query.filter(model.Group.name.in_(field_names))
 
                 if private is not None:
                     dataset_query = dataset_query.filter(model.Package.private == private)
@@ -93,4 +97,4 @@ class FieldStatisticsAPI:
             return result
 
         except Exception as e:
-            raise ValidationError(f"Error fetching organization package status: {e}")
+            raise ValidationError(f"Error fetching group package status: {e}")

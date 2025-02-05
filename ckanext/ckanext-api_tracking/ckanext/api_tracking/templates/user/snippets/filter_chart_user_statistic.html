@@ -1,35 +1,18 @@
+{% asset 'api_tracking/filter_chart-js' %}
 <div class="d-flex align-items-center justify-content-end">
-<label for="adadad">{{ _("Other statistics") }}</label>
-<div class="ms-3">
-  <select id="statistics_select" class="form-select">
-    <option value="/dashboard/statistical/user-dashboard">All statistics</option>
-    <option value="/dashboard/statistical/new_user_stats">New User Statistics</option>
-    <option value="/dashboard/statistical/user_login_stats">User Login Statistics</option>
-    <!-- <option value="/dashboard/statistical/last_active_stats">Last Active Statistics</option> -->
-  </select>
+  <!-- Label trung tâm -->
+  <div class="text-center">
+    <label for="statistics_select">{{ _("Other Statistical") }}</label>
+  </div>
+  <!-- Dropdown lựa chọn -->
+  <div class="ms-3">
+    <select id="statistics_select" class="form-select">
+      {% for option in h.get_statistics_options_user() %}
+        <option value="{{ option['value'] }}" {% if option['selected'] %}selected{% endif %}>
+          {{ option['label'] }}
+        </option>
+      {% endfor %}
+    </select>
+  </div>
 </div>
-</div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  const statisticsSelect = document.getElementById('statistics_select');
-  
-  // Đặt giá trị mặc định dựa trên URL hiện tại
-  const currentUrl = window.location.pathname;
-  Array.from(statisticsSelect.options).forEach(option => {
-    if (option.value === currentUrl) {
-      option.selected = true;
-    }
-  });
-
-  // Lắng nghe sự kiện thay đổi (change) trên dropdown
-  statisticsSelect.addEventListener('change', function () {
-    const selectedValue = this.value;
-    if (selectedValue) {
-      // Chuyển hướng người dùng đến URL tương ứng
-      window.location.href = selectedValue;
-    }
-  });
-});
-
-</script>

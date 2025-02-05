@@ -157,3 +157,12 @@ sort_chart-css:
   output: ckanext-api_tracking/%(version)s-sort_chart.css
   contents:
     - css/sort_chart.css
+
+
+dashboard-css:
+  filter: cssrewrite
+  output: ckanext-api_tracking/%(version)s-dashboard.css
+  contents:
+    - css/dashboard.css
+
+

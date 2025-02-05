@@ -28,7 +28,7 @@
         <label for="fieldName" class="form-label">{{ _("Field Name") }}</label>
         <select style="line-height: 2.5;" id="fieldName" name="field_name" class="form-select" multiple>
           <option value="" {% if field_name == [""] %}selected{% endif %}>{{ _("All Fields") }}</option>
-          {% for field in tag_list %}
+          {% for field in group_list %}
             <option value="{{ field }}" {% if field in field_name %}selected{% endif %}>
               {{ field }}
             </option>

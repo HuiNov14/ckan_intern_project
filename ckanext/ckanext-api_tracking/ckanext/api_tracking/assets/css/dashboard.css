@@ -1,0 +1,14 @@
+.card-img-top {
+    height: 200px !important;
+    object-fit: cover !important;
+}
+
+.card {
+    width: 16rem !important;
+}
+
+.dropdown {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+}

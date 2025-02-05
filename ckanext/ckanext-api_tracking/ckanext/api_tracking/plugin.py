@@ -18,7 +18,7 @@ from ckan.common import CKANConfig
 import ckan.plugins.toolkit as toolkit
 import ckanext.api_tracking.views as views
 from ckan.lib.plugins import DefaultTranslation
-from .helpers import get_statistics_options, get_breadcrumb_links, get_statistical_cards,get_chart_type
+from .helpers import get_statistics_options, get_breadcrumb_links, get_statistical_cards_resource,get_chart_type,get_statistical_cards_user,get_statistics_options_user
 from .models import tracking_package
 
 class API_Tracking_Plugin(p.SingletonPlugin, DefaultTranslation):
@@ -45,8 +45,10 @@ class API_Tracking_Plugin(p.SingletonPlugin, DefaultTranslation):
         return {
             'get_statistics_options': get_statistics_options,
             'get_breadcrumb_links': get_breadcrumb_links,
-            'get_statistical_cards': get_statistical_cards,
+            'get_statistical_cards_resource': get_statistical_cards_resource,
+            'get_statistical_cards_user': get_statistical_cards_user,
             'get_chart_type': get_chart_type,
+            'get_statistics_options_user': get_statistics_options_user
         }
 
     def make_middleware(self, app: CKANApp, config):

@@ -1,4 +1,5 @@
 from flask import request, url_for
+from flask_babel import gettext as _
 import hashlib
 import six
 import re
@@ -96,12 +97,12 @@ def get_statistics_options():
 
     # Danh sách các tùy chọn với endpoint
     options = [
-        {"endpoint": "tracking_blueprint.resource_dashboard", "label": "All Statistics"},
-        {"endpoint": "tracking_blueprint.statistical_org", "label": "Organization Statistics"},
-        {"endpoint": "tracking_blueprint.statistical_field", "label": "Group Statistics"},
-        {"endpoint": "tracking_blueprint.statistical_datatypes", "label": "Datatypes Statistics"},
-        {"endpoint": "tracking_blueprint.statistical_tracking", "label": "Tracking Statistics"},
-        {"endpoint": "tracking_blueprint.statistical_api", "label": "API Statistics"},
+        {"endpoint": "tracking_blueprint.resource_dashboard", "label": _("All Statistics")},
+        {"endpoint": "tracking_blueprint.statistical_org", "label": _("Organization Statistics")},
+        {"endpoint": "tracking_blueprint.statistical_field", "label": _("Group Statistics")},
+        {"endpoint": "tracking_blueprint.statistical_datatypes", "label": _("Datatypes Statistics")},
+        {"endpoint": "tracking_blueprint.statistical_tracking", "label": _("Tracking Statistics")},
+        {"endpoint": "tracking_blueprint.statistical_api", "label": _("API Statistics")},
     ]
 
     # Tạo URL từ endpoint và đánh dấu 'selected'
@@ -119,7 +120,31 @@ def get_statistics_options():
 
     return options
     
-    
+def get_statistics_options_user():
+    # Lấy URL hiện tại
+    current_url = request.path
+
+    # Danh sách các tùy chọn với endpoint
+    options = [
+        {"endpoint": "tracking_blueprint.user_dashboard", "label": _("All Statistics User")},
+        {"endpoint": "tracking_blueprint.user_login_statistical", "label": _("User Login Statistics")},
+        {"endpoint": "tracking_blueprint.new_user_statistical", "label": _("New User Statistics")},
+    ]
+
+    # Tạo URL từ endpoint và đánh dấu 'selected'
+    for option in options:
+        try:
+            option["value"] = url_for(option["endpoint"])
+            option["selected"] = option["value"] == current_url
+        except Exception:
+            # Xử lý nếu endpoint không tồn tại
+            option["value"] = None
+            option["selected"] = False
+
+    # Loại bỏ các tùy chọn không hợp lệ (không tạo được URL)
+    options = [option for option in options if option["value"]]
+
+    return options
     
 def get_breadcrumb_links():
     return [
@@ -127,37 +152,53 @@ def get_breadcrumb_links():
     ]
 
 
-def get_statistical_cards():
+def get_statistical_cards_resource():
+    return [
+    {
+        "url": "tracking_blueprint.statistical_org",
+        "img_src": "/1.png",
+        "title": _("Organization Statistics"),
+        "description": _("This is a statistical chart of data belonging to an organization."),
+    },
+    {
+        "url": "tracking_blueprint.statistical_field",
+        "img_src": "/2.png",
+        "title": _("Group Statistics"),
+        "description": _("This is a statistical chart of data in a field."),
+    },
+    {
+        "url": "tracking_blueprint.statistical_datatypes",
+        "img_src": "/3.png",
+        "title": _("Datatypes Statistics"),
+        "description": _("This is a statistical chart of the number of data types."),
+    },
+    {
+        "url": "tracking_blueprint.statistical_tracking",
+        "img_src": "/4.png",
+        "title": _("Tracking Statistics"),
+        "description": _("This is a statistical chart that tracks views, downloads of data."),
+    },
+    {
+        "url": "tracking_blueprint.statistical_api",
+        "img_src": "/4.png",
+        "title": _("API Statistics"),
+        "description": _("This is a statistical chart that tracks views, downloads of data."),
+    },
+]
+    
+def get_statistical_cards_user():
     return [
         {
-            "url": "tracking_blueprint.statistical_org",
+            "url": "tracking_blueprint.new_user_statistical",
             "img_src": "/1.png",
-            "title": "Organization Statistics",
-            "description": "This is a statistical chart of data belonging to an organization.",
+            "title": _("New User Statistics"),
+            "description": _("Statistics of new users (new accounts created) over time"),
         },
         {
-            "url": "tracking_blueprint.statistical_field",
+            "url": "tracking_blueprint.user_login_statistical",
             "img_src": "/2.png",
-            "title": "Group Statistics",
-            "description": "This is a statistical chart of data in a field.",
-        },
-        {
-            "url": "tracking_blueprint.statistical_datatypes",
-            "img_src": "/3.png",
-            "title": "Datatypes Statistics",
-            "description": "This is a statistical chart of the number of data types.",
-        },
-        {
-            "url": "tracking_blueprint.statistical_tracking",
-            "img_src": "/4.png",
-            "title": "Tracking Statistics",
-            "description": "This is a statistical chart that tracks views, downloads of data.",
-        },
-        {
-            "url": "tracking_blueprint.statistical_api",
-            "img_src": "/4.png",
-            "title": "API Statistics",
-            "description": "This is a statistical chart that tracks views, downloads of data.",
+            "title": _("User Login Statistics"),
+            "description": _("Statistics of user logins over time"),
         },
     ]
 

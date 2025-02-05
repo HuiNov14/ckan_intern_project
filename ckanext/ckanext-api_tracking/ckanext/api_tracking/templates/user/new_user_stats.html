@@ -6,12 +6,7 @@
 
 {% block breadcrumb_content %}
 {% snippet 'user/snippets/breadcrumd_statistical.html' %}
-<li class="statistical">
-    <a href="/dashboard/statistical/user-dashboard">{{ _('User Statistics') }}</a>
-</li>
-<li class="active">
-    <a href="/dashboard/statistical/new_user_stats">{{ _('New User Statistics') }}</a>
-</li>
+
 {% endblock %}
 
 {% block secondary %}{% endblock %}
@@ -20,7 +15,7 @@
 <div class="container my-4 px-3">
 <div class="container rounded">
     <div class="d-flex justify-content-between">
-        <h4 class="mb-4">{{ _("Filter Organization Datasets") }}</h4>
+        <h4 class="mb-4">{{ _("Filter New User") }}</h4>
         <div class="col-md-4">
           {% snippet 'user/snippets/filter_chart_user_statistic.html' %}
         </div>
@@ -29,7 +24,7 @@
 <hr class="mt-3" />
 
 
-<form id="date-form" class="formCss" method="GET" action="/dashboard/statistical/new_user_stats">
+<form id="date-form" class="formCss" method="GET" action="{{ url_for('tracking_blueprint.new_user_statistical') }}">
     <div class="row mb-3">
         <div class="col-md-4">
             <label for="start-date" class="form-label">{{_("Start Date")}}</label>

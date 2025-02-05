@@ -7,23 +7,12 @@
 
 {% endblock %}
 {% block primary %}
-  <style>
-    .card-img-top {
-      height: 200px;
-      object-fit: cover;
-    }
-    
-    .card {
-      width: 16rem;
-    }
-  </style>
-
   <div class="container my-4 px-3">
-    <div style="display: flex; align-items: center; margin-bottom: 16px;">
+    <div class="dropdown">
       {% snippet 'user/snippets/filter_chart_statistical.html' %}
     </div>
     <div class="row row-cols-1 row-cols-md-4 g-4">
-      {% for card in h.get_statistical_cards() %}
+      {% for card in h.get_statistical_cards_resource() %}
         <div class="col">
           <div class="card h-100">
             <a href="{{ url_for(card.url) }}"><img src="{{ card.img_src }}" class="card-img-top" alt="{{ card.title }}" /></a>
@@ -36,4 +25,5 @@
       {% endfor %}
     </div>
   </div>
+  {% asset 'api_tracking/dashboard-css' %}
 {% endblock %}
