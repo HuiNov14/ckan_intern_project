@@ -5,6 +5,7 @@ ckan.module('custom_chart_login_activity', function ($) {
         initialize: function () {
             const apiData = this.options.chart_login_activity;
             const dateList = this.options.chart_date_list;
+            let chartType = 'bar';
 
             if (Array.isArray(dateList) && dateList.length > 0) {
                 document.getElementById("start-date").value = dateList[0];
@@ -20,46 +21,54 @@ ckan.module('custom_chart_login_activity', function ($) {
             const data = Object.values(loginData);
 
             const lineCtx = document.getElementById('statisticsChart').getContext('2d');
-            new Chart(lineCtx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Number of logins',
-                        data: data,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.2,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    aspectRatio: 2,
-                    scales: {
-                        x: {
-                            ticks: {
-                                autoSkip: false,
-                                maxRotation: 45,
-                                minRotation: 0
+            let chart = createChart(chartType);
+
+            document.getElementById('chartType').addEventListener('change', function () {
+                chartType = this.value;
+                chart.destroy(); // Hủy biểu đồ cũ
+                chart = createChart(chartType); // Tạo biểu đồ mới
+            });
+            function createChart(type) {
+                return new Chart(lineCtx, {
+                    type: type,
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Number of logins',
+                            data: data,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.2,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        aspectRatio: 2,
+                        scales: {
+                            x: {
+                                ticks: {
+                                    autoSkip: false,
+                                    maxRotation: 45,
+                                    minRotation: 0
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Date'
+                                }
                             },
-                            title: {
-                                display: true,
-                                text: 'Date'
-                            }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Number of logins'
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of logins'
+                                }
                             }
                         }
                     }
-                }
-            });
-
+                });
+            }
             document.getElementById('date-form').addEventListener('submit', function (event) {
                 if (!validateDates()) {
                     event.preventDefault();
