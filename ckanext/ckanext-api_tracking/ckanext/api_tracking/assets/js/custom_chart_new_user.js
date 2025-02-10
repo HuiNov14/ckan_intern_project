@@ -8,48 +8,58 @@ ckan.module('custom_chart_new_user', function ($) {
 
             const labels = apiData.days.map(item => item.date);
             const data = apiData.days.map(item => item.user_created_count);
+            let chartType = 'bar';
 
             const lineCtx = document.getElementById('statisticsChart').getContext('2d');
+            let chart = createChart(chartType);
 
-            const lineChart = new Chart(lineCtx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'New User',
-                        data: data,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.2,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    aspectRatio: 2,
-                    scales: {
-                        x: {
-                            ticks: {
-                                autoSkip: false,
-                                maxRotation: 45,
-                                minRotation: 0
+            document.getElementById('chartType').addEventListener('change', function () {
+                chartType = this.value;
+                chart.destroy(); // Hủy biểu đồ cũ
+                chart = createChart(chartType); // Tạo biểu đồ mới
+            });
+
+            function createChart(type) {
+                return new Chart(lineCtx, {
+                    type: type,
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'New User',
+                            data: data,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.2,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        aspectRatio: 2,
+                        scales: {
+                            x: {
+                                ticks: {
+                                    autoSkip: false,
+                                    maxRotation: 45,
+                                    minRotation: 0
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Date'
+                                }
                             },
-                            title: {
-                                display: true,
-                                text: 'Date'
-                            }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Number of new user'
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of new user'
+                                }
                             }
                         }
                     }
-                }
-            });
+                });
+            }
 
             document.getElementById('date-form').addEventListener('submit', function (event) {
                 if (!validateDates()) {
