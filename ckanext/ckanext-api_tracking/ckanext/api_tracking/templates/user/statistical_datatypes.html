@@ -15,7 +15,7 @@
   <div>
     <div class="container rounded">
       <div class="d-flex justify-content-between">
-        <h4 class="mb-4">{{_("Filter Datatypes Statistical")}}</h4>
+        <h4 class="mb-4">{{_("Data type statistics chart")}}</h4>
         <div class="col-md-4">
           {% snippet 'user/snippets/filter_chart_statistical.html' %}
         </div>
@@ -28,17 +28,17 @@
       <div class="row mb-3">
           <div class="col-md-4">
               <label for="start_date" class="form-label">{{_("Start Date")}}</label>
-              <input type="date" id="start_date" name="start_date" class="form-control" style="line-height: 2.5;" value="{{ start_date }}" max="{{ today }}">
+              <input type="date" id="start_date" name="start_date" class="form-control" value="{{ start_date }}" max="{{ today }}">
               <div id="start-date-error" class="text-danger mt-1"></div>
           </div>
           <div class="col-md-4">
               <label for="end_date" class="form-label">{{_("End Date")}}</label>
-              <input type="date" id="end_date" name="end_date" class="form-control" style="line-height: 2.5;" value="{{ end_date }}" max="{{ today }}">
+              <input type="date" id="end_date" name="end_date" class="form-control" value="{{ end_date }}" max="{{ today }}">
               <div id="end-date-error" class="text-danger mt-1"></div>
           </div>
           <div class="col-md-4">
               <label for="format_type" class="form-label">{{ _("Format Name") }}</label>
-              <select name="format_type" class="form-select" style="line-height: 2.5;">
+              <select name="format_type" class="form-select">
                 <option value="" {% if format_type == None %}selected{% endif %}>{{ _("All") }}</option>  
                  
                 {% for data in list_datatypes %}
@@ -59,7 +59,7 @@
     </form>
   </div>
   <div class="container mt-5 p-4 border rounded shadow-sm bg-light">
-    <div id="dateRangeTitle" ></div>
+    <div id="dateRangeTitle"></div>
     <div id="totalAccessTitle" ></div>
     {% snippet 'user/snippets/sort_chart_statistical.html' %}
   </div>

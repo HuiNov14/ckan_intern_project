@@ -127,8 +127,9 @@ def get_statistics_options_user():
     # Danh sách các tùy chọn với endpoint
     options = [
         {"endpoint": "tracking_blueprint.user_dashboard", "label": _("All Statistics User")},
-        {"endpoint": "tracking_blueprint.user_login_statistical", "label": _("User Login Statistics")},
+        {"endpoint": "tracking_blueprint.user_login_statistical", "label": _("User Login Activity Statistics")},
         {"endpoint": "tracking_blueprint.new_user_statistical", "label": _("New User Statistics")},
+        {"endpoint": "tracking_blueprint.statistical_user_time", "label": _("User Time Statistics")},
     ]
 
     # Tạo URL từ endpoint và đánh dấu 'selected'
@@ -156,31 +157,31 @@ def get_statistical_cards_resource():
     return [
     {
         "url": "tracking_blueprint.statistical_org",
-        "img_src": "/1.png",
+        "img_src": "/image_org.jpg",
         "title": _("Organization Statistics"),
         "description": _("This is a statistical chart of data belonging to an organization."),
     },
     {
         "url": "tracking_blueprint.statistical_field",
-        "img_src": "/2.png",
+        "img_src": "/image_group.jpg",
         "title": _("Group Statistics"),
         "description": _("This is a statistical chart of data in a field."),
     },
     {
         "url": "tracking_blueprint.statistical_datatypes",
-        "img_src": "/3.png",
+        "img_src": "/image_datatypes.jpg",
         "title": _("Datatypes Statistics"),
         "description": _("This is a statistical chart of the number of data types."),
     },
     {
         "url": "tracking_blueprint.statistical_tracking",
-        "img_src": "/4.png",
+        "img_src": "/image_tracking.jpg",
         "title": _("Tracking Statistics"),
         "description": _("This is a statistical chart that tracks views, downloads of data."),
     },
     {
         "url": "tracking_blueprint.statistical_api",
-        "img_src": "/4.png",
+        "img_src": "/image_api.jpg",
         "title": _("API Statistics"),
         "description": _("This is a statistical chart that tracks views, downloads of data."),
     },
@@ -190,20 +191,26 @@ def get_statistical_cards_user():
     return [
         {
             "url": "tracking_blueprint.new_user_statistical",
-            "img_src": "/1.png",
+            "img_src": "/image_new_user.jpg",
             "title": _("New User Statistics"),
             "description": _("Statistics of new users (new accounts created) over time"),
         },
         {
             "url": "tracking_blueprint.user_login_statistical",
-            "img_src": "/2.png",
-            "title": _("User Login Statistics"),
+            "img_src": "/image_login_show_activity.jpg",
+            "title": _("User Login Activity Statistics"),
             "description": _("Statistics of user logins over time"),
+        },
+        {
+            "url": "tracking_blueprint.statistical_user_time",
+            "img_src": "/image_user_time.jpg",
+            "title": _("User Time Statistics"),
+            "description": _("Statistics of user times over time"),
         },
     ]
 
 def get_chart_type():
     return [
-        {"value": "bar", "label": "Bar"},
-        {"value": "line", "label": "Line"},
+        {"value": "bar", "label": _("Bar")},
+        {"value": "line", "label": _("Line")},
     ]

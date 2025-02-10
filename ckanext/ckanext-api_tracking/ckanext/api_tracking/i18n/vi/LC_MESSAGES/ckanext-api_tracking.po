@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-12-16 09:27+0700\n"
+"POT-Creation-Date: 2025-02-06 06:37+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: vi\n"
@@ -19,10 +19,372 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.16.0\n"
 
-#: ckanext/api_tracking/views.py:75 ckanext/api_tracking/views.py:93
-#: ckanext/api_tracking/views.py:152 ckanext/api_tracking/views.py:188
-#: ckanext/api_tracking/views.py:222 ckanext/api_tracking/views.py:255
-#: ckanext/api_tracking/views.py:314
+#: ckanext/api_tracking/helpers.py:100
+msgid "All Statistics"
+msgstr "Tất cả biểu đồ thống kê"
+
+#: ckanext/api_tracking/helpers.py:101 ckanext/api_tracking/helpers.py:160
+msgid "Organization Statistics"
+msgstr "Dữ liệu thuộc Cơ quan cung cấp"
+
+#: ckanext/api_tracking/helpers.py:102 ckanext/api_tracking/helpers.py:166
+msgid "Group Statistics"
+msgstr "Dữ liệu thuộc lĩnh vực"
+
+#: ckanext/api_tracking/helpers.py:103 ckanext/api_tracking/helpers.py:172
+msgid "Datatypes Statistics"
+msgstr "Theo dõi loại dữ liệu"
+
+#: ckanext/api_tracking/helpers.py:104 ckanext/api_tracking/helpers.py:178
+msgid "Tracking Statistics"
+msgstr "Theo dõi truy cập bộ dữ liệu"
+
+#: ckanext/api_tracking/helpers.py:105 ckanext/api_tracking/helpers.py:184
+msgid "API Statistics"
+msgstr "Dữ liệu được khai thác qua API"
+
+#: ckanext/api_tracking/helpers.py:129
+msgid "All Statistics User"
+msgstr "Tất cả biểu đồ thống kê "
+
+#: ckanext/api_tracking/helpers.py:130 ckanext/api_tracking/helpers.py:200
+msgid "User Login Activity Statistics"
+msgstr "Thông kê hoạt động đăng nhập của người dùng"
+
+#: ckanext/api_tracking/helpers.py:131 ckanext/api_tracking/helpers.py:194
+msgid "New User Statistics"
+msgstr "Số lượng người dùng mới"
+
+#: ckanext/api_tracking/helpers.py:132 ckanext/api_tracking/helpers.py:207
+msgid "User Time Statistics"
+msgstr "Số lượng người dùng theo thời gian"
+
+#: ckanext/api_tracking/helpers.py:161
+msgid "This is a statistical chart of data belonging to an organization."
+msgstr "Đây là biểu đồ thống kê dữ liệu của một tổ chức."
+
+#: ckanext/api_tracking/helpers.py:167
+msgid "This is a statistical chart of data in a field."
+msgstr "Đây là biểu đồ thống kê dữ liệu trong một lĩnh vực."
+
+#: ckanext/api_tracking/helpers.py:173
+msgid "This is a statistical chart of the number of data types."
+msgstr "Đây là biểu đồ thống kê về số lượng kiểu dữ liệu."
+
+#: ckanext/api_tracking/helpers.py:179 ckanext/api_tracking/helpers.py:185
+msgid "This is a statistical chart that tracks views, downloads of data."
+msgstr "Đây là biểu đồ thống kê theo dõi lượt xem, lượt tải xuống dữ liệu."
+
+#: ckanext/api_tracking/helpers.py:195
+msgid "Statistics of new users (new accounts created) over time"
+msgstr "Thống kê người dùng mới (tài khoản mới được tạo) theo thời gian"
+
+#: ckanext/api_tracking/helpers.py:201
+msgid "Statistics of user logins over time"
+msgstr "Thống kê số lần đăng nhập của người dùng theo thời gian"
+
+#: ckanext/api_tracking/helpers.py:208
+msgid "Statistics of user times over time"
+msgstr "Thống kê thời gian sử dụng lần cuối của người dùng theo thời gian"
+
+#: ckanext/api_tracking/helpers.py:207
+msgid "Bar"
+msgstr "Dạng cột"
+
+#: ckanext/api_tracking/helpers.py:208
+msgid "Line"
+msgstr "Dạng đường"
+
+#: ckanext/api_tracking/templates/user/snippets/breadcrumd_statistical.html:2
+msgid "Dashboard"
+msgstr "Bộ điều khiển"
+
+#: ckanext/api_tracking/templates/user/snippets/breadcrumd_statistical.html:5
+msgid "Statistics"
+msgstr "Tất cả biểu đồ"
+
+#: ckanext/api_tracking/templates/user/snippets/filter_chart_statistical.html:5
+msgid "Other Statistical"
+msgstr "Biểu đồ khác"
+
+#: ckanext/api_tracking/templates/user/snippets/filter_chart_user_statistical.html:5
+msgid "Other Statistical"
+msgstr "Biểu đồ khác"
+
+#: ckanext/api_tracking/templates/user/dashboard_statistical.html:8
+msgid "Resources Statistical"
+msgstr "Biểu đồ thống kê bộ dữ liệu"
+
+#: ckanext/api_tracking/templates/user/dashboard_statistical.html:14
+msgid "Users Statistical"
+msgstr "Biểu đồ thống kê người dùng"
+
+#: ckanext/api_tracking/templates/user/dashboard_statistical.html:9
+msgid "Collection of charts related to data statistics"
+msgstr "Bộ sưu tập biểu đồ liên quan đến thống kê dữ liệu"
+
+#: ckanext/api_tracking/templates/user/dashboard_statistical.html:15
+msgid "Collection of charts related to user statistics"
+msgstr "Bộ sưu tập biểu đồ liên quan đến số liệu thống kê người dùng"
+
+#: ckanext/api_tracking/templates/user/dashboard.html:7
+msgid "Statistical"
+msgstr "Thống kê"
+
+#: ckanext/api_tracking/templates/user/new_user_stats.html:18
+msgid "New user statistics chart"
+msgstr "Biểu đồ thống kê người dùng mới"
+
+#: ckanext/api_tracking/templates/user/new_user_stats.html:30
+msgid "Start Date"
+msgstr "Ngày bắt đầu"
+
+#: ckanext/api_tracking/templates/user/new_user_stats.html:35
+msgid "End Date"
+msgstr "Ngày kết thúc"
+
+#: ckanext/api_tracking/templates/user/new_user_stats.html:41
+msgid "User Name"
+msgstr "Tên người dùng"
+
+#: ckanext/api_tracking/templates/user/new_user_stats.html:43
+msgid "Active"
+msgstr "Đang hoạt động"
+
+#: ckanext/api_tracking/templates/user/new_user_stats.html:44
+msgid "Pending"
+msgstr "Đang chờ xử lý"
+
+#: ckanext/api_tracking/templates/user/new_user_stats.html:24
+msgid "Statistical chart of data mined via api"
+msgstr "Biểu đồ thống kê dữ liệu được khai thác qua api"
+
+#: ckanext/api_tracking/templates/user/statistical_api.html:33
+msgid "Start Date"
+msgstr "Ngày bắt đầu"
+
+#: ckanext/api_tracking/templates/user/statistical_api.html:38
+msgid "End Date"
+msgstr "Ngày kết thúc"
+
+#: ckanext/api_tracking/templates/user/statistical_api.html:43
+msgid "User Name"
+msgstr "Tên người dùng"
+
+#: ckanext/api_tracking/templates/user/statistical_api.html:62
+msgid "Filter"
+msgstr "Lọc dữ liệu"
+
+#: ckanext/api_tracking/templates/user/statistical_api.html:64
+msgid "Total api accessed statistics"
+msgstr "Thống kê tổng API được truy cập"
+
+#: ckanext/api_tracking/templates/user/statistical_api.html:70
+msgid "Statistics of resource size created by day"
+msgstr "Thống kê kích thước tài nguyên được tạo theo ngày"
+
+#: ckanext/api_tracking/templates/user/statistical_api.html:74
+msgid "Resource size statistics created by resource name"
+msgstr "Thống kê kích thước tài nguyên được tạo theo tên tài nguyên"
+
+#: ckanext/api_tracking/templates/user/statistical_datatypes.html:18
+msgid "Data type statistics chart"
+msgstr "Biểu đồ thống kê loại dữ liệu"
+
+#: ckanext/api_tracking/templates/user/statistical_datatypes.html:30
+msgid "Start Date"
+msgstr "Ngày bắt đầu"
+
+#: ckanext/api_tracking/templates/user/statistical_datatypes.html:35
+msgid "End Date"
+msgstr "Ngày kết thúc"
+
+#: ckanext/api_tracking/templates/user/statistical_datatypes.html:40
+msgid "Format Name"
+msgstr "Tên loại dữ liệu"
+
+#: ckanext/api_tracking/templates/user/statistical_datatypes.html:42
+msgid "All"
+msgstr "Tất cả"
+
+#: ckanext/api_tracking/templates/user/statistical_datatypes.html:57
+msgid "Filter"
+msgstr "Lọc dữ liệu"
+
+#: ckanext/api_tracking/templates/user/statistical_field.html:18
+msgid "Statistical chart of data in the field"
+msgstr "Biểu đồ thống kê dữ liệu thuộc lĩnh vực"
+
+#: ckanext/api_tracking/templates/user/statistical_field.html:28
+msgid "Field Name"
+msgstr "Tên lĩnh vực"
+
+#: ckanext/api_tracking/templates/user/statistical_field.html:28
+msgid "All Fields"
+msgstr "Tất cả lĩnh vực"
+
+#: ckanext/api_tracking/templates/user/statistical_field.html:41
+msgid "State"
+msgstr "Trạng thái"
+
+#: ckanext/api_tracking/templates/user/statistical_field.html:44
+msgid "Active"
+msgstr "Hoạt động"
+
+#: ckanext/api_tracking/templates/user/statistical_field.html:45
+msgid "Draft"
+msgstr "Bản nháp"
+
+#: ckanext/api_tracking/templates/user/statistical_field.html:46
+msgid "Deleted"
+msgstr "Đã xóa"
+
+#: ckanext/api_tracking/templates/user/statistical_field.html:51
+msgid "Private"
+msgstr "Riêng tư"
+
+#: ckanext/api_tracking/templates/user/statistical_field.html:53
+msgid "All"
+msgstr "Tất cả"
+
+#: ckanext/api_tracking/templates/user/statistical_field.html:54
+msgid "Yes"
+msgstr "Có"
+
+#: ckanext/api_tracking/templates/user/statistical_field.html:55
+msgid "No"
+msgstr "Không"
+
+#: ckanext/api_tracking/templates/user/statistical_field.html:74
+msgid "Filter"
+msgstr "Lọc dữ liệu"
+
+#: ckanext/api_tracking/templates/user/statistical_org.html:18
+msgid "Statistical chart of data in the organization"
+msgstr "Biểu đồ thống kê dữ liệu thuộc Cơ quan cung cấp"
+
+#: ckanext/api_tracking/templates/user/statistical_org.html:28
+msgid "Organization Name"
+msgstr "Tên cơ quan"
+
+#: ckanext/api_tracking/templates/user/statistical_org.html:41
+msgid "State"
+msgstr "Trạng thái"
+
+#: ckanext/api_tracking/templates/user/statistical_org.html:44
+msgid "Active"
+msgstr "Hoạt động"
+
+#: ckanext/api_tracking/templates/user/statistical_org.html:45
+msgid "Draft"
+msgstr "Bản nháp"
+
+#: ckanext/api_tracking/templates/user/statistical_org.html:46
+msgid "Deleted"
+msgstr "Đã xóa"
+
+#: ckanext/api_tracking/templates/user/statistical_org.html:51
+msgid "Private"
+msgstr "Riêng tư"
+
+#: ckanext/api_tracking/templates/user/statistical_org.html:53
+msgid "All"
+msgstr "Tất cả"
+
+#: ckanext/api_tracking/templates/user/statistical_org.html:54
+msgid "Yes"
+msgstr "Có"
+
+#: ckanext/api_tracking/templates/user/statistical_org.html:55
+msgid "No"
+msgstr "Không"
+
+#: ckanext/api_tracking/templates/user/statistical_org.html:74
+msgid "Filter"
+msgstr "Lọc dữ liệu"
+
+#: ckanext/api_tracking/templates/user/statistical_tracking.html:24
+msgid "Statistical charts track datasets and data"
+msgstr "Biểu đồ thống kê theo dõi bộ dữ liệu và dữ liệu"
+
+#: ckanext/api_tracking/templates/user/statistical_tracking.html:34
+msgid "Start Date"
+msgstr "Ngày bắt đầu"
+
+#: ckanext/api_tracking/templates/user/statistical_tracking.html:40
+msgid "End Date"
+msgstr "Ngày kết thúc"
+
+#: ckanext/api_tracking/templates/user/statistical_tracking.html:49
+msgid "Package Name"
+msgstr "Tên bộ dữ liệu"
+
+#: ckanext/api_tracking/templates/user/statistical_tracking.html:53
+msgid "All Packages"
+msgstr "Tất cả bộ dữ liệu"
+
+#: ckanext/api_tracking/templates/user/statistical_tracking.html:61
+msgid "User Name"
+msgstr "Tên người dùng"
+
+#: ckanext/api_tracking/templates/user/statistical_tracking.html:63
+msgid "All User"
+msgstr "Tất cả người dùng"
+
+#: ckanext/api_tracking/templates/user/statistical_tracking.html:78
+msgid "Filter"
+msgstr "Lọc dữ liệu"
+
+#: ckanext/api_tracking/templates/user/user_login_stats.html:18
+msgid "User Login Show Active Statistics Chart"
+msgstr "Biểu đồ thống kê hoạt động đăng nhập của người dùng"
+
+#: ckanext/api_tracking/templates/user/statistical_user_time.html:19
+msgid "User time statistics chart"
+msgstr "Biểu đồ thống kê số lượng người dùng theo thời gian"
+
+#: ckanext/api_tracking/templates/user/statistical_user_time.html:31
+msgid "Last Active Since"
+msgstr "Hoạt động lần cuối kể từ"
+
+#: ckanext/api_tracking/templates/user/statistical_user_time.html:36
+msgid "To"
+msgstr "Đến"
+
+#: ckanext/api_tracking/templates/user/statistical_user_time.html:43
+msgid "Yes"
+msgstr "Có"
+
+#: ckanext/api_tracking/templates/user/statistical_user_time.html:41
+msgid "Show Details"
+msgstr "Xem chi tiết"
+
+#: ckanext/api_tracking/templates/user/statistical_user_time.html:42
+msgid "No"
+msgstr "Không"
+
+#: ckanext/api_tracking/templates/user/statistical_user_time.html:50
+msgid "All"
+msgstr "Tất cả tài khoản"
+
+#: ckanext/api_tracking/templates/user/statistical_user_time.html:51
+msgid "Yes"
+msgstr "Có"
+
+#: ckanext/api_tracking/templates/user/statistical_user_time.html:52
+msgid "No"
+msgstr "Không"
+
+#: ckanext/api_tracking/templates/user/statistical_user_time.html:61
+msgid "Filter"
+msgstr "Lọc dữ liệu"
+
+
+
+#: ckanext/api_tracking/views.py:76 ckanext/api_tracking/views.py:102
+#: ckanext/api_tracking/views.py:156 ckanext/api_tracking/views.py:188
+#: ckanext/api_tracking/views.py:280 ckanext/api_tracking/views.py:312
+#: ckanext/api_tracking/views.py:389
 msgid "Need to be system administrator to administer"
-msgstr ""
+msgstr "Cần phải là quản trị viên hệ thống để quản lý"
 

@@ -1,15 +1,14 @@
 # Translations template for ckanext-api_tracking.
-# Copyright (C) 2024 ORGANIZATION
-# This file is distributed under the same license as the ckanext-api_tracking
-# project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the ckanext-api_tracking project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-api_tracking 0.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2024-12-16 09:27+0700\n"
+"POT-Creation-Date: 2025-02-10 10:39+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,10 +17,95 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.16.0\n"
 
-#: ckanext/api_tracking/views.py:75 ckanext/api_tracking/views.py:93
-#: ckanext/api_tracking/views.py:152 ckanext/api_tracking/views.py:188
-#: ckanext/api_tracking/views.py:222 ckanext/api_tracking/views.py:255
-#: ckanext/api_tracking/views.py:314
+#: ckanext/api_tracking/helpers.py:100
+msgid "All Statistics"
+msgstr ""
+
+#: ckanext/api_tracking/helpers.py:101 ckanext/api_tracking/helpers.py:161
+msgid "Organization Statistics"
+msgstr ""
+
+#: ckanext/api_tracking/helpers.py:102 ckanext/api_tracking/helpers.py:167
+msgid "Group Statistics"
+msgstr ""
+
+#: ckanext/api_tracking/helpers.py:103 ckanext/api_tracking/helpers.py:173
+msgid "Datatypes Statistics"
+msgstr ""
+
+#: ckanext/api_tracking/helpers.py:104 ckanext/api_tracking/helpers.py:179
+msgid "Tracking Statistics"
+msgstr ""
+
+#: ckanext/api_tracking/helpers.py:105 ckanext/api_tracking/helpers.py:185
+msgid "API Statistics"
+msgstr ""
+
+#: ckanext/api_tracking/helpers.py:129
+msgid "All Statistics User"
+msgstr ""
+
+#: ckanext/api_tracking/helpers.py:130 ckanext/api_tracking/helpers.py:201
+msgid "User Login Statistics"
+msgstr ""
+
+#: ckanext/api_tracking/helpers.py:131 ckanext/api_tracking/helpers.py:195
+msgid "New User Statistics"
+msgstr ""
+
+#: ckanext/api_tracking/helpers.py:132 ckanext/api_tracking/helpers.py:207
+msgid "User Time Statistics"
+msgstr ""
+
+#: ckanext/api_tracking/helpers.py:162
+msgid "This is a statistical chart of data belonging to an organization."
+msgstr ""
+
+#: ckanext/api_tracking/helpers.py:168
+msgid "This is a statistical chart of data in a field."
+msgstr ""
+
+#: ckanext/api_tracking/helpers.py:174
+msgid "This is a statistical chart of the number of data types."
+msgstr ""
+
+#: ckanext/api_tracking/helpers.py:180 ckanext/api_tracking/helpers.py:186
+msgid "This is a statistical chart that tracks views, downloads of data."
+msgstr ""
+
+#: ckanext/api_tracking/helpers.py:196
+msgid "Statistics of new users (new accounts created) over time"
+msgstr ""
+
+#: ckanext/api_tracking/helpers.py:202
+msgid "Statistics of user logins over time"
+msgstr ""
+
+#: ckanext/api_tracking/helpers.py:208
+msgid "Statistics of user times over time"
+msgstr ""
+
+#: ckanext/api_tracking/helpers.py:214
+msgid "Bar"
+msgstr ""
+
+#: ckanext/api_tracking/helpers.py:215
+msgid "Line"
+msgstr ""
+
+#: ckanext/api_tracking/views.py:78 ckanext/api_tracking/views.py:104 ckanext/api_tracking/views.py:159 ckanext/api_tracking/views.py:191 ckanext/api_tracking/views.py:283 ckanext/api_tracking/views.py:315 ckanext/api_tracking/views.py:391 ckanext/api_tracking/views.py:441
 msgid "Need to be system administrator to administer"
+msgstr ""
+
+#: ckanext/api_tracking/logic/validators.py:10
+msgid "The 'recent_active_days' value cannot exceed 30 days and less than 0."
+msgstr ""
+
+#: ckanext/api_tracking/logic/validators.py:26
+msgid "Ngày không đúng định dạng (YYYY-MM-DD)"
+msgstr ""
+
+#: ckanext/api_tracking/logic/validators.py:29
+msgid "Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc."
 msgstr ""
 

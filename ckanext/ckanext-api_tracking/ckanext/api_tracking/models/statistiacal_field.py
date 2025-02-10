@@ -20,6 +20,7 @@ class FieldStatisticsAPI:
             # Truy vấn cơ bản lấy số liệu thống kê
             query = meta.Session.query(
                 model.Group.name.label('field_name'),
+                model.Group.title.label('field_title'),
                 model.Package.state.label('package_state'),
                 func.count(model.Package.id).label('state_count'),
                 func.sum(case([(model.Package.private == False, 1)], else_=0)).label('public_count'),
@@ -44,6 +45,7 @@ class FieldStatisticsAPI:
 
             query = query.group_by(
                 model.Group.name,
+                model.Group.title,
                 model.Package.state
             ).all()
 
@@ -51,6 +53,7 @@ class FieldStatisticsAPI:
             for row in query:
                 result.append({
                     'field_name': row.field_name,
+                    'field_title': row.field_title,
                     'package_state': row.package_state or "no state",
                     'state_count': row.state_count,
                     'public_count': row.public_count,
@@ -65,7 +68,8 @@ class FieldStatisticsAPI:
                     model.Package.state.label('package_state'),
                     model.Package.private.label('is_private'),
                     model.Package.metadata_modified.label('package_created'),
-                    model.Group.name.label('field_name')
+                    model.Group.name.label('field_name'),
+                    model.Group.title.label('field_title')
                 ).join(
                     model.Member, model.Package.id == model.Member.table_id
                 ).join(

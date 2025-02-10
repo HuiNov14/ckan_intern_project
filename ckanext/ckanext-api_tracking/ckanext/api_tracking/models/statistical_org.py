@@ -21,6 +21,7 @@ class OrganizationStatisticsAPI:
             # Truy vấn cơ bản lấy số liệu thống kê
             query = meta.Session.query(
                 model.Group.name.label('organization_name'),
+                model.Group.title.label('organization_title'),
                 model.Package.state.label('package_state'),
                 func.count(model.Package.id).label('state_count'),
                 func.sum(case([(model.Package.private == False, 1)], else_=0)).label('public_count'),
@@ -42,10 +43,11 @@ class OrganizationStatisticsAPI:
 
             query = query.group_by(
                 model.Group.name,
+                model.Group.title,  # Đảm bảo group by cả title để tránh lỗi
                 model.Package.state
             ).all()
             
-            print("======================>query",query)
+            print("======================>query", query)
 
             # Danh sách kết quả trả về
             result = []
@@ -54,6 +56,7 @@ class OrganizationStatisticsAPI:
             for row in query:
                 result.append({
                     'organization_name': row.organization_name,
+                    'organization_title': row.organization_title,  # Thêm tiêu đề tổ chức vào kết quả
                     'package_state': row.package_state or "no state",
                     'state_count': row.state_count,
                     'public_count': row.public_count,
@@ -69,7 +72,8 @@ class OrganizationStatisticsAPI:
                     model.Package.state.label('package_state'),
                     model.Package.private.label('is_private'),
                     model.Package.metadata_modified.label('package_created'),
-                    model.Group.name.label('organization_name')
+                    model.Group.name.label('organization_name'),
+                    model.Group.title.label('organization_title')
                 ).join(
                     model.Group, model.Package.owner_org == model.Group.id
                 ).filter(

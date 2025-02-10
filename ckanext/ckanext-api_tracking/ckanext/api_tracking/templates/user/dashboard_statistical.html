@@ -6,13 +6,13 @@
       <li class="dataset-item mb-4">
         <div class="dataset-content p-4 border rounded shadow-sm bg-light">
           <h2 class="dataset-heading"><a href="{{ url_for('tracking_blueprint.resource_dashboard') }}" class="text-decoration-none text-primary d-flex align-items-center"><i class="fa fa-chart-bar mr-2"></i>{{ _('Resources Statistical') }}</a></h2>
-          <p class="empty text-muted">Collection of charts related to data statistics</p>
+          <p class="empty text-muted">{{ _('Collection of charts related to data statistics') }}</p>
         </div>
       </li>
       <li class="dataset-item mb-4">
         <div class="dataset-content p-4 border rounded shadow-sm bg-info text-white">
           <h2 class="dataset-heading"><a href="{{ url_for('tracking_blueprint.user_dashboard') }}" class="text-decoration-none text-white d-flex align-items-center"><i class="fa fa-users mr-2"></i>{{ _('Users Statistical') }}</a></h2>
-          <p class="empty text-light">A collection of charts related to user statistics</p>
+          <p class="empty text-light">{{ _('Collection of charts related to user statistics') }}</p>
         </div>
       </li>
     </ul>

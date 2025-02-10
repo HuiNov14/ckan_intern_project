@@ -15,7 +15,7 @@
   <div class="container rounded">
     <div class="d-flex justify-content-between">
 
-      <h4 class="mb-4">{{ _("Filter Field Datasets") }}</h4>
+      <h4 class="mb-4">{{ _("Statistical chart of data in the field") }}</h4>
       <div class="col-md-4">
         {% snippet 'user/snippets/filter_chart_statistical.html' %}
       </div>
@@ -26,20 +26,18 @@
     <div class="row mb-3">
       <div class="col-md-4">
         <label for="fieldName" class="form-label">{{ _("Field Name") }}</label>
-        <select style="line-height: 2.5;" id="fieldName" name="field_name" class="form-select" multiple>
+        <select id="fieldName" name="field_name" class="form-select" multiple>
           <option value="" {% if field_name == [""] %}selected{% endif %}>{{ _("All Fields") }}</option>
           {% for field in group_list %}
-            <option value="{{ field }}" {% if field in field_name %}selected{% endif %}>
-              {{ field }}
+          <option value="{{ field.name }}" {% if field.name in field_name %}selected{% endif %}>
+              {{ field.title }}
             </option>
           {% endfor %}
         </select>
       </div>
-      
-
       <div class="col-md-4">
         <label for="state" class="form-label">{{ _("State") }}</label>
-        <select style="line-height: 2.5;" id="state" name="state" class="form-select" style="line-height: 2.5;">
+        <select id="state" name="state" class="form-select">
           <option value="" {% if state == None %}selected{% endif %}>{{ _("All") }}</option>
           <option value="active" {% if state == 'active' %}selected{% endif %}>{{ _("Active") }}</option>
           <option value="draft" {% if state == 'draft' %}selected{% endif %}>{{ _("Draft") }}</option>
@@ -49,10 +47,10 @@
 
       <div class="col-md-4">
         <label for="private" class="form-label">{{ _("Private") }}</label>
-        <select style="line-height: 2.5;" id="private" name="private" class="form-select" style="line-height: 2.5;">
+        <select id="private" name="private" class="form-select">
           <option value="" {% if private == None %}selected{% endif %}>{{ _("All") }}</option>
-          <option value="true" {% if private == 'true' %}selected{% endif %}>{{ _("True") }}</option>
-          <option value="false" {% if private == 'false' %}selected{% endif %}>{{ _("False") }}</option>
+          <option value="true" {% if private == 'true' %}selected{% endif %}>{{ _("Yes") }}</option>
+          <option value="false" {% if private == 'false' %}selected{% endif %}>{{ _("No") }}</option>
         </select>
       </div>
     </div>

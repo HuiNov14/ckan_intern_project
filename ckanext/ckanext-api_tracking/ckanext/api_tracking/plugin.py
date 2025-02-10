@@ -20,6 +20,7 @@ import ckanext.api_tracking.views as views
 from ckan.lib.plugins import DefaultTranslation
 from .helpers import get_statistics_options, get_breadcrumb_links, get_statistical_cards_resource,get_chart_type,get_statistical_cards_user,get_statistics_options_user
 from .models import tracking_package
+from .logic.validators import validate_date_range
 
 class API_Tracking_Plugin(p.SingletonPlugin, DefaultTranslation):
     p.implements(p.IMiddleware, inherit=True)
@@ -29,6 +30,7 @@ class API_Tracking_Plugin(p.SingletonPlugin, DefaultTranslation):
     p.implements(p.IBlueprint)
     p.implements(p.ITranslation)
     p.implements(p.ITemplateHelpers)
+    p.implements(p.IValidators)
    
     def get_blueprint(self):
         return views.get_blueprints()
@@ -49,6 +51,11 @@ class API_Tracking_Plugin(p.SingletonPlugin, DefaultTranslation):
             'get_statistical_cards_user': get_statistical_cards_user,
             'get_chart_type': get_chart_type,
             'get_statistics_options_user': get_statistics_options_user
+        }
+    
+    def get_validators(self):
+        return {
+            'validate_date_range': validate_date_range,
         }
 
     def make_middleware(self, app: CKANApp, config):

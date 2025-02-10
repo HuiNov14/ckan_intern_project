@@ -1,16 +1,23 @@
-
 "use strict";
 
-ckan.module('custom_chart_user', function ($) {
+ckan.module('custom_chart_login_activity', function ($) {
     return {
         initialize: function () {
+            const apiData = this.options.chart_login_activity;
+            const dateList = this.options.chart_date_list;
 
-            const loginData = this.options.chart_login
-            const dateList = this.options.chart_date
+            if (Array.isArray(dateList) && dateList.length > 0) {
+                document.getElementById("start-date").value = dateList[0];
+                document.getElementById("end-date").value = dateList[dateList.length - 1];
+            }
 
+            const loginData = {};
+            dateList.forEach(date => {
+                loginData[date] = apiData[date] || 0;
+            });
 
-            const labels = Object.keys(loginData)
-            const data = Object.values(loginData)
+            const labels = Object.keys(loginData);
+            const data = Object.values(loginData);
 
             const lineCtx = document.getElementById('statisticsChart').getContext('2d');
             new Chart(lineCtx, {
@@ -18,7 +25,7 @@ ckan.module('custom_chart_user', function ($) {
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Number of login',
+                        label: 'Number of logins',
                         data: data,
                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
                         borderColor: 'rgba(75, 192, 192, 1)',
@@ -46,12 +53,13 @@ ckan.module('custom_chart_user', function ($) {
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Number of login'
+                                text: 'Number of logins'
                             }
                         }
                     }
                 }
             });
+
             document.getElementById('date-form').addEventListener('submit', function (event) {
                 if (!validateDates()) {
                     event.preventDefault();
@@ -79,6 +87,15 @@ ckan.module('custom_chart_user', function ($) {
                     endDateError.textContent = 'The end date must be after the start date.';
                     return false;
                 }
+
+                const diffTime = Math.abs(end - start);
+                const diffDays = diffTime / (1000 * 60 * 60 * 24);
+                if (diffDays > 30) {
+                    startDateError.textContent = 'The filter date range limit cannot exceed 30 days.';
+                    endDateError.textContent = 'Please select a smaller filter date range.';
+                    return false;
+                }
+
                 return true;
             }
         }

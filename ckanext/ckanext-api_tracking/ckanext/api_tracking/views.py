@@ -1,3 +1,4 @@
+from encodings import undefined
 import json
 import requests
 from math import log
@@ -12,6 +13,7 @@ import ckan.lib.base as base
 from ckan.lib.helpers import helper_functions as h
 from ckan.lib.helpers import Page
 from datetime import date
+from.logic.validators import validate_date_range
 
 # Blueprint for tracking
 dashboard = Blueprint('tracking_blueprint', __name__, url_prefix=u'/dashboard/')
@@ -135,6 +137,7 @@ def statistical_tracking():
     return base.render('user/statistical_tracking.html', extra_vars)
 
 
+
 # Đây là chức năng thống kê data theo tổ chức 
 def statistical_org():
     organization_name = request.form.get('organization_name') or None
@@ -154,9 +157,12 @@ def statistical_org():
         
     except logic.NotAuthorized:
         return base.abort(403, toolkit._('Need to be system administrator to administer'))
- 
-    organization_list = logic.get_action('organization_list')(data_dict={})
- 
+
+    organization_list = logic.get_action('organization_list')(
+        data_dict={'all_fields': True}
+    )
+    print("this is organization_list --->",organization_list)
+    
     extra_vars: dict[str, Any] = {
         u'datasets_org': json.dumps(datasets_org) if datasets_org else '[]',
         u'organization_list': organization_list,
@@ -187,13 +193,12 @@ def statistical_field():
     except logic.NotAuthorized:
         return base.abort(403, toolkit._('Need to be system administrator to administer'))
     
-    field_name_list = [dataset.get('field_name') for dataset in datasets_field if 'field_name' in dataset]
-    unique_field_name_list = list(set(field_name_list))  # Loại bỏ trùng lặp nếu cần thiết
-    print('===============================>',unique_field_name_list)
- 
+    group_list = logic.get_action('group_list')(
+        data_dict={'all_fields': True}
+     )       
     extra_vars: dict[str, Any] = {
         u'datasets_field': json.dumps(datasets_field),
-        u'group_list': unique_field_name_list,
+        u'group_list': group_list,
         u'field_name': field_name,
         u'state': state,
         u'private': private,
@@ -215,12 +220,6 @@ def statistical_api():
     # Lấy tham số từ request args
     limit = int(request.args.get('limit', 100))  # Giá trị mặc định là 100
     page = int(request.args.get('page', 1))  # Giá trị mặc định là 1
-
-    print("start_time:", start_time)
-    print("end_time:", end_time)
-    print("creator_select:", creator_select)
-    print("limit:", limit)
-    print("page:", page)
 
     # Định nghĩa API URL
     api_url = "https://opendata.vnptit.vn/api/3/action/show_api_statistics"
@@ -264,7 +263,7 @@ def statistical_api():
 
     # Tạo extra_vars để truyền sang template
     extra_vars = {
-        'static_api': static_api,
+        'static_api':  json.dumps(static_api) if static_api else '[]',
         'creators': creators,
         'start_time': start_time,
         'end_time': end_time,
@@ -285,7 +284,7 @@ def new_user_statistical():
     except logic.NotAuthorized:
         return base.abort(403, toolkit._('Need to be system administrator to administer'))
 
-    start_date = request.args.get('start_date', (datetime.now() - timedelta(days=29)).strftime('%Y-%m-%d'))
+    start_date = request.args.get('start_date', (datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d'))
     end_date = request.args.get('end_date', datetime.now().strftime('%Y-%m-%d'))
     state = request.args.get('state', 'active')
     date_list = [start_date,end_date]
@@ -300,9 +299,9 @@ def new_user_statistical():
 
     except Exception as e:
         raise toolkit.ValidationError(f"api request error: {e}")    
-    
+    print("this is urls_and_counts --->",urls_and_counts)
     extra_vars: dict[str, Any] = {
-        u'urls_and_counts': urls_and_counts,
+        u'urls_and_counts': json.dumps(urls_and_counts),
         u'state': state, 
         u'count': urls_and_counts['total_user_created_count'],
         u'date_list': date_list,
@@ -316,10 +315,9 @@ def user_login_statistical():
         logic.check_access('user_check', {})
     except logic.NotAuthorized:
         return base.abort(403, toolkit._('Need to be system administrator to administer'))
-    start_date = request.args.get('start_date', (datetime.now() - timedelta(days=29)).strftime('%Y-%m-%d'))
+    start_date = request.args.get('start_date', (datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d'))
     end_date = request.args.get('end_date', datetime.now().strftime('%Y-%m-%d'))
     user_name = request.args.get('user_name')
-    state = request.args.get('state', 'active')
     
     user_name_list = toolkit.get_action('user_list')(data_dict={})
     user_name_list = [user['name'] for user in user_name_list]
@@ -343,7 +341,7 @@ def user_login_statistical():
     current_date = start_date
     while current_date <= end_date:
         date_list.append(current_date.strftime('%Y-%m-%d'))
-        current_date += timedelta(days=1)  
+        current_date += timedelta(days=1)
     
     count = 0
     login_data = {date: 0 for date in date_list} 
@@ -355,8 +353,8 @@ def user_login_statistical():
                 count+=1
                 
     extra_vars: dict[str, Any] = {
-        u'date_list': date_list,
-        u'login_data': login_data,
+        u'login_data': json.dumps(login_data),
+        u'date_list': json.dumps(date_list),
         u'count': count,
         u'user_name_filtered': user_name,
         u'user_name_list': user_name_list,
@@ -418,6 +416,42 @@ def statistical_datatypes():
     }     
     return base.render('user/statistical_datatypes.html', extra_vars)
 
+
+def statistical_user_time():
+    start_date = request.form.get('start_date', (datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d'))  
+    end_date = request.form.get('end_date',datetime.now().strftime('%Y-%m-%d')) 
+    include_user_info_detail = request.form.get('include_user_info_detail') or True
+    sys_admin = request.form.get('sys_admin') or None
+    
+    start_date_obj = datetime.strptime(start_date, '%Y-%m-%d')
+    end_date_obj = datetime.strptime(end_date, '%Y-%m-%d')
+    days_difference = str((end_date_obj - start_date_obj).days)
+    
+    try:
+        action = 'stats_users'
+        list_user_time = logic.get_action(action)(data_dict={
+            'recent_active_days': days_difference,
+            'target_active_date': end_date,
+            'include_user_info_detail': include_user_info_detail,
+            'sys_admin': sys_admin,
+        })  
+        
+    except logic.NotAuthorized:
+        return base.abort(403, toolkit._('Need to be system administrator to administer'))
+
+    print("this is list user --->",list_user_time)
+    
+    extra_vars: dict[str, Any] = {
+        u'list_user_time': json.dumps(list_user_time, default=json_serial),
+        u'start_date': start_date,
+        u'end_date': end_date,
+        u'include_user_info_detail': include_user_info_detail,
+        u'sys_admin': sys_admin,
+    }
+
+    return base.render('user/statistical_user_time.html', extra_vars)
+
+
 dashboard.add_url_rule(
     u"/statistical/resource-dashboard", view_func=resource_dashboard, methods=['GET']
 )
@@ -448,7 +482,13 @@ dashboard.add_url_rule(
     u"/statistical/user_login_stats", view_func=user_login_statistical, methods=['GET', 'POST']
 )
 dashboard.add_url_rule(
+    u"/statistical/user_login", view_func=user_login_statistical, methods=['GET', 'POST']
+)
+dashboard.add_url_rule(
     u"/statistical/new_user_stats", view_func=new_user_statistical, methods=['GET', 'POST']
+)
+dashboard.add_url_rule(
+    u"/statistical/user_time_stats", view_func=statistical_user_time, methods=['GET', 'POST']
 )
 
 dashboard.add_url_rule(

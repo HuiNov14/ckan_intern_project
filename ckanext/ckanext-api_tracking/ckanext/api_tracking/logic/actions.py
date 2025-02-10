@@ -160,7 +160,14 @@ def users_statistics(context, data_dict):
             raise ValidationError(errors)
         
     if 'recent_active_days' not in data_dict:
-        data_dict['recent_active_days'] = 1
+        data_dict['recent_active_days'] = 7
+        
+    if 'include_user_info_detail' not in data_dict:
+        data_dict['include_user_info_detail'] = True
+    
+    if 'sys_admin' not in data_dict:
+        data_dict['sys_admin'] = None 
+
             
     result = ExtendedUserTable.get_users_statistics(data_dict)
     return result

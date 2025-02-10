@@ -10,12 +10,12 @@
 {% block secondary %}{% endblock %}
 
 {% block primary %}
-{% asset 'api_tracking/statistical_user-js' %}
-{% asset 'api_tracking/statistical_user-css' %}
+{% asset 'api_tracking/statistical_login_activity-js' %}
+{% asset 'api_tracking/statistical_login_activity-css' %}
 <div class="container my-4 px-3">
     <div class="container rounded">
         <div class="d-flex justify-content-between">
-            <h4 class="mb-4">{{ _("Filter User Login") }}</h4>
+            <h4 class="mb-4">{{ _("User Login Show Active Statistics Chart") }}</h4>
             <div class="col-md-4">
               {% snippet 'user/snippets/filter_chart_user_statistic.html' %}
             </div>
@@ -26,18 +26,18 @@
             <div class="row mb-3">
                 <div class="col-md-4">
                     <label for="start-date" class="form-label">{{_("Start Date")}}</label>
-                    <input type="date" id="start-date" name="start_date" class="form-control" style="line-height: 2.5;" required value="{{ date_list[0] if date_list else '' }}">
+                    <input type="date" id="start-date" name="start_date" class="form-control" required >
                     <div id="start-date-error" class="text-danger mt-1"></div>
                 </div>
                 <div class="col-md-4">  
                     <label for="end-date" class="form-label">{{_("End Date")}}</label>
-                    <input type="date" id="end-date" name="end_date" class="form-control" style="line-height: 2.5;" required value="{{ date_list[-1] if date_list else '' }}">
+                    <input type="date" id="end-date" name="end_date" class="form-control" required >
                     <div id="end-date-error" class="text-danger mt-1"></div>
                 </div>
                 <div class="col-md-4">
                     <label for="user-name" class="form-label">{{ _("User Name") }}</label>
-                    <select name="user_name" id="user-name" class="form-select" style="line-height: 2.5;">
-                        <option value="">{{ _("All user") }}</option>
+                    <select name="user_name" id="user-name" class="form-select">
+                        <option value="">{{ _("All User") }}</option>
                             {% for user_name in user_name_list %}
                         <option value="{{ user_name }}" {% if user_name == user_name_filtered %}selected{% endif %}>{{ user_name }}</option>
                             {% endfor %}
@@ -46,108 +46,16 @@
                 <div id="user-name-error" class="text-danger mt-1"></div>
             </div>
             <div class="text-end">
-                <button type="submit" class="btn btn-primary px-4">{{ _("Filter") }}</button>
+                <button type="submit"
+                data-module="custom_chart_login_activity" 
+                data-module-chart_login_activity="{{ login_data }}"  
+                data-module-chart_date_list="{{ date_list }}"  
+                class="btn btn-primary px-4">{{ _("Filter") }}</button>
             </div>
         </form>
     <div class="container mt-5 p-4 border rounded shadow-sm bg-light">
         {% snippet 'user/snippets/sort_chart_statistical.html' %}
     </div>
 </div>
-
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    const apiData = {{ login_data | tojson }};
-    const dateList = {{ date_list | tojson }};
-
-    const loginData = {};
-    dateList.forEach(date => {
-        loginData[date] = apiData[date] || 0;
-    });
-
-    const labels = Object.keys(loginData);
-    const data = Object.values(loginData);
-
-    const lineCtx = document.getElementById('statisticsChart').getContext('2d');
-    new Chart(lineCtx, {
-        type: 'line',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Number of login',
-                data: data,
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 2,
-                fill: true,
-                tension: 0.2,
-            }]
-        },
-        options: {
-            responsive: true,
-            aspectRatio: 2,
-            scales: {
-                x: {
-                    ticks: {
-                        autoSkip: false,
-                        maxRotation: 45,
-                        minRotation: 0
-                    },
-                    title: {
-                        display: true,
-                        text: 'Date'
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Number of login'
-                    }
-                }
-            }
-        }
-    });
-
-    document.getElementById('date-form').addEventListener('submit', function (event) {
-        if (!validateDates()) {
-            event.preventDefault();
-        }
-    });
-
-    document.getElementById('start-date').addEventListener('change', validateDates);
-    document.getElementById('end-date').addEventListener('change', validateDates);
-
-    function validateDates() {
-        const startDate = document.getElementById('start-date').value;
-        const endDate = document.getElementById('end-date').value;
-
-        const startDateError = document.getElementById('start-date-error');
-        const endDateError = document.getElementById('end-date-error');
-
-        startDateError.textContent = '';
-        endDateError.textContent = '';
-
-        const start = new Date(startDate);
-        const end = new Date(endDate);
-
-        if (start > end) {
-            startDateError.textContent = 'The start date must be before the end date.';
-            endDateError.textContent = 'The end date must be after the start date.';
-            return false;
-        }
-
-        const diffTime = Math.abs(end - start);
-        const diffDays = diffTime / (1000 * 60 * 60 * 24);
-        if (diffDays > 30) {
-            startDateError.textContent = 'The filter date range limit cannot exceed 30 days.';
-            endDateError.textContent = 'Please select a smaller filter date range.';
-            return false;
-        }
-
-        return true;
-    }
-
-</script>
 
 {% endblock %}
