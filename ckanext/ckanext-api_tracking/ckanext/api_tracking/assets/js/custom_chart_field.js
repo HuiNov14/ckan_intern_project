@@ -8,7 +8,11 @@ ckan.module('custom_chart_field', function ($) {
             // template.
             var chartFiled = this.options.chart_field;
             console.log("chartFiled: ", chartFiled);
-
+            var count = this.options.count;
+            var state = this.options.state;
+            var publicCount = this.options.public;
+            var privateCount = this.options.private;
+            var name = this.options.name;
             const ctx = document.getElementById('statisticsChart').getContext('2d');
             let chart; // Biến lưu trữ biểu đồ để có thể cập nhật lại
 
@@ -21,21 +25,21 @@ ckan.module('custom_chart_field', function ($) {
                         labels: labels,
                         datasets: [
                             {
-                                label: 'State Count',
+                                label: state,
                                 data: activeCounts,
                                 backgroundColor: 'rgba(153, 102, 255, 0.6)', // Màu tím
                                 borderColor: 'rgba(153, 102, 255, 1)',
                                 borderWidth: 1
                             },
                             {
-                                label: 'Public Count',
+                                label: publicCount,
                                 data: publicCounts,
                                 backgroundColor: 'rgba(255, 206, 86, 0.6)', // Màu vàng
                                 borderColor: 'rgba(255, 206, 86, 1)',
                                 borderWidth: 1
                             },
                             {
-                                label: 'Private Count',
+                                label: privateCount,
                                 data: privateCounts,
                                 backgroundColor: 'rgba(255, 99, 132, 0.6)', // Màu đỏ
                                 borderColor: 'rgba(255, 99, 132, 1)',
@@ -49,13 +53,13 @@ ckan.module('custom_chart_field', function ($) {
                             x: {
                                 title: {
                                     display: true,
-                                    text: 'Group Name'
+                                    text: name
                                 }
                             },
                             y: {
                                 title: {
                                     display: true,
-                                    text: 'Count'
+                                    text: count
                                 },
                                 beginAtZero: true
                             }
@@ -66,7 +70,7 @@ ckan.module('custom_chart_field', function ($) {
                                     title: function (tooltipItems) {
                                         // Return full field name on hover
                                         const index = tooltipItems[0].dataIndex;
-                                        return chartFiled[index].field_name; // Full field name
+                                        return chartFiled[index].field_title; // Full field name
                                     }
                                 }
                             }
@@ -80,7 +84,7 @@ ckan.module('custom_chart_field', function ($) {
                 const groupedData = {};
 
                 chartFiled.forEach(item => {
-                    const fieldName = item.field_name; // Lấy tên trường
+                    const fieldName = item.field_title; // Lấy tên trường
                     if (!groupedData[fieldName]) {
                         groupedData[fieldName] = {
                             state_count: 0,

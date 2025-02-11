@@ -190,3 +190,7 @@
   max-width: 1000px;
   min-width: 200px;
 }
+
+.text-center {
+  width: 50%;
+}

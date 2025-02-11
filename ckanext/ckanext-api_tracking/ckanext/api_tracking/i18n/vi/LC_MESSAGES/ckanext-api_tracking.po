@@ -155,6 +155,18 @@ msgstr "Đang hoạt động"
 msgid "Pending"
 msgstr "Đang chờ xử lý"
 
+#: ckanext/api_tracking/templates/user/new_user_stats.html:52
+msgid "New User"
+msgstr "Người dùng mới"
+
+#: ckanext/api_tracking/templates/user/new_user_stats.html:53
+msgid "Date"
+msgstr "Ngày"
+
+#: ckanext/api_tracking/templates/user/new_user_stats.html:54
+msgid "Number of new user"
+msgstr "Số người dùng mới"
+
 #: ckanext/api_tracking/templates/user/new_user_stats.html:24
 msgid "Statistical chart of data mined via api"
 msgstr "Biểu đồ thống kê dữ liệu được khai thác qua api"
@@ -202,6 +214,14 @@ msgstr "Ngày kết thúc"
 #: ckanext/api_tracking/templates/user/statistical_datatypes.html:40
 msgid "Format Name"
 msgstr "Tên loại dữ liệu"
+
+#: ckanext/api_tracking/templates/user/statistical_datatypes.html:60
+msgid "Total accesses:"
+msgstr "Tổng lượt truy cập:"
+
+#: ckanext/api_tracking/templates/user/statistical_datatypes.html:61
+msgid "accesses"
+msgstr "lượt truy cập"
 
 #: ckanext/api_tracking/templates/user/statistical_datatypes.html:42
 msgid "All"
@@ -299,6 +319,26 @@ msgstr "Có"
 msgid "No"
 msgstr "Không"
 
+#: ckanext/api_tracking/templates/user/statistical_org.html:64
+msgid "Organization Name"
+msgstr "Tên cơ quan"
+
+#: ckanext/api_tracking/templates/user/statistical_org.html:65
+msgid "Count"
+msgstr "Số lượng"
+
+#: ckanext/api_tracking/templates/user/statistical_org.html:66
+msgid "State"
+msgstr "Trạng thái"
+
+#: ckanext/api_tracking/templates/user/statistical_org.html:67
+msgid "Public"
+msgstr "Công khai"
+
+#: ckanext/api_tracking/templates/user/statistical_org.html:68
+msgid "Private"
+msgstr "Riêng tư"
+
 #: ckanext/api_tracking/templates/user/statistical_org.html:74
 msgid "Filter"
 msgstr "Lọc dữ liệu"
@@ -306,6 +346,10 @@ msgstr "Lọc dữ liệu"
 #: ckanext/api_tracking/templates/user/statistical_tracking.html:24
 msgid "Statistical charts track datasets and data"
 msgstr "Biểu đồ thống kê theo dõi bộ dữ liệu và dữ liệu"
+
+#: ckanext/api_tracking/templates/user/statistical_tracking.html:24
+msgid "Resource Statistics Chart"
+msgstr "Biểu đồ thống kê theo dõi tài nguyên"
 
 #: ckanext/api_tracking/templates/user/statistical_tracking.html:34
 msgid "Start Date"
@@ -330,6 +374,26 @@ msgstr "Tên người dùng"
 #: ckanext/api_tracking/templates/user/statistical_tracking.html:63
 msgid "All User"
 msgstr "Tất cả người dùng"
+
+#: ckanext/api_tracking/templates/user/statistical_tracking.html:81
+msgid "Total Package Views:"
+msgstr "Tổng lượt xem bộ dữ liệu:"
+
+#: ckanext/api_tracking/templates/user/statistical_tracking.html:82
+msgid "Package Views"
+msgstr "Lượt truy cập bộ dữ liệu"
+
+#: ckanext/api_tracking/templates/user/statistical_tracking.html:83
+msgid "Resource Downloads"
+msgstr "Tải xuống tài nguyên"
+
+#: ckanext/api_tracking/templates/user/statistical_tracking.html:84
+msgid "Resource Views"
+msgstr "Lượt xem tài nguyên"
+
+#: ckanext/api_tracking/templates/user/statistical_tracking.html:85
+msgid "Resource Name"
+msgstr "Tên tài nguyên"
 
 #: ckanext/api_tracking/templates/user/statistical_tracking.html:78
 msgid "Filter"
@@ -363,6 +427,18 @@ msgstr "Xem chi tiết"
 msgid "No"
 msgstr "Không"
 
+#: ckanext/api_tracking/templates/user/statistical_user_time.html:51
+msgid "Date"
+msgstr "Ngày"
+
+#: ckanext/api_tracking/templates/user/statistical_user_time.html:52
+msgid "Total active users"
+msgstr "Tổng số người dùng hoạt động"
+
+#: ckanext/api_tracking/templates/user/statistical_user_time.html:48
+msgid "Admin Account"
+msgstr "Tài khoản quản trị"
+
 #: ckanext/api_tracking/templates/user/statistical_user_time.html:50
 msgid "All"
 msgstr "Tất cả tài khoản"
@@ -378,6 +454,27 @@ msgstr "Không"
 #: ckanext/api_tracking/templates/user/statistical_user_time.html:61
 msgid "Filter"
 msgstr "Lọc dữ liệu"
+
+#: ckanext/api_tracking/templates/user/statistical_user_time.html:60
+msgid "Number of users"
+msgstr "Số lượng người dùng"
+
+#: ckanext/api_tracking/templates/user/statistical_user_time.html:61
+msgid "Date"
+msgstr "Ngày"
+
+#: ckanext/api_tracking/templates/user/statistical_user_time.html:62
+msgid "Date Range: From"
+msgstr "Khoảng ngày: Từ"
+
+#: ckanext/api_tracking/templates/user/statistical_user_time.html:63
+msgid "To"
+msgstr "Đến"
+
+#: ckanext/api_tracking/templates/user/statistical_user_time.html:61
+msgid "Total users:"
+msgstr "Tổng số người dùng:"
+
 
 
 

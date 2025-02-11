@@ -93,6 +93,7 @@ statistical_user-js:
     - js/chart.js
     - js/choices.min.js
     - js/custom_chart_user.js
+    - js/validate_date.js
   extra:
     preload:
       - base/main
@@ -131,6 +132,7 @@ statistical_api-js:
     - js/chart.js
     - js/choices.min.js
     - js/custom_chart_api.js
+    - js/validate_date.js
   extra:
     preload:
       - base/main
@@ -175,6 +177,7 @@ statistical_login_activity-js:
     - js/chart.js
     - js/choices.min.js
     - js/custom_chart_login_show_active.js
+    - js/validate_date.js
   extra:
     preload:
       - base/main
@@ -189,6 +192,7 @@ statistical_user_time-js:
     - js/chart.js
     - js/choices.min.js
     - js/custom_chart_user_time.js
+    - js/validate_date.js
   extra:
     preload:
       - base/main
@@ -203,6 +207,7 @@ statistical_new_user-js:
     - js/chart.js
     - js/choices.min.js
     - js/custom_chart_new_user.js
+    - js/validate_date.js
   extra:
     preload:
       - base/main

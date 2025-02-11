@@ -49,7 +49,10 @@
     <div class="text-end">
         <button type="submit"
         data-module="custom_chart_new_user" 
-        data-module-chart_new_user="{{ urls_and_counts   }}"  
+        data-module-newuser="{{ _('New User') }}"
+        data-module-x="{{ _('Date') }}"
+        data-module-y="{{ _('Number of new user') }}"
+        data-module-chart_new_user="{{ urls_and_counts }}"  
         class="btn btn-primary px-4">{{_("Filter")}}</button>
     </div>
 

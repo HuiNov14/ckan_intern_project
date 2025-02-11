@@ -16,7 +16,12 @@ ckan.module('custom_chart_datatypes', function ($) {
             let formatTypes = {};
             let totalAccess = 0; // Biến lưu tổng số lượt truy cập
             let chartType = 'bar'; // Loại biểu đồ mặc định
-
+            const x = this.options.x;
+            const y = this.options.y;
+            const from = this.options.from;
+            const to = this.options.to;
+            const sum = this.options.sum;
+            const tracking = this.options.tracking;
             processData(trackingDatatypes);
 
             const ctx = document.getElementById('statisticsChart').getContext('2d');
@@ -47,14 +52,14 @@ ckan.module('custom_chart_datatypes', function ($) {
                             tooltip: {
                                 callbacks: {
                                     label: function (context) {
-                                        return `${context.dataset.label} - ${context.label}: ${context.raw} accesses`;
+                                        return `${context.dataset.label}: ${context.raw} ${tracking}`;
                                     }
                                 }
                             }
                         },
                         scales: type !== 'pie' ? {
-                            x: { title: { display: true, text: 'Date Updated' } },
-                            y: { beginAtZero: true, title: { display: true, text: 'Access Count' } }
+                            x: { title: { display: true, text: x } },
+                            y: { beginAtZero: true, title: { display: true, text: y } }
                         } : {}
                     }
                 });
@@ -138,8 +143,8 @@ ckan.module('custom_chart_datatypes', function ($) {
                 const dateRangeTitleElement = document.getElementById('dateRangeTitle');
                 const totalAccessTitleElement = document.getElementById('totalAccessTitle');
 
-                dateRangeTitleElement.innerHTML = `From <strong>${startDate}</strong> to <strong>${endDate}</strong>`;
-                totalAccessTitleElement.innerHTML = `Total Accesses: <strong>${totalAccess}</strong>`;
+                dateRangeTitleElement.innerHTML = `<h5>${from} ${startDate} ${to} ${endDate}</h5>`;;
+                totalAccessTitleElement.innerHTML = `<h5>${sum} ${totalAccess}</h5>`;
             }
 
 

@@ -67,7 +67,7 @@ def users_statistics_combined_schema(not_empty: Validator, ignore_missing: Valid
                                      int_validator: Validator):
     return {
         'sys_admin': [ignore_missing, boolean_validator],
-        'recent_active_days': [ignore_missing, not_empty, int_validator, max_30_days_validator],
+        'recent_active_days': [ignore_missing, not_empty, int_validator],
         'start_created_date': [ignore_missing, not_empty, isodate],
         'end_created_date': [ignore_missing, not_empty, isodate],
         'target_active_date': [ignore_missing, not_empty, isodate],

@@ -5,6 +5,8 @@ ckan.module('custom_chart_login_activity', function ($) {
         initialize: function () {
             const apiData = this.options.chart_login_activity;
             const dateList = this.options.chart_date_list;
+            const x = this.options.x;
+            const y = this.options.y;
             let chartType = 'bar';
 
             if (Array.isArray(dateList) && dateList.length > 0) {
@@ -34,7 +36,7 @@ ckan.module('custom_chart_login_activity', function ($) {
                     data: {
                         labels: labels,
                         datasets: [{
-                            label: 'Number of logins',
+                            label: y,
                             data: data,
                             backgroundColor: 'rgba(75, 192, 192, 0.2)',
                             borderColor: 'rgba(75, 192, 192, 1)',
@@ -55,21 +57,21 @@ ckan.module('custom_chart_login_activity', function ($) {
                                 },
                                 title: {
                                     display: true,
-                                    text: 'Date'
+                                    text: x
                                 }
                             },
                             y: {
                                 beginAtZero: true,
                                 title: {
                                     display: true,
-                                    text: 'Number of logins'
+                                    text: y
                                 }
                             }
                         }
                     }
                 });
             }
-            document.getElementById('date-form').addEventListener('submit', function (event) {
+            document.getElementById('tracking-form').addEventListener('submit', function (event) {
                 if (!validateDates()) {
                     event.preventDefault();
                 }
@@ -92,16 +94,8 @@ ckan.module('custom_chart_login_activity', function ($) {
                 const end = new Date(endDate);
 
                 if (start > end) {
-                    startDateError.textContent = 'The start date must be before the end date.';
-                    endDateError.textContent = 'The end date must be after the start date.';
-                    return false;
-                }
-
-                const diffTime = Math.abs(end - start);
-                const diffDays = diffTime / (1000 * 60 * 60 * 24);
-                if (diffDays > 30) {
-                    startDateError.textContent = 'The filter date range limit cannot exceed 30 days.';
-                    endDateError.textContent = 'Please select a smaller filter date range.';
+                    startDateError.textContent = 'Start date must be earlier than or equal to end date.';
+                    endDateError.textContent = 'End date must be later than or equal to start date.';
                     return false;
                 }
 

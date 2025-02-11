@@ -5,6 +5,11 @@ ckan.module('custom_chart_user_time', function ($) {
         initialize: function () {
             document.getElementById('statisticsChart').style.height = '450px';
             let listUserTime = this.options.chart_user_time;
+            const x = this.options.x;
+            const y = this.options.y;
+            const from = this.options.from;
+            const to = this.options.to;
+            const sum = this.options.sum;
 
             let labels = listUserTime.days.map(item => item.date);
             let userCounts = listUserTime.days.map(item => item.active_user_count);
@@ -21,8 +26,8 @@ ckan.module('custom_chart_user_time', function ($) {
             const totalAccessTitle = document.getElementById('totalAccessTitle');
 
             // Cập nhật thông tin vào các phần tử nếu cần hiển thị
-            dateRangeTitle.innerHTML = `<h5>Khoảng ngày: Từ ${startDate} đến ${endDate}</h5>`;
-            totalAccessTitle.innerHTML = `<h5>Tổng số người dùng: ${totalUserCount}</h5>`;
+            dateRangeTitle.innerHTML = `<h5>${from} ${startDate} ${to} ${endDate}</h5>`;
+            totalAccessTitle.innerHTML = `<h5>${sum} ${totalUserCount}</h5>`;
 
             // Lấy giá trị từ dropdown 'include_user_info_detail'
             const selectIncludeUserInfo = document.querySelector('select[name="include_user_info_detail"]');
@@ -65,7 +70,7 @@ ckan.module('custom_chart_user_time', function ($) {
                     data: {
                         labels: labels,
                         datasets: [{
-                            label: 'Số lượng người dùng',
+                            label: y,
                             data: userCounts,
                             borderColor: 'rgb(54, 162, 235)',
                             backgroundColor: 'rgba(54, 162, 235, 0.2)',
@@ -81,7 +86,7 @@ ckan.module('custom_chart_user_time', function ($) {
                             x: {
                                 title: {
                                     display: true,
-                                    text: 'Ngày'
+                                    text: x
                                 },
                                 ticks: {
                                     autoSkip: true,
@@ -91,7 +96,7 @@ ckan.module('custom_chart_user_time', function ($) {
                             y: {
                                 title: {
                                     display: true,
-                                    text: 'Số lượng người dùng'
+                                    text: y
                                 },
                                 beginAtZero: true
                             }
@@ -100,7 +105,7 @@ ckan.module('custom_chart_user_time', function ($) {
                             tooltip: {
                                 callbacks: {
                                     label: function (tooltipItem) {
-                                        return 'Người dùng: ' + tooltipItem.raw;
+                                        return y + ':' + tooltipItem.raw;
                                     }
                                 }
                             }

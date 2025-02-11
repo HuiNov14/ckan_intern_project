@@ -4,6 +4,9 @@ ckan.module('custom_chart_new_user', function ($) {
     return {
         initialize: function () {
             const apiData = this.options.chart_new_user;
+            const newuser = this.options.newuser;
+            const x = this.options.x;
+            const y = this.options.y;
             apiData.days.sort((a, b) => new Date(a.date) - new Date(b.date));
 
             const labels = apiData.days.map(item => item.date);
@@ -25,7 +28,7 @@ ckan.module('custom_chart_new_user', function ($) {
                     data: {
                         labels: labels,
                         datasets: [{
-                            label: 'New User',
+                            label: newuser,
                             data: data,
                             backgroundColor: 'rgba(75, 192, 192, 0.2)',
                             borderColor: 'rgba(75, 192, 192, 1)',
@@ -46,14 +49,14 @@ ckan.module('custom_chart_new_user', function ($) {
                                 },
                                 title: {
                                     display: true,
-                                    text: 'Date'
+                                    text: x
                                 }
                             },
                             y: {
                                 beginAtZero: true,
                                 title: {
                                     display: true,
-                                    text: 'Number of new user'
+                                    text: y
                                 }
                             }
                         }
@@ -84,16 +87,8 @@ ckan.module('custom_chart_new_user', function ($) {
                 const end = new Date(endDate);
 
                 if (start > end) {
-                    startDateError.textContent = 'The start date must be before the end date.';
-                    endDateError.textContent = 'The end date must be after the start date.';
-                    return false;
-                }
-
-                const diffTime = Math.abs(end - start);
-                const diffDays = diffTime / (1000 * 60 * 60 * 24);
-                if (diffDays > 30) {
-                    startDateError.textContent = 'The filter date range limit cannot exceed 30 days.';
-                    endDateError.textContent = 'Please select a smaller filter date range.';
+                    startDateError.textContent = 'Start date must be earlier than or equal to end date.';
+                    endDateError.textContent = 'End date must be later than or equal to start date.';
                     return false;
                 }
 
