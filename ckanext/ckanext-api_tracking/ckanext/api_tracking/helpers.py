@@ -147,11 +147,6 @@ def get_statistics_options_user():
 
     return options
     
-def get_breadcrumb_links():
-    return [
-        {"url": "/dashboard/statistical/resource_dashboard", "label": "Resource Statistics"},
-    ]
-
 
 def get_statistical_cards_resource():
     return [
@@ -214,3 +209,26 @@ def get_chart_type():
         {"value": "bar", "label": _("Bar")},
         {"value": "line", "label": _("Line")},
     ]
+    
+def get_validation_error_messages():
+    """Trả về các thông báo lỗi đã được dịch."""
+    return {
+        'start_date_invalid': _('Please enter a valid start date.'),
+        'end_date_invalid': _('Please enter a valid end date.'),
+        'start_date_after_end_date': _('Start date must be earlier than or equal to end date.'),
+        'end_date_before_start_date': _('End date must be later than or equal to start date.')
+    }
+    
+def get_info_name_static_tracking():
+    """Trả về các tên của bảng đã được dịch."""
+    return {
+        'x': _('Date'),
+        'y': _('Count'),
+        'from': _('Date Range: From'),
+        'to': _('To'),
+        'total_package_view': _('Total Package Views:'),
+        'package_view': _('Package Views'),
+        'resource_download': _('Resource Downloads'),
+        'resource_view': _('Resource Views'),
+        'resource_name': _('Resource Name'),
+    }

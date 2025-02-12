@@ -23,6 +23,22 @@ msgstr ""
 msgid "All Statistics"
 msgstr "Tất cả biểu đồ thống kê"
 
+#: ckanext/api_tracking/helpers.py:221
+msgid "Please enter a valid start date."
+msgstr "Vui lòng nhập ngày bắt đầu hợp lệ."
+
+#: ckanext/api_tracking/helpers.py:222
+msgid "Please enter a valid end date."
+msgstr "Vui lòng nhập vào ngày kết thúc hợp lệ"
+
+#: ckanext/api_tracking/helpers.py:223
+msgid "Start date must be earlier than or equal to end date."
+msgstr "Ngày bắt đầu phải sớm hơn hoặc bằng ngày kết thúc."
+
+#: ckanext/api_tracking/helpers.py:224
+msgid "End date must be later than or equal to start date."
+msgstr "Ngày kết thúc phải muộn hơn hoặc bằng ngày bắt đầu."
+
 #: ckanext/api_tracking/helpers.py:101 ckanext/api_tracking/helpers.py:160
 msgid "Organization Statistics"
 msgstr "Dữ liệu thuộc Cơ quan cung cấp"
@@ -94,6 +110,10 @@ msgstr "Dạng cột"
 #: ckanext/api_tracking/helpers.py:208
 msgid "Line"
 msgstr "Dạng đường"
+
+#: ckanext/api_tracking/templates/user/snippets/sort_chart_statistical.html:2
+msgid "There is no data for this period."
+msgstr "Không có dữ liệu nào trong khoảng thời gian này."
 
 #: ckanext/api_tracking/templates/user/snippets/breadcrumd_statistical.html:2
 msgid "Dashboard"

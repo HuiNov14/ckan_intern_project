@@ -5,6 +5,9 @@ ckan.module('custom_chart_login_activity', function ($) {
         initialize: function () {
             const apiData = this.options.chart_login_activity;
             const dateList = this.options.chart_date_list;
+            const validator = this.options.validator_test;
+            console.log("validator: ", validator);
+
             const x = this.options.x;
             const y = this.options.y;
             let chartType = 'bar';
@@ -94,11 +97,10 @@ ckan.module('custom_chart_login_activity', function ($) {
                 const end = new Date(endDate);
 
                 if (start > end) {
-                    startDateError.textContent = 'Start date must be earlier than or equal to end date.';
-                    endDateError.textContent = 'End date must be later than or equal to start date.';
+                    startDateError.textContent = validator.start_date_after_end_date;
+                    endDateError.textContent = validator.end_date_before_start_date;
                     return false;
                 }
-
                 return true;
             }
         }

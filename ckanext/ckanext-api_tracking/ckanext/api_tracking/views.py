@@ -14,17 +14,27 @@ from ckan.lib.helpers import helper_functions as h
 from ckan.lib.helpers import Page
 from datetime import date
 from.logic.validators import validate_date_range
+from .helpers import get_validation_error_messages,get_info_name_static_tracking
 
 # Blueprint for tracking
 dashboard = Blueprint('tracking_blueprint', __name__, url_prefix=u'/dashboard/')
 
-#Function aggregate package
+
 def resource_dashboard():
         return base.render('user/resource_dashboard.html')
 
 def user_dashboard():
         return base.render('user/user_dashboard.html')
     
+#Dashboard/statistical
+def statistical():
+
+    try:
+        logic.check_access('user_check', {})
+    except logic.NotAuthorized:
+        return base.abort(403, toolkit._('Need to be system administrator to administer'))
+
+    return base.render('user/dashboard_statistical.html')
 
 def aggregate_package_views(urls_and_counts):
     """Aggregate package views for each unique package."""
@@ -68,15 +78,6 @@ def aggregate_package_views(urls_and_counts):
     return list(aggregated_data.values())
 
 
-#Dashboard/statistical
-def statistical():
-
-    try:
-        logic.check_access('user_check', {})
-    except logic.NotAuthorized:
-        return base.abort(403, toolkit._('Need to be system administrator to administer'))
-
-    return base.render('user/dashboard_statistical.html')
 
 ##Dashboard/statistical/statiscal_tracking
 def statistical_tracking():
@@ -101,7 +102,10 @@ def statistical_tracking():
 
     except logic.NotAuthorized:
         return base.abort(403, toolkit._('Need to be system administrator to administer'))
-        
+    
+    error_messages = get_validation_error_messages()
+    name_static_tracking = get_info_name_static_tracking()
+    
     aggregated_urls_and_counts = json.dumps(aggregate_package_views(urls_and_counts))
     
     dataset_alls = logic.get_action('package_list')(data_dict={})
@@ -118,6 +122,8 @@ def statistical_tracking():
         u'user_name': user_name,
         u'user_all': user_all,
         u'today': today,
+        u'error_messages': json.dumps(error_messages),
+        u'name_static_tracking': json.dumps(name_static_tracking),
     }
     
     if isinstance(urls_and_counts, dict):
@@ -208,7 +214,7 @@ def statistical_field():
 def statistical_api():
     # Lấy ngày hiện tại và ngày mặc định
     today = datetime.today().date()
-    day_default = int(config.get('ckan.day_defaul', 7))
+    day_default = int(config.get('ckan.day_default'))
     day_tracking_default = today - timedelta(days=day_default)
 
     # Lấy tham số từ form hoặc sử dụng giá trị mặc định
@@ -217,11 +223,11 @@ def statistical_api():
     creator_select = request.form.get('creator_select', 'all')
     
     # Lấy tham số từ request args
-    limit = int(request.args.get('limit', 100))  # Giá trị mặc định là 100
-    page = int(request.args.get('page', 1))  # Giá trị mặc định là 1
+    limit = int(request.args.get('limit', 100)) 
+    page = int(request.args.get('page', 1))  
 
     # Định nghĩa API URL
-    api_url = "https://opendata.vnptit.vn/api/3/action/show_api_statistics"
+    api_url = config.get('ckan.url_api')
 
     # Tham số gửi đi trong request
     payload = {
@@ -229,12 +235,12 @@ def statistical_api():
         "end_time": end_time,
         "creator_select": creator_select,
         "limit": limit,
-        "page": page  # Thêm tham số page
+        "page": page 
     }
 
     headers = {
-        "Content-Type": "application/json",
-        "Authorization": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJzZlVLMHdWMkZpMG83SGlhaUl3QVdqRDVoVnZvTndUTnJZWmFibHoxVkFVIiwiaWF0IjoxNzM0OTIyMjU5fQ.DkI4tf1gEuhoKKX4D40PH60XsJAqkz0dEHJfC2EalKI"  # Thay thế bằng key thực tế
+        "Content-Type": config.get('ckan.content_type'),
+        "Authorization": config.get('ckan.authorization')
     }
 
     try:
@@ -278,14 +284,13 @@ def statistical_api():
 
 #Dashboard/statistical/new_user_stats
 def new_user_statistical():
-    try:
-        logic.check_access('user_check', {})
-    except logic.NotAuthorized:
-        return base.abort(403, toolkit._('Need to be system administrator to administer'))
+    today = datetime.today().date()
+    day_default = int(config.get('ckan.day_default'))
+    day_tracking_default = today - timedelta(days=day_default)
 
-    start_date = request.args.get('start_date', (datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d'))
-    end_date = request.args.get('end_date', datetime.now().strftime('%Y-%m-%d'))
-    state = request.args.get('state', 'active')
+    start_date = request.form.get('start_date', str(day_tracking_default))
+    end_date = request.form.get('end_date', str(today))
+    state = request.form.get('state', 'active')
     date_list = [start_date,end_date]
 
     try:
@@ -296,27 +301,32 @@ def new_user_statistical():
             u'state': state,
         })
 
-    except Exception as e:
-        raise toolkit.ValidationError(f"api request error: {e}")    
+    except logic.NotAuthorized:
+        return base.abort(403, toolkit._('Need to be system administrator to administer'))
+    print("this is urls_and_counts --->",date_list)
+    error_messages = get_validation_error_messages()
+    
+      
     print("this is urls_and_counts --->",urls_and_counts)
     extra_vars: dict[str, Any] = {
         u'urls_and_counts': json.dumps(urls_and_counts),
         u'state': state, 
         u'count': urls_and_counts['total_user_created_count'],
         u'date_list': date_list,
+        u'error_messages': json.dumps(error_messages),
     }
 
     return base.render('user/new_user_stats.html', extra_vars)
 
 #Dashboard/statistical/user_login_stats
 def user_login_statistical():
-    try:
-        logic.check_access('user_check', {})
-    except logic.NotAuthorized:
-        return base.abort(403, toolkit._('Need to be system administrator to administer'))
-    start_date = request.args.get('start_date', (datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d'))
-    end_date = request.args.get('end_date', datetime.now().strftime('%Y-%m-%d'))
-    user_name = request.args.get('user_name')
+    today = datetime.today().date()
+    day_default = int(config.get('ckan.day_default'))
+    day_tracking_default = today - timedelta(days=day_default)
+
+    start_date = request.form.get('start_date', str(day_tracking_default))
+    end_date = request.form.get('end_date', str(today))
+    user_name = request.form.get('user_name')
     
     user_name_list = toolkit.get_action('user_list')(data_dict={})
     user_name_list = [user['name'] for user in user_name_list]
@@ -331,8 +341,11 @@ def user_login_statistical():
             data_dict[u'user_name'] = user_name
 
         urls_and_counts = logic.get_action(action)(data_dict=data_dict)
-    except Exception as e:
-        raise toolkit.ValidationError(f"api request error: {e}")  
+    except logic.NotAuthorized:
+        return base.abort(403, toolkit._('Need to be system administrator to administer'))
+    
+    error_messages = get_validation_error_messages()
+    
     
     date_list = []
     start_date = datetime.strptime(start_date, '%Y-%m-%d')
@@ -357,6 +370,7 @@ def user_login_statistical():
         u'count': count,
         u'user_name_filtered': user_name,
         u'user_name_list': user_name_list,
+        u'error_messages': json.dumps(error_messages),
     }
 
     return base.render('user/user_login_stats.html', extra_vars)
@@ -368,17 +382,11 @@ def json_serial(obj):
 
 def statistical_datatypes():
     today = datetime.today().date()
-    
-    # Lấy giá trị mặc định từ cấu hình, xử lý lỗi nếu config không tồn tại
-    try:
-        day_default = int(config.get('ckan.day_default', 7))  # Giá trị mặc định là 7 ngày nếu không được cấu hình
-    except ValueError:
-        day_default = 7  # Giá trị mặc định nếu không thể chuyển đổi sang số nguyên
-    
-    day_tracking_default = (today - timedelta(days=day_default)).isoformat()    
-    
-    start_date = request.form.get('start_date', day_tracking_default)  
-    end_date = request.form.get('end_date', str(today.isoformat())) 
+    day_default = int(config.get('ckan.day_default'))
+    day_tracking_default = today - timedelta(days=day_default)
+
+    start_date = request.form.get('start_date', str(day_tracking_default))
+    end_date = request.form.get('end_date', str(today))
     format_type = request.form.get('format_type') or None
     
     try:
@@ -391,7 +399,8 @@ def statistical_datatypes():
     except logic.NotAuthorized:
         return base.abort(403, toolkit._('Need to be system administrator to administer'))
     
-    print(data_types)
+    error_messages = get_validation_error_messages()
+
     
     list_datatypes = set()
     
@@ -412,6 +421,7 @@ def statistical_datatypes():
             u'end_date': end_date,
             u'list_datatypes': list_datatypes,
             u'format_type': format_type,
+            u'error_messages': json.dumps(error_messages),
     }     
     return base.render('user/statistical_datatypes.html', extra_vars)
 
@@ -437,8 +447,9 @@ def statistical_user_time():
         
     except logic.NotAuthorized:
         return base.abort(403, toolkit._('Need to be system administrator to administer'))
-
-    print("this is list user --->",list_user_time)
+    
+    
+    error_messages = get_validation_error_messages()
     
     extra_vars: dict[str, Any] = {
         u'list_user_time': json.dumps(list_user_time, default=json_serial),
@@ -446,6 +457,7 @@ def statistical_user_time():
         u'end_date': end_date,
         u'include_user_info_detail': include_user_info_detail,
         u'sys_admin': sys_admin,
+        u'error_messages': json.dumps(error_messages),
     }
 
     return base.render('user/statistical_user_time.html', extra_vars)

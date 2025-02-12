@@ -5,6 +5,7 @@ ckan.module('custom_chart_new_user', function ($) {
         initialize: function () {
             const apiData = this.options.chart_new_user;
             const newuser = this.options.newuser;
+            const validator = this.options.validator;
             const x = this.options.x;
             const y = this.options.y;
             apiData.days.sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -87,11 +88,10 @@ ckan.module('custom_chart_new_user', function ($) {
                 const end = new Date(endDate);
 
                 if (start > end) {
-                    startDateError.textContent = 'Start date must be earlier than or equal to end date.';
-                    endDateError.textContent = 'End date must be later than or equal to start date.';
+                    startDateError.textContent = validator.start_date_after_end_date;
+                    endDateError.textContent = validator.end_date_before_start_date;
                     return false;
                 }
-
                 return true;
             }
         }

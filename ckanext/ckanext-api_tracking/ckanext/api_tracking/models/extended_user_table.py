@@ -76,10 +76,7 @@ class ExtendedUserTable(model.User):
                 current_date = datetime.datetime.now()
                 start_date = current_date
                 end_date = current_date + datetime.timedelta(days=1)
-                
-            if (end_date - start_date).days > 30:
-                raise Invalid('The gap between start_date and end_date cannot be greater than 30 days.')
-                
+ 
             if data_dict.get('state'):
                 state = data_dict.get('state')    
                 query = query.filter(cls.state == state)

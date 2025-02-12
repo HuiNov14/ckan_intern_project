@@ -18,7 +18,7 @@ from ckan.common import CKANConfig
 import ckan.plugins.toolkit as toolkit
 import ckanext.api_tracking.views as views
 from ckan.lib.plugins import DefaultTranslation
-from .helpers import get_statistics_options, get_breadcrumb_links, get_statistical_cards_resource,get_chart_type,get_statistical_cards_user,get_statistics_options_user
+from .helpers import get_statistics_options, get_statistical_cards_resource,get_chart_type,get_statistical_cards_user,get_statistics_options_user
 from .models import tracking_package
 from .logic.validators import validate_date_range
 
@@ -46,7 +46,6 @@ class API_Tracking_Plugin(p.SingletonPlugin, DefaultTranslation):
     def get_helpers(self):
         return {
             'get_statistics_options': get_statistics_options,
-            'get_breadcrumb_links': get_breadcrumb_links,
             'get_statistical_cards_resource': get_statistical_cards_resource,
             'get_statistical_cards_user': get_statistical_cards_user,
             'get_chart_type': get_chart_type,

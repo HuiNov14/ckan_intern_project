@@ -22,7 +22,7 @@
           </div>
         </div>
     <hr class="mt-3" />
-        <form class="formCss" id="tracking-form" method="POST" action="{{ url_for('tracking_blueprint.user_login_statistical') }}" data-module="custom_form_validation">
+        <form class="formCss" id="tracking-form" method="POST" action="{{ url_for('tracking_blueprint.user_login_statistical') }}" data-module="custom_form_validation" >
             <div class="row mb-3">
                 <div class="col-md-4">
                     <label for="start-date" class="form-label">{{_("Start Date")}}</label>
@@ -51,7 +51,8 @@
                 data-module-x="{{ _("Date") }}"  
                 data-module-y="{{ _("Total active users") }}"  
                 data-module-chart_login_activity="{{ login_data }}"  
-                data-module-chart_date_list="{{ date_list }}"  
+                data-module-chart_date_list="{{ date_list }}" 
+                data-module-validator_test="{{error_messages}}" 
                 class="btn btn-primary px-4">{{ _("Filter") }}</button>
             </div>
         </form>

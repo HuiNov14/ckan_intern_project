@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-api_tracking 0.0.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2025-02-10 10:39+0700\n"
+"POT-Creation-Date: 2025-02-12 10:24+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,7 +46,7 @@ msgid "All Statistics User"
 msgstr ""
 
 #: ckanext/api_tracking/helpers.py:130 ckanext/api_tracking/helpers.py:201
-msgid "User Login Statistics"
+msgid "User Login Activity Statistics"
 msgstr ""
 
 #: ckanext/api_tracking/helpers.py:131 ckanext/api_tracking/helpers.py:195
@@ -93,7 +93,23 @@ msgstr ""
 msgid "Line"
 msgstr ""
 
-#: ckanext/api_tracking/views.py:78 ckanext/api_tracking/views.py:104 ckanext/api_tracking/views.py:159 ckanext/api_tracking/views.py:191 ckanext/api_tracking/views.py:283 ckanext/api_tracking/views.py:315 ckanext/api_tracking/views.py:391 ckanext/api_tracking/views.py:441
+#: ckanext/api_tracking/helpers.py:221
+msgid "Please enter a valid start date."
+msgstr ""
+
+#: ckanext/api_tracking/helpers.py:222
+msgid "Please enter a valid end date."
+msgstr ""
+
+#: ckanext/api_tracking/helpers.py:223
+msgid "Start date must be earlier than or equal to end date."
+msgstr ""
+
+#: ckanext/api_tracking/helpers.py:224
+msgid "End date must be later than or equal to start date."
+msgstr ""
+
+#: ckanext/api_tracking/views.py:78 ckanext/api_tracking/views.py:104 ckanext/api_tracking/views.py:159 ckanext/api_tracking/views.py:194 ckanext/api_tracking/views.py:285 ckanext/api_tracking/views.py:317 ckanext/api_tracking/views.py:393 ckanext/api_tracking/views.py:440
 msgid "Need to be system administrator to administer"
 msgstr ""
 

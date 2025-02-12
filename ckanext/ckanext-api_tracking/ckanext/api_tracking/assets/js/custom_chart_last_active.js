@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     const data = window.trackingData;
     const trackingData = data.days || [];
+    
 
     const ctx = document.getElementById('statisticsChart').getContext('2d');
     let chart; 
