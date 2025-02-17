@@ -69,7 +69,7 @@ msgstr "Tất cả biểu đồ thống kê "
 
 #: ckanext/api_tracking/helpers.py:130 ckanext/api_tracking/helpers.py:200
 msgid "User Login Activity Statistics"
-msgstr "Thông kê hoạt động đăng nhập của người dùng"
+msgstr "Thống kê hoạt động đăng nhập của người dùng"
 
 #: ckanext/api_tracking/helpers.py:131 ckanext/api_tracking/helpers.py:194
 msgid "New User Statistics"
