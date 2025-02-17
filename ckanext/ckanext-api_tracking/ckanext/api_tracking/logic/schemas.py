@@ -32,6 +32,26 @@ def tracking_urls_and_counts_combined_schema(not_empty: Validator, ignore_missin
     }
     
 @validator_args    
+def datasets_statistical_schema(not_empty: Validator, ignore_missing: Validator, isodate: Validator, int_validator: Validator):
+    return {
+        'package_name': [ignore_missing, not_empty],
+        'organizations': [ignore_missing, not_empty],
+        'start_date': [ignore_missing, not_empty, isodate],
+        'end_date': [ignore_missing, not_empty, isodate,],
+    }
+    
+@validator_args    
+def resource_statistical_schema(not_empty: Validator, ignore_missing: Validator, isodate: Validator, int_validator: Validator):
+    return {
+        'resource_name': [ignore_missing, not_empty],
+        'organizations': [ignore_missing, not_empty],
+        'start_date': [ignore_missing, not_empty, isodate],
+        'end_date': [ignore_missing, not_empty, isodate,],
+        'limit': [ignore_missing, not_empty, int_validator],
+        'offset': [ignore_missing, not_empty, int_validator]
+    }
+    
+@validator_args    
 def organization_statistics_schema(not_empty: Validator, ignore_missing: Validator, boolean_validator: Validator):
     return {
         'organization_name': [ignore_missing, not_empty],

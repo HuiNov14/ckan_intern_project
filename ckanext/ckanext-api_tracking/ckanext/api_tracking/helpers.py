@@ -103,6 +103,7 @@ def get_statistics_options():
         {"endpoint": "tracking_blueprint.statistical_datatypes", "label": _("Datatypes Statistics")},
         {"endpoint": "tracking_blueprint.statistical_tracking", "label": _("Tracking Statistics")},
         {"endpoint": "tracking_blueprint.statistical_api", "label": _("API Statistics")},
+        {"endpoint": "tracking_blueprint.statistical_resource", "label": _("Resource statistics chart")},
     ]
 
     # Tạo URL từ endpoint và đánh dấu 'selected'
@@ -180,6 +181,12 @@ def get_statistical_cards_resource():
         "title": _("API Statistics"),
         "description": _("This is a statistical chart that tracks views, downloads of data."),
     },
+    {
+        "url": "tracking_blueprint.statistical_resource",
+        "img_src": "/image_resource.jpg",
+        "title": _("Resource statistics chart"),
+        "description": _("This is a chart of data statistics over time."),
+    },
 ]
     
 def get_statistical_cards_user():
@@ -220,7 +227,6 @@ def get_validation_error_messages():
     }
     
 def get_info_name_static_tracking():
-    """Trả về các tên của bảng đã được dịch."""
     return {
         'x': _('Date'),
         'y': _('Count'),

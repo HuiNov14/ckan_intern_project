@@ -7,7 +7,7 @@ import ckan.plugins as p
 from flask import Flask
 from ckan.common import g, request
 
-from .logic.actions import tracking_by_user, tracking_urls_and_counts, statistical_org_get_sum, statistical_field_get_sum, resources_statistics, users_statistics, new_users_statistics, login_activity_show,resource_access_by_date
+from .logic.actions import tracking_by_user, tracking_urls_and_counts, statistical_org_get_sum, statistical_field_get_sum, resources_statistics, users_statistics, new_users_statistics, login_activity_show,resource_access_by_date,get_datasets_statistics, get_resource_statistics
 from .logic import auth
 import sqlalchemy as sa
 import re 
@@ -93,7 +93,9 @@ class API_Tracking_Plugin(p.SingletonPlugin, DefaultTranslation):
             'stats_users': users_statistics,
             'stats_new_users': new_users_statistics,
             'login_activity_show': login_activity_show,
-            'resource_access_by_date': resource_access_by_date
+            'resource_access_by_date': resource_access_by_date,
+            'get_datasets_statistics': get_datasets_statistics,
+            'get_resource_statistics': get_resource_statistics
         }
         
     def get_auth_functions(self):

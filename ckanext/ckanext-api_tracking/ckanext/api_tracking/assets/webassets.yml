@@ -217,3 +217,18 @@ statistical_login_activity-css:
   output: ckanext-api_tracking/%(version)s-statistical_login_activity.css
   contents:
     - css/base.css
+
+statistical_resource-js:
+  filter: rjsmin
+  output: ckanext-api_tracking/%(version)s-statistical_resource.js
+  contents:
+    - js/bootstrap.js
+    - js/jquery.js
+    - js/base.js
+    - js/chart.js
+    - js/choices.min.js
+    - js/custom_chart_resource.js
+    - js/validate_date.js
+  extra:
+    preload:
+      - base/main

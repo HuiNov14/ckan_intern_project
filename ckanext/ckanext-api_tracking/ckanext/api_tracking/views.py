@@ -462,6 +462,46 @@ def statistical_user_time():
 
     return base.render('user/statistical_user_time.html', extra_vars)
 
+def statistical_resource():
+    start_date = request.form.get('start_date', (datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d'))  
+    end_date = request.form.get('end_date',datetime.now().strftime('%Y-%m-%d')) 
+    organizations = request.form.get('organizations') or None
+    package_name = request.form.get('package_name') or None
+    
+    try:
+        action = 'get_datasets_statistics'
+        list_datasets = logic.get_action(action)(data_dict={
+            'start_date': start_date,
+            'end_date': end_date,
+            'organizations': organizations,
+            'package_name': package_name,
+        })  
+        
+    except logic.NotAuthorized:
+        return base.abort(403, toolkit._('Need to be system administrator to administer'))
+    
+    dataset_alls = logic.get_action('package_list')(data_dict={})
+    print("this is dataset_alls --->",dataset_alls)
+    organization_list = logic.get_action('organization_list')(data_dict={'all_fields': True})
+    print("this is organization_list --->",organization_list)
+    print("-------------------------------->",list_datasets)
+    error_messages = get_validation_error_messages()
+    
+    
+    
+    extra_vars: dict[str, Any] = {
+        u'list_datasets': json.dumps(list_datasets, default=json_serial),
+        u'start_date': start_date,
+        u'end_date': end_date,
+        u'organizations': organizations,
+        u'organization_list': organization_list,
+        u'package_name': package_name,
+        u'dataset_alls': dataset_alls,
+        u'error_messages': json.dumps(error_messages),
+    }
+    return base.render('user/statistical_resource.html', extra_vars)
+
+
 
 dashboard.add_url_rule(
     u"/statistical/resource-dashboard", view_func=resource_dashboard, methods=['GET']
@@ -504,6 +544,10 @@ dashboard.add_url_rule(
 
 dashboard.add_url_rule(
     u"/statistical/statistical-datatypes", view_func=statistical_datatypes,methods=['GET', 'POST']
+)
+
+dashboard.add_url_rule(
+    u"/statistical/statistical-resource", view_func=statistical_resource,methods=['GET', 'POST']
 )
 
 def get_blueprints():

@@ -1,5 +1,5 @@
 from ckan.common import config
-from .schemas import organization_statistics_schema, tracking_by_user_combined_schema, tracking_urls_and_counts_combined_schema, field_statistics_schema, resources_statistics_combined_schema, users_statistics_combined_schema, new_users_statistics_combined_schema, login_activity_show_schema,tracking_datatypes_get_sum_schema
+from .schemas import organization_statistics_schema, tracking_by_user_combined_schema, tracking_urls_and_counts_combined_schema, field_statistics_schema, resources_statistics_combined_schema, users_statistics_combined_schema, new_users_statistics_combined_schema, login_activity_show_schema,tracking_datatypes_get_sum_schema, datasets_statistical_schema,resource_statistical_schema
 from ..models.extended_tracking_raw import ExtendedTrackingRaw
 from ..models.extended_tracking_summary import ExtendedTrackingSummary
 from ..models.extended_resource_table import ExtendedResourceTable
@@ -39,6 +39,64 @@ def tracking_urls_and_counts(context, data_dict):
     offset = data_dict.get('offset', 0) 
     
     urls_and_counts = ExtendedTrackingSummary.get_urls_and_counts_all(data_dict, limit=limit, offset=offset)
+    return urls_and_counts
+
+@side_effect_free
+def get_datasets_statistics(context, data_dict):
+    toolkit.check_access("user_check", context, data_dict)
+
+    schema = datasets_statistical_schema()
+    data_dict, errors = toolkit.navl_validate(data_dict, schema)
+    
+    if errors:
+            raise ValidationError(errors)
+        
+    if 'start_date' not in data_dict:
+        current_date = datetime.now()
+        data_dict['start_date'] = current_date
+    
+    if 'end_date' not in data_dict:
+        current_date = datetime.now()
+        data_dict['end_date'] = current_date
+        
+    if 'package_name' not in data_dict:
+        data_dict['package_name'] = None
+    
+    if 'organization' not in data_dict:
+        data_dict['organization'] = None
+        
+    
+    urls_and_counts = ExtendedResourceTable.get_resources_statistics(data_dict)
+    return urls_and_counts
+
+@side_effect_free
+def get_resource_statistics(context, data_dict):
+    toolkit.check_access("user_check", context, data_dict)
+
+    schema = resource_statistical_schema()
+    data_dict, errors = toolkit.navl_validate(data_dict, schema)
+    
+    if errors:
+            raise ValidationError(errors)
+        
+    if 'start_date' not in data_dict:
+        current_date = datetime.now()
+        data_dict['start_date'] = current_date
+    
+    if 'end_date' not in data_dict:
+        current_date = datetime.now()
+        data_dict['end_date'] = current_date
+        
+    if 'resource_name' not in data_dict:
+        data_dict['resource_name'] = None
+    
+    if 'organization' not in data_dict:
+        data_dict['organization'] = None
+        
+    limit = data_dict.get('limit', 10)  
+    offset = data_dict.get('offset', 0) 
+    
+    urls_and_counts = ExtendedResourceTable.get_resources_statistics(data_dict, limit=limit, offset=offset)
     return urls_and_counts
 
 @side_effect_free

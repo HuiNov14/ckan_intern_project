@@ -19,7 +19,6 @@ class TrackingAPI:
         end_date = data_dict.get('end_date')
         format_type = data_dict.get('format_type')
         
-        print("====================================>", tracking_package.tracking_packages_table)
         try:
             query = meta.Session.query(
                 model.Resource.format.label('format_type'),
