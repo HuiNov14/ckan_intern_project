@@ -274,7 +274,9 @@ def statistical_api():
         'end_time': end_time,
         'creator_select': creator_select,
         'limit': limit,
-        'page': page  # Truyền thêm page để render trong giao diện
+        'page': page ,
+        u'today': today,
+        
     }
 
     # Trả về trang giao diện với dữ liệu đã lọc
@@ -314,6 +316,8 @@ def new_user_statistical():
         u'count': urls_and_counts['total_user_created_count'],
         u'date_list': date_list,
         u'error_messages': json.dumps(error_messages),
+        u'today': today,
+        
     }
 
     return base.render('user/new_user_stats.html', extra_vars)
@@ -371,6 +375,8 @@ def user_login_statistical():
         u'user_name_filtered': user_name,
         u'user_name_list': user_name_list,
         u'error_messages': json.dumps(error_messages),
+        u'today': today,
+        
     }
 
     return base.render('user/user_login_stats.html', extra_vars)
@@ -421,14 +427,19 @@ def statistical_datatypes():
             u'end_date': end_date,
             u'list_datatypes': list_datatypes,
             u'format_type': format_type,
+            u'today': today,
             u'error_messages': json.dumps(error_messages),
     }     
     return base.render('user/statistical_datatypes.html', extra_vars)
 
 
 def statistical_user_time():
-    start_date = request.form.get('start_date', (datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d'))  
-    end_date = request.form.get('end_date',datetime.now().strftime('%Y-%m-%d')) 
+    today = datetime.today().date()
+    day_default = int(config.get('ckan.day_default'))
+    day_tracking_default = today - timedelta(days=day_default)
+
+    start_date = request.form.get('start_date', str(day_tracking_default))
+    end_date = request.form.get('end_date', str(today))
     include_user_info_detail = request.form.get('include_user_info_detail') or True
     sys_admin = request.form.get('sys_admin') or None
     
@@ -458,13 +469,19 @@ def statistical_user_time():
         u'include_user_info_detail': include_user_info_detail,
         u'sys_admin': sys_admin,
         u'error_messages': json.dumps(error_messages),
+        u'today': today,
+        
     }
 
     return base.render('user/statistical_user_time.html', extra_vars)
 
 def statistical_resource():
-    start_date = request.form.get('start_date', (datetime.now() - timedelta(days=7)).strftime('%Y-%m-%d'))  
-    end_date = request.form.get('end_date',datetime.now().strftime('%Y-%m-%d')) 
+    today = datetime.today().date()
+    
+    day_default = int(config.get('ckan.day_default'))
+    day_tracking_default = today - timedelta(days=day_default)
+    start_date = request.form.get('start_date', str(day_tracking_default))
+    end_date = request.form.get('end_date', str(today))
     organizations = request.form.get('organizations') or None
     package_name = request.form.get('package_name') or None
     
@@ -498,6 +515,8 @@ def statistical_resource():
         u'package_name': package_name,
         u'dataset_alls': dataset_alls,
         u'error_messages': json.dumps(error_messages),
+        u'today': today,
+        
     }
     return base.render('user/statistical_resource.html', extra_vars)
 

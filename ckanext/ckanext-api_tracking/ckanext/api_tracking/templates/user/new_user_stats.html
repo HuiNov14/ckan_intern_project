@@ -29,17 +29,17 @@
     <div class="row mb-3">
         <div class="col-md-4">
             <label for="start-date" class="form-label">{{_("Start Date")}}</label>
-            <input type="date" id="start-date" name="start_date" class="form-control" required value="{{ date_list[0] if date_list else '' }}">
+            <input type="date" id="start-date" name="start_date" max="{{ today }}" class="form-control" required value="{{ date_list[0] if date_list else '' }}">
             <div id="start-date-error" class="text-danger mt-1"></div>
         </div>
         <div class="col-md-4">  
             <label for="end-date" class="form-label">{{_("End Date")}}</label>
-            <input type="date" id="end-date" name="end_date" class="form-control" required value="{{ date_list[-1] if date_list else '' }}">
+            <input type="date" id="end-date" name="end_date" max="{{ today }}" class="form-control" required value="{{ date_list[-1] if date_list else '' }}">
             <div id="end-date-error" class="text-danger mt-1"></div>
         </div>
         <div class="col-md-4">
 
-            <label for="state" class="form-label">{{ _("User Name") }}</label>
+            <label for="state" class="form-label">{{ _("User") }}</label>
             <select name="state" id="state" class="form-select">
                 <option value="active" {% if state=='active' %}selected{% endif %}>{{_("Active")}}</option>
                 <option value="pending" {% if state=='pending' %}selected{% endif %}>{{_("Pending")}}</option>
