@@ -34,7 +34,7 @@ class ExtendedUserTable(model.User):
             active_date = (target_active_date - datetime.timedelta(days=int(data_dict['recent_active_days']))).strftime('%Y-%m-%d')
             query = query.filter(func.date(cls.last_active) >= active_date, func.date(cls.last_active) <= target_active_date)
             query = query.group_by(cls.name, cls.about, cls.email, cls.sysadmin, func.date(cls.created), func.date(cls.last_active))
-            query = query.order_by(func.date(cls.created))
+            query = query.order_by(func.date(cls.created).asc())
 
         # Chuyển các kết quả query thành từ điển để dễ dàng JSON hóa
             result = []
@@ -82,7 +82,7 @@ class ExtendedUserTable(model.User):
                 query = query.filter(cls.state == state)
                 
             query = query.group_by(cls.name, cls.about, cls.email, cls.sysadmin, func.date(cls.created), cls.state)
-            query = query.order_by(func.date(cls.created))
+            query = query.order_by(func.date(cls.created).asc())
             
             results = query.all()
             

@@ -225,7 +225,7 @@ def get_validation_error_messages():
         'start_date_after_end_date': _('Start date must be earlier than or equal to end date.'),
         'end_date_before_start_date': _('End date must be later than or equal to start date.')
     }
-    
+# Việt hóa biểu đồ tracking
 def get_info_name_static_tracking():
     return {
         'x': _('Date'),
@@ -238,3 +238,27 @@ def get_info_name_static_tracking():
         'resource_view': _('Resource Views'),
         'resource_name': _('Resource Name'),
     }
+# Việt hóa biểu đồ api 
+def get_info_chart_name_api():
+    return {
+        'apiTotal': _('API Total'),
+        'xNameApi': _('API Name'),
+        'yTotalReq': _('Total Requests'),
+        'yNameSize': _('Total Resource Size'),
+        'xDate': _('Date'),
+        'ySize': _('Size'),
+        'resName': _('Resource Name'),
+    }
+# Cấu hình màu của biểu đồ
+def color_chart_datatypes():
+    return {
+        'XLSX': 'rgba(54, 162, 235, 0.6)',
+        'PNG': 'rgba(255, 99, 132, 0.6)',
+        'JPEG': 'rgba(255, 99, 132, 1)',
+        'CSV': 'rgba(153, 102, 255, 0.6)',
+        'xlxs': 'rgba(255, 159, 64, 0.6)',
+        'PNG': 'rgba(64, 255, 134, 0.6)',
+        'DOCX': 'rgba(73, 241, 235, 0.6)', 
+    }
+    
+

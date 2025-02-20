@@ -27,17 +27,17 @@
       </div>
     </div>
     <hr class="mt-3" />
-    <form class="formCss" id="tracking-form" action="{{ url_for('tracking_blueprint.statistical_api') }}" method="post">
+    <form class="formCss" id="tracking-form" action="{{ url_for('tracking_blueprint.statistical_api') }}" method="post" data-module="custom_form_validation" data-module-errors="{{ error_messages }}">
       <div class="row mb-3">
           <div class="col-md-4">
               <label for="start_time" class="form-label">{{_("Start Date")}}</label>
-              <input type="date" id="start_time" name="start_time" class="form-control" value="{{ start_time }}" max="{{ today }}">
-              <div id="start-time-error" class="text-danger mt-1"></div>
+              <input type="date" id="start_date" name="start_time" class="form-control" value="{{ start_time }}" max="{{ today }}">
+              <div id="start-date-error" class="text-danger mt-1"></div>
           </div>
           <div class="col-md-4">
               <label for="end_time" class="form-label">{{_("End Date")}}</label>
-              <input type="date" id="end_time" name="end_time" class="form-control" value="{{ end_time }}" max="{{ today }}">
-              <div id="end-time-error" class="text-danger mt-1"></div>
+              <input type="date" id="end_date" name="end_time" class="form-control" value="{{ end_time }}" max="{{ today }}">
+              <div id="end-date-error" class="text-danger mt-1"></div>
           </div>
           <div class="col-md-4">
             <label for="creator_select" class="form-label">{{_("User Name")}}</label>
@@ -53,12 +53,10 @@
         </div>
       </div>  
       <div class="text-end">
-
-        
-
           <button type="submit"  
           data-module="custom_chart_api" 
           data-module-chart_api="{{ static_api }}"
+          data-module-chart_name="{{ chart_name_api }}"
           class="btn btn-primary px-4">{{_("Filter")}}</button>
       </div>
     </form>
@@ -66,8 +64,6 @@
   <div class="container mt-5 p-4 border rounded shadow-sm bg-light">
     <label for="">{{_("Total api accessed statistics")}}</label>
     {% snippet 'user/snippets/sort_chart_statistical.html' %}
-
-    
     <div class="row mb-3">
       <div class="col-md-12 mb-4">
           <label for="">{{_("Statistics of resource size created by day")}}</label>
@@ -78,8 +74,6 @@
           <canvas id="resourceSizeChart"></canvas>
       </div>
   </div>
-  
-  
 </div>
 </div>
 </div>

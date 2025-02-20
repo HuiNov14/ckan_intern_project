@@ -23,6 +23,34 @@ msgstr ""
 msgid "All Statistics"
 msgstr "Tất cả biểu đồ thống kê"
 
+#: ckanext/api_tracking/helpers.py:244
+msgid "API Total"
+msgstr "Tổng số API"
+
+#: ckanext/api_tracking/helpers.py:245
+msgid "API Name"
+msgstr "Tên API"
+
+#: ckanext/api_tracking/helpers.py:246
+msgid "Total Requests"
+msgstr "Tổng số yêu cầu"
+
+#: ckanext/api_tracking/helpers.py:247
+msgid "Total Resource Size"
+msgstr "Tổng kích thức tài nguyên"
+
+#: ckanext/api_tracking/helpers.py:248
+msgid "Date"
+msgstr "Ngày"
+
+#: ckanext/api_tracking/helpers.py:249
+msgid "Size"
+msgstr "Kích thước"
+
+#: ckanext/api_tracking/helpers.py:250
+msgid "Resource Name"
+msgstr "Tên tài nguyên"
+
 #: ckanext/api_tracking/helpers.py:221
 msgid "Please enter a valid start date."
 msgstr "Vui lòng nhập ngày bắt đầu hợp lệ."

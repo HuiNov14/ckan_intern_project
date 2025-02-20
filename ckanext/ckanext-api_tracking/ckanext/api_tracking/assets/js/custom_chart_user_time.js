@@ -11,47 +11,40 @@ ckan.module('custom_chart_user_time', function ($) {
             const to = this.options.to;
             const sum = this.options.sum;
 
+            // Sắp xếp dữ liệu theo ngày tăng dần
+            listUserTime.days.sort((a, b) => new Date(a.date) - new Date(b.date));
+
             let labels = listUserTime.days.map(item => item.date);
             let userCounts = listUserTime.days.map(item => item.active_user_count);
             let chartType = 'bar';
 
-            // Hiển thị tổng số user và khoảng ngày
-            const totalUserCount = listUserTime.total_user_count; // Tổng số user
-            const endDate = listUserTime.days[0].date; // Ngày bắt đầu
-            const startDate = listUserTime.days[listUserTime.days.length - 1].date; // Ngày kết thúc
-
+            // Đảm bảo ngày hiển thị đúng
+            const startDate = listUserTime.days[0].date; // Ngày sớm nhất
+            const endDate = listUserTime.days[listUserTime.days.length - 1].date; // Ngày muộn nhất
+            const totalUserCount = listUserTime.total_user_count;
 
             // Cập nhật thông tin khoảng ngày và tổng số user
             const dateRangeTitle = document.getElementById('dateRangeTitle');
             const totalAccessTitle = document.getElementById('totalAccessTitle');
 
-            // Cập nhật thông tin vào các phần tử nếu cần hiển thị
             dateRangeTitle.innerHTML = `<h5>${from} ${startDate} ${to} ${endDate}</h5>`;
             totalAccessTitle.innerHTML = `<h5>${sum} ${totalUserCount}</h5>`;
 
-            // Lấy giá trị từ dropdown 'include_user_info_detail'
+            // Hiển thị/ẩn các phần tử dựa trên dropdown
             const selectIncludeUserInfo = document.querySelector('select[name="include_user_info_detail"]');
 
-            // Hàm kiểm tra giá trị và hiển thị/ẩn các phần tử
             function toggleVisibility() {
                 if (selectIncludeUserInfo.value === 'true') {
-                    // Hiển thị các phần tử
                     dateRangeTitle.style.display = 'block';
                     totalAccessTitle.style.display = 'block';
                 } else {
-                    // Ẩn các phần tử
                     dateRangeTitle.style.display = 'none';
                     totalAccessTitle.style.display = 'none';
                 }
             }
 
-            // Gọi hàm toggleVisibility khi trang được tải xong
             toggleVisibility();
-
-            // Lắng nghe sự kiện thay đổi giá trị của dropdown
-            selectIncludeUserInfo.addEventListener('change', function () {
-                toggleVisibility(); // Cập nhật hiển thị dựa trên giá trị mới
-            });
+            selectIncludeUserInfo.addEventListener('change', toggleVisibility);
 
             // Cấu hình biểu đồ
             const ctx = document.getElementById('statisticsChart').getContext('2d');
@@ -59,8 +52,8 @@ ckan.module('custom_chart_user_time', function ($) {
 
             document.getElementById('chartType').addEventListener('change', function () {
                 chartType = this.value;
-                chart.destroy(); // Hủy biểu đồ cũ
-                chart = createChart(chartType); // Tạo biểu đồ mới
+                chart.destroy();
+                chart = createChart(chartType);
                 document.getElementById('statisticsChart').style.height = '450px';
             });
 

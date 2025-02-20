@@ -52,13 +52,9 @@
      
       <div class="text-end">
           <button type="submit"
-          data-module="custom_chart_datatypes" 
-          data-module-x="{{ _('Date') }}" 
-          data-module-y="{{ _('Count') }}"  
-          data-module-from="{{ _('Date Range: From') }}"  
-          data-module-to="{{ _('To') }}"   
-          data-module-sum="{{ _('Total accesses:') }}" 
+          data-module="custom_chart_datatypes"
           data-module-tracking="{{ _('accesses') }}" 
+          data-module-chart_color="{{ color_chart_format }}"  
           data-module-chart_datatypes="{{ data_types }}"  
           class="btn btn-primary px-4">{{_("Filter")}}</button>
       </div>
@@ -67,7 +63,9 @@
   <div class="container mt-5 p-4 border rounded shadow-sm bg-light">
     <div id="dateRangeTitle"></div>
     <div id="totalAccessTitle" ></div>
-    {% snippet 'user/snippets/sort_chart_statistical.html' %}
+    <div class="container">
+      <canvas id="statisticsChart" height="450px" width="450px"></canvas>
+    </div>
   </div>
 
 </div>

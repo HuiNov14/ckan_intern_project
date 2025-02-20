@@ -18,7 +18,7 @@ ckan.module('custom_chart_resource', function ($) {
             const data = labels.map(date => countByDate[date]);
             // Khởi tạo canvas cho biểu đồ
             const ctx = document.getElementById('statisticsChart').getContext('2d');
-            let chartType = 'bar'; // 
+            let chartType = 'bar';
             let chart = createChart(chartType);
 
             document.getElementById('statisticsChart').style.height = '450px';

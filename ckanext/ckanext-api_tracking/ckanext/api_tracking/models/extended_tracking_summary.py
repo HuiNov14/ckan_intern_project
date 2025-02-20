@@ -33,7 +33,7 @@ class ExtendedTrackingSummary(model.TrackingSummary):
                 model.tracking_summary_table.c.tracking_date,
                 model.tracking_summary_table.c.package_id
             ).order_by(
-                model.tracking_summary_table.c.tracking_date.desc(),
+                model.tracking_summary_table.c.tracking_date.asc(),
                 func.sum(model.tracking_summary_table.c.count).desc()
             )
         except Exception as e:

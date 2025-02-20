@@ -14,7 +14,7 @@ from ckan.lib.helpers import helper_functions as h
 from ckan.lib.helpers import Page
 from datetime import date
 from.logic.validators import validate_date_range
-from .helpers import get_validation_error_messages,get_info_name_static_tracking
+from .helpers import get_validation_error_messages,get_info_name_static_tracking,color_chart_datatypes,get_info_chart_name_api
 
 # Blueprint for tracking
 dashboard = Blueprint('tracking_blueprint', __name__, url_prefix=u'/dashboard/')
@@ -261,22 +261,25 @@ def statistical_api():
         static_api = []
         print("Request Exception:", str(e))
     
-    creators = static_api.get("creators", [])  # Lấy danh sách creators
+    creators = static_api.get("creators", [])
     
     for creator in creators:
         print(f"Value: {creator.get('value')}, Text: {creator.get('text')}")
+    error_messages = get_validation_error_messages()
+    chart_name_api = get_info_chart_name_api()
 
     # Tạo extra_vars để truyền sang template
     extra_vars = {
-        'static_api':  json.dumps(static_api) if static_api else '[]',
-        'creators': creators,
-        'start_time': start_time,
-        'end_time': end_time,
-        'creator_select': creator_select,
-        'limit': limit,
-        'page': page ,
+        u'static_api': json.dumps(static_api) if static_api else '[]',
+        u'creators': creators,
+        u'start_time': start_time,
+        u'end_time': end_time,
+        u'creator_select': creator_select,
+        u'limit': limit,
+        u'page': page ,
         u'today': today,
-        
+        u'chart_name_api': json.dumps(chart_name_api),
+        u'error_messages': json.dumps(error_messages),
     }
 
     # Trả về trang giao diện với dữ liệu đã lọc
@@ -405,6 +408,7 @@ def statistical_datatypes():
     except logic.NotAuthorized:
         return base.abort(403, toolkit._('Need to be system administrator to administer'))
     
+    color_chart_format = color_chart_datatypes()
     error_messages = get_validation_error_messages()
 
     
@@ -416,7 +420,6 @@ def statistical_datatypes():
     # Duyệt qua các dataset
     for package in results.get('results', []):
         for resource in package.get('resources', []):
-            # Lấy giá trị format
             format_value = resource.get('format', '').strip().lower()
             if format_value:
                 list_datatypes.add(format_value)     
@@ -428,6 +431,7 @@ def statistical_datatypes():
             u'list_datatypes': list_datatypes,
             u'format_type': format_type,
             u'today': today,
+            u'color_chart_format': json.dumps(color_chart_format),
             u'error_messages': json.dumps(error_messages),
     }     
     return base.render('user/statistical_datatypes.html', extra_vars)
@@ -497,11 +501,9 @@ def statistical_resource():
     except logic.NotAuthorized:
         return base.abort(403, toolkit._('Need to be system administrator to administer'))
     
-    dataset_alls = logic.get_action('package_list')(data_dict={})
+    dataset_alls = logic.get_action('package_list')(data_dict={'all_fields': True})
     print("this is dataset_alls --->",dataset_alls)
     organization_list = logic.get_action('organization_list')(data_dict={'all_fields': True})
-    print("this is organization_list --->",organization_list)
-    print("-------------------------------->",list_datasets)
     error_messages = get_validation_error_messages()
     
     

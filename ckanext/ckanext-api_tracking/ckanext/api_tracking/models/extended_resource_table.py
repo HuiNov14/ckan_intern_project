@@ -30,6 +30,7 @@ class ExtendedResourceTable(model.Resource):
                 cls.format,
                 func.date(cls.created).label('created_date'), 
                 model.Package.name.label('package_name'), 
+                model.Package.title.label('package_title'), 
                 model.Group.name.label('organization'),
                 (literal('/dataset/') + model.Package.id + literal('/resource/') + cls.id + literal('/download/') + cls.url).label('download_url'),
             ).join(model.Package, cls.package_id == model.Package.id
@@ -75,6 +76,7 @@ class ExtendedResourceTable(model.Resource):
                     'format': row.format,
                     'created_date': row.created_date,
                     'package_name': row.package_name,
+                    'package_title': row.package_title,
                     'organization': row.organization,
                     'download_url': row.download_url
                 })

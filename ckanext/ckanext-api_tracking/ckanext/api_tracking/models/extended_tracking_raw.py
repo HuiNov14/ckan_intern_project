@@ -43,7 +43,7 @@ class ExtendedTrackingRaw(model.TrackingSummary):
                 tracking_package.tracking_packages_table.c.user_key,
                 func.date(tracking_package.tracking_packages_table.c.tracking_date),
             ).order_by(
-                func.date(tracking_package.tracking_packages_table.c.tracking_date).desc()
+                func.date(tracking_package.tracking_packages_table.c.tracking_date).asc()
             )
         except Exception as e:
             raise ValidationError(f"Database query error: {e}")

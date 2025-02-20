@@ -18,7 +18,7 @@ class ExtendedActivityTable(Activity):
                 start_date = data_dict.get('start_date')
                 end_date = data_dict.get('end_date') + datetime.timedelta(days=1)
                 query = query.filter(func.date(cls.timestamp) >= start_date, func.date(cls.timestamp) < end_date)
-                
+                query = query.order_by(func.date(cls.timestamp).asc())
             results = query.all()
             if data_dict.get('user_name'):
                 user_name = data_dict.get('user_name') 
